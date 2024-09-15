@@ -32,7 +32,9 @@
             
             <div class="d-flex w-100" style="min-height: calc(100vh - 90px);">
                 <div class="bg-secondary-subtle d-none d-md-block p-3" style="width: 250px;">
-                    @include('layouts.sidebar')
+                    @isset($menus)
+                        @include('layouts.sidebar')
+                    @endisset
                 </div>
                 <!-- Page Content -->
                 <div class="flex-grow-1">

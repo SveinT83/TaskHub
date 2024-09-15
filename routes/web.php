@@ -1,15 +1,19 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+//Dashboard
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -17,9 +21,34 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-//NextCloud Socialite
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//Roles
+Route::middleware(['auth'])->group(function () {
+    // Ruter for roller
+    Route::resource('roles', RoleController::class);
+
+    // Ruter for tillatelser
+    Route::get('permissions/create', [RoleController::class, 'createPermission'])->name('permissions.create');
+    Route::post('permissions/store', [RoleController::class, 'storePermission'])->name('permissions.store');
+    Route::get('permissions/{permission}/edit', [RoleController::class, 'editPermission'])->name('permissions.edit');
+    Route::put('permissions/{permission}', [RoleController::class, 'updatePermission'])->name('permissions.update');
+    Route::delete('permissions/{permission}', [RoleController::class, 'destroyPermission'])->name('permissions.destroy');
+});
+
+//Users
+Route::middleware(['auth'])->group(function () {
+    // Liste over brukere
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    // Opprett ny bruker
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
+    // Rediger bruker
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+
+    // Slett bruker
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
 
