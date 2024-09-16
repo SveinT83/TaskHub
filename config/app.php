@@ -122,4 +122,9 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    'providers' => [
+        // Andre Service Providers...
+        App\Providers\ModuleServiceProvider::class,
+    ],
 ];

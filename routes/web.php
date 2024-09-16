@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\MenuConfigurationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,6 +50,23 @@ Route::middleware(['auth'])->group(function () {
 
     // Slett bruker
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+});
+
+//Config / Menus
+Route::middleware(['auth'])->group(function () {
+    // Route for Menu Configurations view
+    Route::get('/configurations/menu', [MenuConfigurationController::class, 'index'])->name('menu.configurations');
+    
+    // Route for creating a new menu
+    Route::post('/configurations/menu/create', [MenuConfigurationController::class, 'store'])->name('menu.create');
+
+    // Route for listing and managing menu items for a specific menu
+    Route::get('/configurations/menu/{menu}/items', [MenuConfigurationController::class, 'show'])->name('menu.items');
+
+    // Route for adding/editing menu items
+    Route::post('/configurations/menu/{menu}/items/create', [MenuConfigurationController::class, 'storeItem'])->name('menu.items.create');
+    Route::get('/configurations/menu/{menu}/items/{item}/edit', [MenuConfigurationController::class, 'editItem'])->name('menu.items.edit');
+    Route::post('/configurations/menu/{menu}/items/{item}/update', [MenuConfigurationController::class, 'updateItem'])->name('menu.items.update');
 });
 
 

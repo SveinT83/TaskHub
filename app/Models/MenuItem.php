@@ -5,14 +5,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class MenuItem extends Model
 {
-    protected $fillable = ['menu_id', 'parent_id', 'title', 'url', 'permission', 'order'];
+    protected $fillable = ['menu_id', 'parent_id', 'title', 'url', 'order'];
 
     public function menu()
     {
         return $this->belongsTo(Menu::class);
     }
 
-    // Henter child-elementer
+    public function parent()
+    {
+        return $this->belongsTo(MenuItem::class, 'parent_id');
+    }
+
     public function children()
     {
         return $this->hasMany(MenuItem::class, 'parent_id');
