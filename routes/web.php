@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\MenuConfigurationController;
+use App\Http\Controllers\ModuleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -68,6 +69,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/configurations/menu/{menu}/items/{item}/edit', [MenuConfigurationController::class, 'editItem'])->name('menu.items.edit');
     Route::post('/configurations/menu/{menu}/items/{item}/update', [MenuConfigurationController::class, 'updateItem'])->name('menu.items.update');
 });
+
+//Modules
+Route::get('/modules', [ModuleController::class, 'index'])->name('modules.index');
+Route::put('/modules/{id}/toggle', [ModuleController::class, 'toggleStatus'])->name('modules.toggle');
+Route::post('/modules/upload', [ModuleController::class, 'upload'])->name('modules.upload');
+
 
 
 require __DIR__.'/auth.php';
