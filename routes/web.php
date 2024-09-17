@@ -75,6 +75,11 @@ Route::get('/modules', [ModuleController::class, 'index'])->name('modules.index'
 Route::put('/modules/{id}/toggle', [ModuleController::class, 'toggleStatus'])->name('modules.toggle');
 Route::post('/modules/upload', [ModuleController::class, 'upload'])->name('modules.upload');
 
+Route::get('/modules/{module}', [ModuleController::class, 'show'])->name('modules.show');
+Route::post('/modules/{module}/run-migrations', [ModuleController::class, 'runMigrations'])->name('modules.runMigrations');
+Route::post('/modules/{module}/seed-database', [ModuleController::class, 'runSeed'])->name('modules.runSeed');
+
+
 
 
 require __DIR__.'/auth.php';

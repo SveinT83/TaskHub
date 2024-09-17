@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58235e73a5fd130f32451122ca74203c",
+    "content-hash": "1786d04f375d8b89660dafedcca5b578",
     "packages": [
         {
             "name": "brick/math",
@@ -5911,6 +5911,35 @@
             "time": "2023-12-08T13:03:43+00:00"
         },
         {
+            "name": "tronderdata/td-clients",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./modules/td-clients",
+                "reference": "257c519fe775ccd2a06f30cd5f825c8bd49f310b"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "tronderdata\\TdClients\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A module to manage clients, addresses, and users",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.1",
             "source": {
@@ -8330,7 +8359,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "tronderdata/td-clients": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

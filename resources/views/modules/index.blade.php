@@ -22,13 +22,19 @@
                         <td>{{ $module->description }}</td>
                         <td>{{ $module->is_active ? 'Active' : 'Inactive' }}</td>
                         <td>
-                            <form action="{{ route('modules.toggle', $module->id) }}" method="POST">
+                            <!-- Toggle Activate/Deactivate -->
+                            <form action="{{ route('modules.toggle', $module->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('PUT')
                                 <button class="btn btn-sm btn-{{ $module->is_active ? 'danger' : 'success' }}">
                                     {{ $module->is_active ? 'Deactivate' : 'Activate' }}
                                 </button>
                             </form>
+
+                            <!-- View Module Details Button -->
+                            <a href="{{ route('modules.show', $module->slug) }}" class="btn btn-sm btn-info">
+                                View
+                            </a>
                         </td>
                     </tr>
                 @endforeach
