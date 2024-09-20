@@ -6,6 +6,8 @@ use tronderdata\TdClients\Models\Client;
 use tronderdata\TdClients\Models\ClientSite;
 use Illuminate\Http\Request;
 use tronderdata\TdClients\Models\ClientUser;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Gate;
 
 class ClientUserController extends Controller
 {
@@ -17,6 +19,14 @@ class ClientUserController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function index()
     {
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('user.view')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+
         // -------------------------------------------------
         // Get all users of the clients
         // -------------------------------------------------
@@ -37,6 +47,14 @@ class ClientUserController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function create()
     {
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('user.create')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+
         // -------------------------------------------------
         // Hent alle klienter
         // -------------------------------------------------
@@ -77,6 +95,14 @@ class ClientUserController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function edit(ClientUser $user)
     {
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('user.edit')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+
         // -------------------------------------------------
         // Hent alle sites for den klienten som brukeren er tilknyttet
         // -------------------------------------------------
@@ -125,6 +151,15 @@ class ClientUserController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function destroy(ClientUser $user)
     {
+
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('user.delete')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+
         // -------------------------------------------------
         // Delete the user
         // -------------------------------------------------
@@ -145,6 +180,15 @@ class ClientUserController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function profile(ClientUser $user)
     {
+
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('user.view')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+        
         // -------------------------------------------------
         // Return the view with the user
         // -------------------------------------------------

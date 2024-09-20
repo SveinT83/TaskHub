@@ -4,6 +4,9 @@ use tronderdata\TdClients\Http\Controllers\ClientController;
 use tronderdata\TdClients\Http\Controllers\ClientSiteController;
 use tronderdata\TdClients\Http\Controllers\ClientUserController;
 use tronderdata\TdClients\Http\Controllers\ClientConfigController;
+use tronderdata\TdClients\Http\Controllers\Api\ClientApiController;
+use tronderdata\TdClients\Http\Controllers\Api\ClientSiteApiController;
+use tronderdata\TdClients\Http\Controllers\Api\ClientUserApiController;
 
 // Ruter for klientmodulen
 Route::middleware(['web', 'auth'])->group(function () {
@@ -33,7 +36,29 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('client/users/{user}/profile', [ClientUserController::class, 'profile'])->name('client.users.profile');
 
     // Admin-ruter for å konfigurere klientmodulen
-    Route::prefix('admin')->middleware('can:admin')->group(function () {
-        Route::get('clients/config', [ClientConfigController::class, 'index'])->name('admin.clients.config');
-    });
+    Route::get('/admin/clients/config', [ClientConfigController::class, 'index'])->name('admin.clients.config');
+
+});
+
+// API-ruter for klientmodulen
+Route::prefix('api')->middleware('auth:sanctum')->group(function () {
+    
+    // Hent alle klienter
+    Route::get('/clients', [ClientApiController::class, 'index'])->name('api.clients.index');
+
+    // Hent én spesifikk klient
+    Route::get('/clients/{client}', [ClientApiController::class, 'show'])->name('api.clients.show');
+
+    // Hent alle sites til en spesifikk klient
+    Route::get('/clients/{client}/sites', [ClientSiteApiController::class, 'index'])->name('api.clients.sites.index');
+
+    // Hent én spesifikk site
+    Route::get('/clients/sites/{site}', [ClientSiteApiController::class, 'show'])->name('api.clients.sites.show');
+
+    // Hent alle brukere for en spesifikk site
+    Route::get('/clients/sites/{site}/users', [ClientUserApiController::class, 'index'])->name('api.clients.sites.users.index');
+
+    // Hent én spesifikk bruker
+    Route::get('/clients/users/{user}', [ClientUserApiController::class, 'show'])->name('api.clients.users.show');
+
 });

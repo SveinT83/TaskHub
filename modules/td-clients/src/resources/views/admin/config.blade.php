@@ -2,11 +2,52 @@
 
 @section('title', 'Client Module Configuration')
 
-@section('content')
-    <div class="container mt-5">
-        <h1>Client Module Configuration</h1>
-        <p>This is the admin configuration page for the Client module. You can manage the settings for Clients, Sites, and Users here.</p>
+@section('pageHeader')
+    <h1>Client Module Configuration</h1>
+@endsection
 
-        <!-- Du kan legge til konfigurasjonsskjemaer og innstillinger her -->
+@section('content')
+    <div class="container mt-3">
+        
+        <div class="row">
+
+            <!-- Clients Card -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h2>Clients</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Total Clients: {{ $clientCount }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sites Card -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h2>Sites</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Total Sites: {{ $siteCount }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Card -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h2>Users</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Total Users: {{ $userCount }}</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 @endsection

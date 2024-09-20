@@ -71,7 +71,7 @@
                         </table>
 
                         <!-- Edit-knapp -->
-                        <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-primary btn-sm me-2">Edit</a>
+                        <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-primary  btn-sm me-2 bi bi-pencil"> Edit</a>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                                         <tr>
                                             <th scope="row">{{ $site->name }}</td>
                                             <td>
-                                                <a href="{{ route('client.sites.profile', $site->id) }}" class="btn btn-primary">View</a>
+                                                <a href="{{ route('client.sites.profile', $site->id) }}" class="btn btn-primary btn-sm bi bi-binoculars"> View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -135,7 +135,7 @@
                                         <tr>
                                             <th scope="row">{{ $user->first_name }} {{ $user->last_name }}</td>
                                             <td>
-                                                <a href="{{ route('client.users.profile', $user->id) }}" class="btn btn-primary">View</a>
+                                                <a href="{{ route('client.users.profile', $user->id) }}" class="btn btn-primary btn-sm bi bi-binoculars"> View</a>
                                             </td>
                                         </tr>
                                     @endforeach

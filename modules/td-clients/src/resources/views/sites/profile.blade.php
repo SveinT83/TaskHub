@@ -83,18 +83,12 @@
                             <p>No users found.</p>
                         @else
                             <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">User Name</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
                                 <tbody>
                                     @foreach ($users as $user)
                                         <tr>
                                             <th scope="row">{{ $user->first_name }} {{ $user->last_name }}</td>
                                             <td>
-                                                <a href="{{ route('client.users.profile', $user->id) }}" class="btn btn-primary">View</a>
+                                                <a href="{{ route('client.users.profile', $user->id) }}" class="btn btn-primary btn-sm bi bi-binoculars"> View</a>
                                             </td>
                                         </tr>
                                     @endforeach

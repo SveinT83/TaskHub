@@ -41,6 +41,7 @@ class ClientController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function store(Request $request)
     {
+
         // -------------------------------------------------
         // Valider dataene
         // -------------------------------------------------
@@ -130,7 +131,18 @@ class ClientController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function edit(Client $client)
     {
+
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('client.edit')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+
+        // -------------------------------------------------
         // Hent den første tilknyttede siten og brukeren
+        // -------------------------------------------------
         $mainSite = $client->sites()->orderBy('created_at')->first(); 
         $mainUser = $client->users()->orderBy('created_at')->first();
 
@@ -158,6 +170,15 @@ class ClientController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function destroy(Client $client)
     {
+
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('client.delete')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+
         $client->delete();
         return redirect()->route('clients.index');
     }
@@ -171,6 +192,15 @@ class ClientController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function profile(Client $client)
     {
+
+        // -------------------------------------------------
+        // Sjekker om brukeren har tillatelsen
+        // -------------------------------------------------
+        if (!Gate::allows('client.view')) {
+            // Hvis brukeren ikke har tillatelsen, returner en 403-feil
+            abort(403, 'You do not have permission to create users.');
+        }
+
         // -------------------------------------------------
         // Henter alle sites knyttet til klienten
         // -------------------------------------------------
