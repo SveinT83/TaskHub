@@ -14,6 +14,7 @@ class CreateTicketTimeSpendsTable extends Migration
             $table->unsignedBigInteger('ticket_id'); // Referanse til ticket
             $table->unsignedBigInteger('time_rate_id')->nullable(); // Referanse til time_rate
             $table->integer('time_spend')->nullable(); // Tid brukt i minutter
+            $table->boolean('billed')->default(false); // Faktureres
             $table->timestamps();
 
             // Utenlandske nøkler

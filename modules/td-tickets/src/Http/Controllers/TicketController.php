@@ -168,6 +168,16 @@ class TicketController extends Controller
             $ticketTimeSpend->save();
         }
 
+        // Send e-post hvis det ikke er en intern notis
+        if (!$isInternal) {
+            try {
+                $this->sendTicketReplyEmail($ticket, $ticketReply, $request->input('email'));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send ticket reply email: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'E-postsending feilet.');
+            }
+        }
+
         return redirect()->back()->with('success', $isInternal ? 'Intern notis lagt til.' : 'Svar sendt.');
     }
 
@@ -208,6 +218,18 @@ class TicketController extends Controller
         $ticketTimeSpend->save();
 
         return redirect()->back()->with('success', 'Tid registrert på ticketen.');
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION CreateNewTicket
+    // Function for creating a new simple ticket.
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function createNewTicket(Request $request) {
+
+        return view('tdtickets::new.index');
     }
 
 }

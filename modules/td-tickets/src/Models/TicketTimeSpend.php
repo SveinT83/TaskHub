@@ -12,6 +12,7 @@ class TicketTimeSpend extends Model
         'ticket_reply_id', // Legg til dette hvis tidsforbruk er knyttet til en reply
         'time_rate_id',
         'time_spend',
+        'billed',
     ];
 
     // Relasjoner

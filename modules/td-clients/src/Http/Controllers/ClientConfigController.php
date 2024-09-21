@@ -17,7 +17,7 @@ class ClientConfigController extends Controller
         $user = auth()->user();
 
         // Sjekker om brukeren har tillatelsen 'manageclients'
-        if (!$user->can('manageClients')) {
+        if (!$user->can('clients.admin')) {
             // Hvis brukeren ikke har tillatelsen, returnerer vi en 403-feil (forbudt tilgang)
             abort(403, 'You do not have permission to manage clients.');
         }
