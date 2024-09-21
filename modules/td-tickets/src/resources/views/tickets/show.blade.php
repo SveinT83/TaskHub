@@ -1,31 +1,32 @@
 @extends('layouts.app')
 
 @section('pageHeader')
-    <h1>#{{ $ticket->status->id }} - {{ $ticket->title }}</h1>
-@endsection
 
-@section('content')
-<div class="container-fluid mt-3">
-    
     <!-- ------------------------------------------------- -->
     <!-- Ticket Header -->
     <!-- ------------------------------------------------- -->
-    <div class="row pb-2 align-items-end border-bottom">
+    <div class="row">
+        <h1 class="col-md-2">#{{ $ticket->status->id }} - {{ $ticket->title }}</h1>
         <p class="col-md-2"><strong>Status:</strong> {{ $ticket->status->name }}</p>
-        <p class="col-md-2"><strong>Kunde:</strong> {{ $ticket->client->name ?? 'N/A' }}</p>
-        <p class="col-md-2"><strong>Tildelt til:</strong> {{ $ticket->assignedUser->name ?? 'Ikke tildelt' }}</p>
-
-        <div class="col-md-2">
-            <select class="form-select" aria-label="Default select example">
-                <option selected>
-                    {{ $ticket->assignedUser->name ?? 'Ikke tildelt' }}
-                </option>
-            </select>
-        </div>
-
-        <p class="col-md-2"><strong>Opprettet:</strong> {{ $ticket->created_at->format('Y-m-d H:i') }}</p>
-        <p class="col-md-2"><strong>Forfallsdato:</strong> {{ $ticket->due_date ? $ticket->due_date->format('Y-m-d') : 'Ingen' }}</p>
+        <p class="col-md-2"><strong>Client:</strong> {{ $ticket->client->name ?? 'N/A' }}</p>
+        <p class="col-md-2"><strong>Assigned:</strong> {{ $ticket->assignedUser->name ?? 'Unassignet' }}</p>
+        <p class="col-md-2"><strong>Created:</strong> {{ $ticket->created_at->format('Y-m-d H:i') }}</p>
+        <p class="col-md-2"><strong>Due date:</strong> {{ $ticket->due_date ? $ticket->due_date->format('Y-m-d') : 'Ingen' }}</p>
     </div>
+
+    @if ($errors->any())
+      <div class="alert alert-danger">
+          <ul>
+              @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+              @endforeach
+          </ul>
+      </div>
+  @endif
+@endsection
+
+@section('content')
+<div class="container-fluid">
 
 
 
@@ -54,6 +55,38 @@
             </div>
 
             <!-- ------------------------------------------------- -->
+            <!-- Corresponding -->
+            <!-- ------------------------------------------------- -->
+            <div class="card mt-3">
+                <div class="card-header">
+                  <h2>Corresponding:</h2>
+                </div>
+                <div class="card-body">
+            
+                    <!-- Accordion Start -->
+                    <div class="accordion" id="ticketReplies">
+                        @foreach($replies as $index => $reply)
+                            <!-- Ticket Reply Item -->
+                            <div class="accordion-item">
+                              <h2 class="accordion-header" id="heading{{ $index }}">
+                                <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReplyItem{{ $index }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}" aria-controls="collapseReplyItem{{ $index }}">
+                                    <strong>{{ $reply->user->name ?? $ticket->client->name }}</strong> - {{ $reply->created_at->format('Y-m-d H:i') }}
+                                </button>
+                              </h2>
+                              <div id="collapseReplyItem{{ $index }}" class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}" data-bs-parent="#ticketReplies" aria-labelledby="heading{{ $index }}">
+                                <div class="accordion-body">
+                                    <!-- Ticket Reply Content START-->
+                                    <p>{{ $reply->message }}</p>
+                                    <!-- Ticket Reply Content END-->
+                                </div>
+                              </div>
+                            </div>
+                        @endforeach
+                    </div><!-- Accordion End -->
+                </div>
+            </div>
+          
+            <!-- ------------------------------------------------- -->
             <!-- Ticket Action -->
             <!-- ------------------------------------------------- -->
             <div class="card mt-3">
@@ -75,18 +108,45 @@
                           <div id="collapseReply" class="accordion-collapse collapse show" data-bs-parent="#ticketAction">
                             <div class="accordion-body">
                                 <!-- Ticket Reply Content START-->
-                                <form class="row">
+                                <form method="POST" action="{{ route('tickets.reply', $ticket->id) }}">
+                                  @csrf
+                              
+                                  <div class="row">
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="The e-mail to the user if it exists.">
-                                      </div>
-                                      <div class="mb-3">
-                                        <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                      </div>
+                                        <label for="email" class="form-label">E-postadresse</label>
+                                        <input type="email" class="form-control" id="email" name="email" value="{{ $ticket->client->main_email ?? '' }}" required>
+                                    </div>
 
-                                      <button class="btn btn-primary"> send </button>
-                                </form>
+                                    <div class="mb-3">
+                                        <label for="message" class="form-label">Melding</label>
+                                        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                    </div>
+                                  </div>
+
+                                  <div class="row">
+
+                                    <div class="col-md-4 mb-3">
+                                      <label for="timeSpend" class="form-label">Time spent (min):</label>
+                                      <input type="number" id="timeSpend" name="timeSpend" class="form-control" placeholder="Time spent in minutes"> 
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="timeRate" class="form-label">Time Rate:</label>
+                                        <select class="form-select" id="timeRate" name="timeRate" aria-label="Select Time Rate">
+                                            @foreach($timeRates as $rate)
+                                                <option value="{{ $rate->id }}">
+                                                    {{ $rate->name }} - {{ number_format($rate->price, 2) }} NOK @if($rate->taxable) (Taxable) @else (Non-Taxable) @endif
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                              
+                                    <div class="col-md-4 mb-3">
+                                        <button class="btn btn-primary" type="submit" name="action" value="send_response">Send Responce</button>
+                                        <button class="btn btn-secondary" type="submit" name="action" value="internal_note">Internal Note</button>
+                                    </div>
+                                  </div>
+                              </form>
                                 <!-- Ticket Reply Content END-->
                             </div>
                           </div>
@@ -100,28 +160,23 @@
                             </button>
                           </h2>
                           <div id="collapseTime" class="accordion-collapse collapse" data-bs-parent="#ticketAction">
-                            <div class="accordion-body">
-                                <!-- Ticket Time Content START -->
-                                <form class="row align-items-end">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Time spend:</label>
-                                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Time spend in minutes">
-                                      </div>
-                                    <div class="col-md-4 mb-3">
-                                        <select class="form-select" aria-label="Default select example">
-                                            <option selected>Time rate</option>
-                                            <option value="1">Remote support</option>
-                                            <option value="2">On Site</option>
-                                        </select>
-                                    </div>
+                              <div class="accordion-body">
 
-                                    <div class="col-md-4 mb-3">
-                                        <button class="btn btn-primary"> send </button>
-                                    </div>
-                                </form>
-                                <!-- Ticket Time Content START -->
-                            </div>
+                                  <!-- Ticket Time Rows START -->
+                                  <form class="row">
+                                      @foreach($timeSpends as $time)
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <p>{{ $time->time_spend }} min</p>
+                                            </div>
+                                        </div>
+                                      @endforeach
+                                        </form>
+                                  <!-- Ticket Time Rows END -->
+
+                              </div>
                           </div>
+                        
                         </div>
                     </div><!-- Accordion End -->
                 </div>

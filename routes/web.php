@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\MenuConfigurationController;
+use App\Http\Controllers\EmailAccountController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -69,6 +70,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/configurations/menu/{menu}/items/{item}/update', [MenuConfigurationController::class, 'updateItem'])->name('menu.items.update');
 });
 
+//E-postkontoer
+Route::middleware(['auth'])->group(function () {
+    Route::resource('admin/email/email_accounts', EmailAccountController::class);
+});
 
 
 

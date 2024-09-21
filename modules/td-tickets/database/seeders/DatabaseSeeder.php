@@ -1,6 +1,6 @@
 <?php
 
-namespace tronderdata\TdTickets\database\seeders;
+namespace tronderdata\TdTickets\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StatusesTableSeeder::class,
             QueuesTableSeeder::class,
+            TimeRatesSeeder::class,
         ]);
     }
 }

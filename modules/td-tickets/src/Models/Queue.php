@@ -3,6 +3,7 @@
 namespace tronderdata\TdTickets\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Queue extends Model
 {
