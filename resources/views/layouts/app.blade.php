@@ -48,5 +48,8 @@
                 </div>
             </div>
         </div>
+
+        @yield('scripts') <!-- For tilpassede scripts -->
+        
     </body>
 </html>

@@ -1,63 +1,90 @@
 <?php
 
-namespace tronderdata\TdTickets\Models;
+namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use tronderdata\TdClients\Models\Client;
 
 class Ticket extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
+        'client_id',
+        'user_id',
+        'queue_id',
+        'ticket_category_id', // Legg til dette
         'title',
         'description',
-        'client_id',
-        'status_id',
-        'queue_id',
-        'assigned_to',
         'priority',
         'due_date',
+        'assigned_to',
+        'status_id',
         'created_by',
         'updated_by',
     ];
 
-    protected $casts = [
-        'due_date' => 'datetime', // Legg til denne linjen
-        // Andre casts...
-    ];
-
-    // Relasjoner
+    /**
+     * Relasjon til klienten.
+     */
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
+    /**
+     * Relasjon til brukeren.
+     */
+    public function user()
+    {
+        return $this->belongsTo(ClientUser::class, 'user_id');
+    }
+
+    /**
+     * Relasjon til køen.
+     */
+    public function queue()
+    {
+        return $this->belongsTo(Queue::class);
+    }
+
+    /**
+     * Relasjon til kategorien.
+     */
+    public function category()
+    {
+        return $this->belongsTo(TicketCategory::class, 'ticket_category_id');
+    }
+
+    /**
+     * Relasjon til brukeren som er tildelt ticketen.
+     */
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    /**
+     * Relasjon til statusen.
+     */
     public function status()
     {
         return $this->belongsTo(Status::class);
     }
 
-    public function assignedUser()
+    /**
+     * Relasjon til brukeren som opprettet ticketen.
+     */
+    public function creator()
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function replies()
+    /**
+     * Relasjon til brukeren som oppdaterte ticketen.
+     */
+    public function updater()
     {
-        return $this->hasMany(TicketReply::class);
-    }
-
-    public function timeSpends()
-    {
-        return $this->hasMany(TicketTimeSpend::class);
-    }
-
-    public function getFormattedDueDateAttribute()
-    {
-        return $this->due_date ? $this->due_date->format('Y-m-d') : 'Ingen';
-    }
-
-    public function queue() {
-        return $this->belongsTo(Queue::class, 'queue_id');
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

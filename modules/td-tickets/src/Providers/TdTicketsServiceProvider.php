@@ -3,6 +3,8 @@
 namespace tronderdata\TdTickets\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use tronderdata\TdClients\Models\Client;
 
 class TdTicketsServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,9 @@ class TdTicketsServiceProvider extends ServiceProvider
 
         //Migrasjoner
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
+        // Eksplisitt binding av {client} til Client-modellen
+        Route::model('client', Client::class);
     }
 
     public function register()

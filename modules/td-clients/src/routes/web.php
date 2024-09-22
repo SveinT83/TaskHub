@@ -41,8 +41,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 });
 
 // API-ruter for klientmodulen
-Route::prefix('api')->middleware('auth:sanctum')->group(function () {
-    
+Route::prefix('api')->middleware('auth')->group(function () {
+
     // Hent alle klienter
     Route::get('/clients', [ClientApiController::class, 'index'])->name('api.clients.index');
 
@@ -61,4 +61,6 @@ Route::prefix('api')->middleware('auth:sanctum')->group(function () {
     // Hent én spesifikk bruker
     Route::get('/clients/users/{user}', [ClientUserApiController::class, 'show'])->name('api.clients.users.show');
 
+    // Ny rute for å hente brukere basert på klient
+    Route::get('/clients/{client}/users', [ClientUserApiController::class, 'getUsersByClient'])->name('api.clients.users.index');
 });

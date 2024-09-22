@@ -10,11 +10,13 @@ use App\Services\MailService;
 use tronderdata\TdTickets\Models\Ticket;
 use tronderdata\TdTickets\Models\Status;
 use tronderdata\TdTickets\Models\Queue;
-use tronderdata\TdClients\Models\Client;
 use tronderdata\TdTickets\Models\TicketReply;
 use tronderdata\TdTickets\Models\TimeRate;
 use tronderdata\TdTickets\Models\TicketTimeSpend;
 use tronderdata\TdTickets\Mail\TicketReplyMail;
+use tronderdata\TdTickets\Models\TicketCategory;
+use tronderdata\TdClients\Models\Client;
+use tronderdata\TdClients\Models\ClientUser;
 use App\Models\User;
 use App\Models\EmailAccount;
 
@@ -228,8 +230,90 @@ class TicketController extends Controller
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function createNewTicket(Request $request) {
+        
+        // -------------------------------------------------
+        // Client: Get all clients from Client model - use tronderdata\TdClients\Models\Client; at the top
+        // -------------------------------------------------
+        $clients = Client::all();
 
-        return view('tdtickets::new.index');
+        // -------------------------------------------------
+        // Ques: Get all queues - use tronderdata\TdTickets\Models\Queue; at the top
+        // -------------------------------------------------
+        $queues = Queue::all();
+
+        // -------------------------------------------------
+        // TicketCategories: Get all ticket categories - use tronderdata\TdTickets\Models\TicketCategory; at the top
+        // -------------------------------------------------
+        $ticketCategories = TicketCategory::all();
+
+
+        // -------------------------------------------------
+        // Return: View
+        // -------------------------------------------------
+        return view('tdtickets::new.index', compact('clients', 'queues'));
+
     }
 
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION Store
+    // Function for storing a new ticket.
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function store(Request $request)
+    {
+        // Validering
+        $request->validate([
+            'client_id' => 'required|exists:clients,id',
+            'user_id' => 'required|exists:client_user,id',
+            'queue_id' => 'required|exists:queues,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'priority' => 'required|in:low,normal,high',
+            'due_date' => 'nullable|date',
+        ]);
+
+        // Opprett ny ticket
+        $ticket = new Ticket();
+        $ticket->client_id = $request->input('client_id');
+        $ticket->user_id = $request->input('user_id'); // Bruker tilknyttet ticketen
+        $ticket->queue_id = $request->input('queue_id');
+        $ticket->title = $request->input('title');
+        $ticket->description = $request->input('description');
+        $ticket->priority = $request->input('priority');
+        $ticket->due_date = $request->input('due_date');
+        $ticket->assigned_to = Auth::id(); // Tildel til innlogget bruker
+        $ticket->status_id = 1; // Sett status til "Åpen"
+        $ticket->created_by = Auth::id();
+        $ticket->updated_by = Auth::id();
+        $ticket->save();
+
+        return redirect()->route('tickets.show', $ticket->id)->with('success', 'Ticket opprettet!');
+    }
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION Get Users By Client
+    // Function for getting users by client. Used in ticket form.
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    /**
+     * Hent alle brukere for en spesifikk klient.
+     *
+     * @param Client $client
+     * @return \Illuminate\Http\JsonResponse
+     */
+    
+    public function getUsersByClient($client) {
+
+        // -------------------------------------------------
+        // Users: Get users by client - used in ticket form
+        // -------------------------------------------------
+        $users = ClientUser::where('client_id', $client->id)->get(['id', 'first_name', 'last_name', 'email']);
+
+        // -------------------------------------------------
+        // Return: JSON response
+        // -------------------------------------------------
+        return response()->json($users);
+    }
 }
