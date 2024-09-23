@@ -250,7 +250,7 @@ class TicketController extends Controller
         // -------------------------------------------------
         // Return: View
         // -------------------------------------------------
-        return view('tdtickets::new.index', compact('clients', 'queues'));
+        return view('tdtickets::new.index', compact('clients', 'queues', 'ticketCategories'));
 
     }
 

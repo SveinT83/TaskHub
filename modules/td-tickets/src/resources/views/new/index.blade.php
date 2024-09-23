@@ -1,9 +1,18 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container">
+<!-- ------------------------------------------------- -->
+<!-- Header -->
+<!-- ------------------------------------------------- -->
+@section('pageHeader')
     <h1>Opprett Ny Ticket</h1>
+@endsection
 
+@section('content')
+<div class="container mt-3">
+
+    <!-- ------------------------------------------------- -->
+    <!-- Alert -->
+    <!-- ------------------------------------------------- -->
     @if ($errors->any())
         <div class="alert alert-danger">
             <strong>Oops!</strong> Det var noen problemer med innsendelsen din.<br><br>
@@ -15,6 +24,9 @@
         </div>
     @endif
 
+    <!-- ------------------------------------------------- -->
+    <!-- Form: create ticket -->
+    <!-- ------------------------------------------------- -->
     <form action="{{ route('tickets.store') }}" method="POST">
         @csrf
 
