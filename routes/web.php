@@ -13,11 +13,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//NextCLoud integrations
+// Nextcloud routes
 Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('nextcloud.connect');
-Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback']);
+Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
+
 Route::get('admin/integrations/nextcloud', [NextcloudController::class, 'showSettings'])->name('nextcloud.settings');
 Route::post('admin/integrations/nextcloud/toggle', [NextcloudController::class, 'toggleNextcloudIntegration'])->name('nextcloud.toggle');
+
+// Nextcloud login routes
+Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('login.nextcloud');
+Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
 
 
 //Dashboard

@@ -36,5 +36,6 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class, // Legg til Spatie Role Middleware
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class, // Tillatelse middleware
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class, // Alternativt
+        'checkNextcloudIntegration' => \App\Http\Middleware\CheckNextcloudIntegration::class,
     ];
 }

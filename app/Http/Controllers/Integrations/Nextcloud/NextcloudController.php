@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Integrations\Nextcloud;
 
+use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
+use App\Models\Menu;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Log;
 
 class NextcloudController extends Controller
 {
@@ -22,6 +22,13 @@ class NextcloudController extends Controller
         $this->clientSecret = config('services.nextcloud.client_secret');
         $this->redirectUri = config('services.nextcloud.redirect');
         $this->baseUrl = config('services.nextcloud.base_url');
+
+        // Legg til meny-data
+        $menus = Menu::with(['items' => function ($query) {
+            $query->whereNull('parent_id')->with('children');
+        }])->get();
+        
+        view()->share('menus', $menus); // Del menyene med alle visninger
     }
 
     /**
@@ -61,17 +68,17 @@ class NextcloudController extends Controller
                     'redirect_uri' => config('services.nextcloud.redirect'),
                 ],
             ]);
-    
+
             $data = json_decode($response->getBody()->getContents(), true);
-    
+
             \Log::info('Nextcloud token response:', $data ?? []);
-    
+
             if (!isset($data['access_token'])) {
                 throw new \Exception('Ingen tilgangstoken ble returnert fra Nextcloud.');
             }
-    
+
             $accessToken = $data['access_token'];
-    
+
             // Hent brukerdata fra Nextcloud med tilgangstoken
             $userResponse = $client->get(config('services.nextcloud.base_url') . '/ocs/v2.php/cloud/user', [
                 'headers' => [
@@ -79,33 +86,48 @@ class NextcloudController extends Controller
                     'OCS-APIRequest' => 'true',
                 ],
             ]);
-    
-            // Konverter XML-responsen til et PHP-array
+
             $userData = simplexml_load_string($userResponse->getBody()->getContents(), "SimpleXMLElement", LIBXML_NOCDATA);
-            $userData = json_decode(json_encode($userData), true); // Konverter til array
-            
+            $userData = json_decode(json_encode($userData), true);
+
             \Log::info('Nextcloud user response (XML):', $userData ?? []);
-    
-            // Sjekk om brukerdataene er gyldige
+
             if (!isset($userData['data']['id'])) {
                 throw new \Exception('Feil under henting av brukerdata fra Nextcloud.');
             }
-    
-            // Lagre Nextcloud-token og evt. brukerdata
-            $user = Auth::user();
-            $user->nextcloud_token = $accessToken;
-            $user->save();
-    
-            return redirect()->route('nextcloud.settings')->with('success', 'Nextcloud-tilkoblingen ble vellykket!');
+
+            // Sjekk om brukeren finnes i systemet
+            $existingUser = \App\Models\User::where('email', $userData['data']['email'])->first();
+
+            if (!$existingUser) {
+                // Hvis brukeren ikke finnes, opprett ny bruker
+                $existingUser = \App\Models\User::create([
+                    'name' => $userData['data']['displayname'],
+                    'email' => $userData['data']['email'],
+                    'password' => \Illuminate\Support\Facades\Hash::make(uniqid()), // Midlertidig passord
+                    'nextcloud_token' => $accessToken,
+                ]);
+            }
+
+            // Logg inn brukeren
+            Auth::login($existingUser);
+
+            // Oppdater token og lagre det
+            $existingUser->nextcloud_token = $accessToken;
+            $existingUser->save();
+
+            return redirect()->route('dashboard')->with('success', 'Du er logget inn via Nextcloud!');
+
         } catch (\Exception $e) {
             \Log::error('Nextcloud authentication error: ' . $e->getMessage());
-            return redirect()->route('nextcloud.settings')->with('error', 'Det oppstod en feil under Nextcloud-tilkoblingen: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'Det oppstod en feil under Nextcloud-innloggingen: ' . $e->getMessage());
         }
     }
     
 
     public function showSettings()
     {
+
         // Hent Nextcloud-integrasjonsinnstillingen
         $setting = Setting::where('name', 'nextcloud_integration')->first();
         $isNextcloudActive = $setting ? $setting->value == '1' : false;
