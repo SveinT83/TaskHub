@@ -18,9 +18,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('queue_id')->nullable(); // Kø
             $table->unsignedBigInteger('assigned_to')->nullable(); // Tildelt tekniker
 
-            $table->unsignedTinyInteger('priority')->default(3); // Prioritet (1=høy, 5=lav)
+            // Fjern gammel priority og erstatt med priority_id
+            $table->unsignedBigInteger('priority_id')->nullable()->after('queue_id'); // Ny kolonne for priority_id
 
             $table->dateTime('due_date')->nullable(); // Forfallsdato
+
+            $table->unsignedBigInteger('ticket_category_id')->nullable()->after('queue_id'); // Ny kolonne for ticket_category_id
 
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');
@@ -32,6 +35,10 @@ return new class extends Migration {
             $table->foreign('status_id')->references('id')->on('tickets_status');
             $table->foreign('queue_id')->references('id')->on('tickets_queues');
             $table->foreign('assigned_to')->references('id')->on('users');
+
+            // Fremmednøkler for de nye feltene
+            $table->foreign('ticket_category_id')->references('id')->on('ticket_categories')->onDelete('set null');
+            $table->foreign('priority_id')->references('id')->on('ticket_priorities')->onDelete('set null');
         });
     }
 

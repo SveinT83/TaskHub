@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace tronderdata\TdTickets\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Ticket extends Model
 {
@@ -13,10 +14,10 @@ class Ticket extends Model
         'client_id',
         'user_id',
         'queue_id',
-        'ticket_category_id', // Legg til dette
+        'ticket_category_id',
         'title',
         'description',
-        'priority',
+        'priority_id',
         'due_date',
         'assigned_to',
         'status_id',
@@ -59,7 +60,7 @@ class Ticket extends Model
     /**
      * Relasjon til brukeren som er tildelt ticketen.
      */
-    public function assignee()
+    public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
@@ -86,5 +87,22 @@ class Ticket extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Relasjon til prioritet.
+     */
+    public function priority()
+    {
+        return $this->belongsTo(TicketPriority::class, 'priority_id');
+    }
+
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
+
+    public function replies()
+    {
+        return $this->hasMany(TicketReply::class, 'ticket_id');
     }
 }

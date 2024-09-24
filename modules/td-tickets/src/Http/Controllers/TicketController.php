@@ -13,6 +13,7 @@ use tronderdata\TdTickets\Models\Queue;
 use tronderdata\TdTickets\Models\TicketReply;
 use tronderdata\TdTickets\Models\TimeRate;
 use tronderdata\TdTickets\Models\TicketTimeSpend;
+use tronderdata\TdTickets\Models\TicketPriority;
 use tronderdata\TdTickets\Mail\TicketReplyMail;
 use tronderdata\TdTickets\Models\TicketCategory;
 use tronderdata\TdClients\Models\Client;
@@ -226,7 +227,7 @@ class TicketController extends Controller
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION CreateNewTicket
-    // Function for creating a new simple ticket.
+    // Function for creating a new simple ticket form.
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function createNewTicket(Request $request) {
@@ -246,11 +247,16 @@ class TicketController extends Controller
         // -------------------------------------------------
         $ticketCategories = TicketCategory::all();
 
+        // -------------------------------------------------
+        // TicketPriorities: Get all ticket priorities - use tronderdata\TdTickets\Models\TicketPriority; at the top
+        // -------------------------------------------------
+        $ticketPriorities = TicketPriority::all();
+
 
         // -------------------------------------------------
         // Return: View
         // -------------------------------------------------
-        return view('tdtickets::new.index', compact('clients', 'queues', 'ticketCategories'));
+        return view('tdtickets::new.index', compact('clients', 'queues', 'ticketCategories', 'ticketPriorities'));
 
     }
 
@@ -265,11 +271,11 @@ class TicketController extends Controller
         // Validering
         $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'user_id' => 'required|exists:client_user,id',
-            'queue_id' => 'required|exists:queues,id',
+            'user_id' => 'required|exists:client_users,id',
+            'queue_id' => 'required|exists:tickets_queues,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'priority' => 'required|in:low,normal,high',
+            'priority_id' => 'required|exists:ticket_priorities,id', // Bruk priority_id nå
             'due_date' => 'nullable|date',
         ]);
 
@@ -280,7 +286,7 @@ class TicketController extends Controller
         $ticket->queue_id = $request->input('queue_id');
         $ticket->title = $request->input('title');
         $ticket->description = $request->input('description');
-        $ticket->priority = $request->input('priority');
+        $ticket->priority_id = $request->input('priority_id'); // Nå bruker vi priority_id
         $ticket->due_date = $request->input('due_date');
         $ticket->assigned_to = Auth::id(); // Tildel til innlogget bruker
         $ticket->status_id = 1; // Sett status til "Åpen"
