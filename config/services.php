@@ -41,4 +41,11 @@ return [
         'redirect' => env('MICROSOFT_REDIRECT_URI'),
     ],
 
+    'nextcloud' => [
+        'client_id' => env('NEXTCLOUD_CLIENT_ID'),
+        'client_secret' => env('NEXTCLOUD_CLIENT_SECRET'),
+        'redirect' => env('NEXTCLOUD_REDIRECT_URI'),
+        'base_url' => env('NEXTCLOUD_BASE_URL'),
+    ],
+
 ];

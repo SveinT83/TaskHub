@@ -6,11 +6,19 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\MenuConfigurationController;
 use App\Http\Controllers\EmailAccountController;
+use App\Http\Controllers\Integrations\Nextcloud\NextcloudController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+//NextCLoud integrations
+Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('nextcloud.connect');
+Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback']);
+Route::get('admin/integrations/nextcloud', [NextcloudController::class, 'showSettings'])->name('nextcloud.settings');
+Route::post('admin/integrations/nextcloud/toggle', [NextcloudController::class, 'toggleNextcloudIntegration'])->name('nextcloud.toggle');
+
 
 //Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])

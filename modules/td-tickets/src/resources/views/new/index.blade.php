@@ -25,130 +25,146 @@
     @endif
 
     <!-- ------------------------------------------------- -->
-    <!-- Form: create ticket -->
+    <!-- Card - START -->
     <!-- ------------------------------------------------- -->
-    <form action="{{ route('tickets.store') }}" method="POST">
-        @csrf
+    <div class="card">
+        <div class="card-body">
 
+            <!-- ------------------------------------------------- -->
+            <!-- Form: create ticket -->
+            <!-- ------------------------------------------------- -->
+            <form action="{{ route('tickets.store') }}" method="POST">
+                @csrf
+
+                <!-- ------------------------------------------------- -->
+                <!-- Row - Select client and user -->
+                <!-- ------------------------------------------------- -->
+                <div class="row">
+
+                    <!-- ------------------------------------------------- -->
+                    <!-- Klient Select -->
+                    <!-- ------------------------------------------------- -->
+                    <div class="col-md-6 mt-2">
+                        <label for="client_id" class="form-label fw-bold">Client</label>
+                        <select class="form-select" id="client_id" name="client_id" required>
+                            <option value="">Select Client</option>
+                            @foreach($clients as $client)
+                                <option value="{{ $client->id }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>
+                                    {{ $client->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- ------------------------------------------------- -->
+                    <!-- Bruker Select -->
+                    <!-- ------------------------------------------------- -->
+                    <div class="col-md-6 mt-2">
+                        <label for="user_id" class="form-label fw-bold">User:</label>
+                        <select class="form-select" id="user_id" name="user_id" required>
+                            <option value="">Select User</option>
+                            <!-- Brukere vil bli lastet inn dynamisk -->
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- ------------------------------------------------- -->
+                <!-- Ticket Title/Subject -->
+                <!-- ------------------------------------------------- -->
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label for="title" class="form-label fw-bold">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required>
+                    </div>
+                </div>
+
+                <!-- Beskrivelse Textarea -->
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label for="description" class="form-label fw-bold">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" required>{{ old('description') }}</textarea>
+                    </div>
+                </div>
+
+                <!-- ------------------------------------------------- -->
+                <!-- Row - Category, Que and priority -->
+                <!-- ------------------------------------------------- -->
+                <div class="row mt-3">
+
+                    <!-- ------------------------------------------------- -->
+                    <!-- Ticket Category Select -->
+                    <!-- ------------------------------------------------- -->
+                    <div class="col-md-3 mt-2">
+                        <label for="ticket_category_id" class="form-label fw-bold">Ticket Category</label>
+                        <select class="form-select" id="ticket_category_id" name="ticket_category_id" required>
+                            <option value="general">General</option>
+                            @foreach($ticketCategories as $category)
+                                <option value="{{ $category->id }}" {{ old('ticket_category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- ------------------------------------------------- -->
+                    <!-- Que Select -->
+                    <!-- ------------------------------------------------- -->
+                    <div class="col-md-3 mt-2">
+                        <label for="queue_id" class="form-label fw-bold">Que</label>
+                        <select class="form-select" id="queue_id" name="queue_id" required>
+                            <option value="">Select que</option>
+                            @foreach($queues as $queue)
+                                <option value="{{ $queue->id }}" {{ old('queue_id') == $queue->id ? 'selected' : '' }}>
+                                    {{ $queue->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- ------------------------------------------------- -->
+                    <!-- Priority Select -->
+                    <!-- ------------------------------------------------- -->
+                    <div class="col-md-3 mt-2">
+                        <label for="priority_id" class="form-label fw-bold">Priority:</label>
+                        <select class="form-select" id="priority_id" name="priority_id" required>
+                            @foreach($ticketPriorities as $priority)
+                                <option value="{{ $priority->id }}" {{ old('priority_id') == $priority->id ? 'selected' : '' }}>
+                                    {{ $priority->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- ------------------------------------------------- -->
+                    <!-- Due Input -->
+                    <!-- ------------------------------------------------- -->
+                    <div class="col-md-3 mt-2">
+                        <label for="due_date" class="form-label fw-bold">Due date</label>
+                        <input type="date" class="form-control" id="due_date" name="due_date" value="{{ old('due_date') }}">
+                    </div>
+
+                </div>
+
+                <!-- ------------------------------------------------- -->
+                <!-- Submit Button -->
+                <!-- ------------------------------------------------- -->
+                <div class="row mt-3">
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Create Ticket</button>
+                    </div>
+                </div>
+            </form>
+        
         <!-- ------------------------------------------------- -->
-        <!-- Row - Select client and user -->
+        <!-- Card - END -->
         <!-- ------------------------------------------------- -->
-        <div class="row">
-
-            <!-- ------------------------------------------------- -->
-            <!-- Klient Select -->
-            <!-- ------------------------------------------------- -->
-            <div class="col-md-6 mt-2">
-                <label for="client_id" class="form-label fw-bold">Client</label>
-                <select class="form-select" id="client_id" name="client_id" required>
-                    <option value="">Select Client</option>
-                    @foreach($clients as $client)
-                        <option value="{{ $client->id }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>
-                            {{ $client->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- ------------------------------------------------- -->
-            <!-- Bruker Select -->
-            <!-- ------------------------------------------------- -->
-            <div class="col-md-6 mt-2">
-                <label for="user_id" class="form-label fw-bold">User:</label>
-                <select class="form-select" id="user_id" name="user_id" required>
-                    <option value="">Select User</option>
-                    <!-- Brukere vil bli lastet inn dynamisk -->
-                </select>
-            </div>
-
         </div>
+    </div>
 
-        <!-- ------------------------------------------------- -->
-        <!-- Ticket Title/Subject -->
-        <!-- ------------------------------------------------- -->
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <label for="title" class="form-label fw-bold">Title</label>
-                <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required>
-            </div>
-        </div>
-
-        <!-- Beskrivelse Textarea -->
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <label for="description" class="form-label fw-bold">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="5" required>{{ old('description') }}</textarea>
-            </div>
-        </div>
-
-        <!-- ------------------------------------------------- -->
-        <!-- Row - Category, Que and priority -->
-        <!-- ------------------------------------------------- -->
-        <div class="row mt-3">
-
-            <!-- ------------------------------------------------- -->
-            <!-- Ticket Category Select -->
-            <!-- ------------------------------------------------- -->
-            <div class="col-md-3 mt-2">
-                <label for="ticket_category_id" class="form-label fw-bold">Ticket Category</label>
-                <select class="form-select" id="ticket_category_id" name="ticket_category_id" required>
-                    <option value="general">General</option>
-                    @foreach($ticketCategories as $category)
-                        <option value="{{ $category->id }}" {{ old('ticket_category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- ------------------------------------------------- -->
-            <!-- Que Select -->
-            <!-- ------------------------------------------------- -->
-            <div class="col-md-3 mt-2">
-                <label for="queue_id" class="form-label fw-bold">Que</label>
-                <select class="form-select" id="queue_id" name="queue_id" required>
-                    <option value="">Select que</option>
-                    @foreach($queues as $queue)
-                        <option value="{{ $queue->id }}" {{ old('queue_id') == $queue->id ? 'selected' : '' }}>
-                            {{ $queue->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- ------------------------------------------------- -->
-            <!-- Priority Select -->
-            <!-- ------------------------------------------------- -->
-            <div class="col-md-3 mt-2">
-                <label for="priority_id" class="form-label fw-bold">Priority:</label>
-                <select class="form-select" id="priority_id" name="priority_id" required>
-                    @foreach($ticketPriorities as $priority)
-                        <option value="{{ $priority->id }}" {{ old('priority_id') == $priority->id ? 'selected' : '' }}>
-                            {{ $priority->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- ------------------------------------------------- -->
-            <!-- Due Input -->
-            <!-- ------------------------------------------------- -->
-            <div class="col-md-3 mt-2">
-                <label for="due_date" class="form-label fw-bold">Due date</label>
-                <input type="date" class="form-control" id="due_date" name="due_date" value="{{ old('due_date') }}">
-            </div>
-
-        </div>
-
-        <!-- ------------------------------------------------- -->
-        <!-- Submit Button -->
-        <!-- ------------------------------------------------- -->
-        <div class="row mt-3">
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary">Create Ticket</button>
-            </div>
-        </div>
-    </form>
+<!-- ------------------------------------------------- -->
+<!-- Container - END -->
+<!-- ------------------------------------------------- -->
 </div>
 @endsection
 

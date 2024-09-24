@@ -7,6 +7,9 @@
 @endsection
 
 @section('content')
+    <!-- ------------------------------------------------- -->
+    <!-- Conatainer -->
+    <!-- ------------------------------------------------- -->
     <div class="container mt-3">
         <div class="row">
             <p>Main section</p>
