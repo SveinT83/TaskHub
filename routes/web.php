@@ -90,12 +90,4 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('admin/email/email_accounts', EmailAccountController::class);
 });
 
-//Temp Task
-Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
-Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
-Route::post('/tasks/{task}/sync', [TaskController::class, 'updateFromNextcloud'])->name('tasks.sync');
-
-
-
 require __DIR__.'/auth.php';

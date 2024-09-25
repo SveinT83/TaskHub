@@ -1,0 +1,18 @@
+{
+    "name": "td-tasks",
+    "alias": "tasks",
+    "description": "Task module for Task Hub, used to create and manage tasks and task walls.",
+    "version": "1.0.0",
+    "providers": [
+        "Tronderdata\\TdTasks\\Providers\\TaskServiceProvider"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tronderdata\\TdTasks\\": "src/"
+        }
+    },
+    "requires": {
+        "php": "^8.0",
+        "laravel/framework": "^9.0"
+    }
+}

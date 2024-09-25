@@ -32,6 +32,10 @@
         {
             "type": "path",
             "url": "./modules/td-tickets"
+        },
+        {
+            "type": "path",
+            "url": "./modules/td-tasks"
         }
     ],
     "autoload": {
@@ -41,6 +45,8 @@
             "tronderdata\\TdClient\\database\\": "modules/td-client/database/",
             "tronderdata\\TdTickets\\": "modules/td-tickets/src/",
             "tronderdata\\TdTickets\\database\\": "modules/td-tickets/database/",
+            "tronderdata\\TdTasks\\": "app/Modules/TdTasks/",
+            "tronderdata\\TdTasks\\database\\": "app/Modules/TdTasks/database/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
@@ -71,7 +77,8 @@
         "laravel": {
             "providers": [
                 "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider",
-                "Tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider"
+                "Tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider",
+                "Tronderdata\\TdTasks\\Providers\\TaskServiceProvider"
             ]
         }
     },

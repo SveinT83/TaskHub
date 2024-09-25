@@ -1,0 +1,18 @@
+{
+    "name": "tronderdata/td-tasks",
+    "description": "A module to manage tasks and task lists",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "tronderdata\\TdTasks\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "tronderdata\\TdTasks\\Providers\\TaskServiceProvider"
+            ]
+        }
+    }
+}
