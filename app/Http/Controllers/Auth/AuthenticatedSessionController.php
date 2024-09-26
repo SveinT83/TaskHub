@@ -18,8 +18,8 @@ class AuthenticatedSessionController extends Controller
         $setting = Setting::where('name', 'nextcloud_integration')->first();
         $isNextcloudActive = $setting ? $setting->value == '1' : false;
 
-        // Hvis Nextcloud er aktivert, bruk Nextcloud-påloggingsvisning
-        if ($isNextcloudActive) {
+        // Sjekk om Nextcloud er aktivert og tilgjengelig
+        if ($isNextcloudActive && $this->isNextcloudAvailable()) {
             return view('auth.loginNextcloud', compact('isNextcloudActive'));
         }
 
@@ -53,5 +53,26 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    /**
+ * Sjekk om Nextcloud-serveren er tilgjengelig
+ *
+ * @return bool
+ */
+    private function isNextcloudAvailable(): bool
+    {
+        try {
+            // Send en GET-forespørsel til Nextcloud-serverens base-URL
+            $response = (new \GuzzleHttp\Client())->request('GET', config('services.nextcloud.base_url'), [
+                'timeout' => 5 // Tidsavbrudd på 5 sekunder
+            ]);
+
+            // Hvis statuskoden er 200 (OK), er serveren tilgjengelig
+            return $response->getStatusCode() === 200;
+        } catch (\Exception $e) {
+            // Hvis en feil oppstår (som timeout), er serveren ikke tilgjengelig
+            return false;
+        }
     }
 }

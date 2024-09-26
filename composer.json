@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.9",
         "spatie/laravel-permission": "^6.9",
         "tronderdata/td-clients": "dev-main",
-        "tronderdata/td-tickets": "dev-main"
+        "tronderdata/td-tickets": "dev-main",
+        "tronderdata/td-task": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -35,7 +36,7 @@
         },
         {
             "type": "path",
-            "url": "./modules/td-tasks"
+            "url": "./modules/td-task"
         }
     ],
     "autoload": {
@@ -45,10 +46,9 @@
             "tronderdata\\TdClient\\database\\": "modules/td-client/database/",
             "tronderdata\\TdTickets\\": "modules/td-tickets/src/",
             "tronderdata\\TdTickets\\database\\": "modules/td-tickets/database/",
-            "tronderdata\\TdTasks\\": "app/Modules/TdTasks/",
-            "tronderdata\\TdTasks\\database\\": "app/Modules/TdTasks/database/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "tronderdata\\tdTask\\": "modules/td-task/src/"
         }
     },
     "autoload-dev": {
@@ -78,7 +78,7 @@
             "providers": [
                 "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider",
                 "Tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider",
-                "Tronderdata\\TdTasks\\Providers\\TaskServiceProvider"
+                "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider"
             ]
         }
     },
