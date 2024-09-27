@@ -5,13 +5,18 @@ use tronderdata\TdTask\Http\Controllers\TaskController;
 use tronderdata\TdTask\Http\Controllers\TaskWallController;
 
 // Middleware for autentiserte brukere
-Route::middleware('auth')->group(function () {
+Route::middleware(['web', 'auth'])->group(function () {
     
     // Tasks routes (krever innlogging)
     Route::prefix('tasks')->group(function () {
         Route::get('/', [TaskController::class, 'index'])->name('tasks.index');
         Route::get('/create', [TaskController::class, 'create'])->name('tasks.create');
         Route::post('/store', [TaskController::class, 'store'])->name('tasks.store');
+        Route::get('/{id}', [TaskController::class, 'show'])->name('tasks.show');
+
+        // Redigeringsruter
+        Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+        Route::put('/{task}', [TaskController::class, 'update'])->name('tasks.update');
     });
 
     // Walls routes (krever innlogging)

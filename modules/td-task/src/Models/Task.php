@@ -9,6 +9,7 @@ namespace tronderdata\TdTask\Models;
 // Dependencies
 // -------------------------------------------------
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Task extends Model
 {
@@ -90,5 +91,20 @@ class Task extends Model
         // Return the relationship between tasks and taskgroups
         // -------------------------------------------------
         return $this->belongsTo(TaskGroup::class, 'group_id');
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION ASSIGNEE
+    // Relationships between assignees and tasks
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function assignee()
+    {
+        // -------------------------------------------------
+        // Return the relationship between tasks and the assigned user
+        // -------------------------------------------------
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 }

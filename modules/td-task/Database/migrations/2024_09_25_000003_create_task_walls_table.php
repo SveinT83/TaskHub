@@ -11,7 +11,13 @@ class CreateTaskWallsTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
+            
+            // Bruker som opprettet task wall
             $table->foreignId('created_by')->constrained('users');
+            
+            // Bruker som task wall er assignet til
+            $table->foreignId('assigned_to')->nullable()->constrained('users');  // Kan være null
+            
             $table->timestamps();
         });
     }

@@ -11,6 +11,7 @@ namespace tronderdata\TdTask\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use tronderdata\TdTask\Models\Task;
 use tronderdata\TdTask\Models\TaskGroup;
 use tronderdata\TdTask\Models\TaskStatus;
@@ -54,12 +55,34 @@ class TaskController extends Controller
         // -------------------------------------------------
         // Get all tasks
         // -------------------------------------------------
-        $tasks = Task::all();
+        $tasks = Task::with(['group', 'assignee'])->get();
+
+        // -------------------------------------------------
+        // Get all groups
+        // -------------------------------------------------
+        $groups = TaskGroup::all();
+
+        // -------------------------------------------------
+        // Get all groups
+        // -------------------------------------------------
+        $users = \App\Models\User::all();
 
         // -------------------------------------------------
         // Return view whit tasks
         // -------------------------------------------------
-        return view('tdtask::tasks.index', compact('tasks'));
+        return view('tdtask::tasks.index', compact('tasks', 'groups', 'users'));
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION SHOW
+    // Viser detaljer for en spesifikk oppgave
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function show($id)
+    {
+        $task = Task::with(['group', 'assignee', 'status'])->findOrFail($id);
+        return view('tdtask::tasks.profile', compact('task'));
     }
 
 
@@ -73,9 +96,24 @@ class TaskController extends Controller
     {
 
         // -------------------------------------------------
+        // Get all tasks
+        // -------------------------------------------------
+        $tasks = Task::all();
+
+        // -------------------------------------------------
+        // Get all groups
+        // -------------------------------------------------
+        $groups = TaskGroup::all();
+
+        // -------------------------------------------------
+        // Get all groups
+        // -------------------------------------------------
+        $users = \App\Models\User::all();
+
+        // -------------------------------------------------
         // Return view for creating a new task
         // -------------------------------------------------
-        return view('tdtask::tasks.create');
+        return view('tdtask::tasks.create', compact('tasks', 'groups', 'users'));
     }
 
 
@@ -89,13 +127,66 @@ class TaskController extends Controller
     {
 
         // -------------------------------------------------
-        // Create a new task
+        // Validate the request
         // -------------------------------------------------
-        $task = Task::create($request->all());
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'required|date',
+        ]);
 
         // -------------------------------------------------
-        // Return view for creating a new task
+        // Add the user id to the validated data
+        // -------------------------------------------------
+        $validatedData['created_by'] = Auth::id();
+
+        // -------------------------------------------------
+        // Create a new task with validated data
+        // -------------------------------------------------
+        Task::create($validatedData);
+
+        // -------------------------------------------------
+        // Redirect to the task index page
         // -------------------------------------------------
         return redirect()->route('tasks.index');
     }
+
+    // -------------------------------------------------
+    // FUNCTION EDIT
+    // Viser redigeringsskjemaet for en oppgave
+    // -------------------------------------------------
+    public function edit(Task $task)
+    {
+        // Henter alle grupper og brukere for valglister
+        $groups = TaskGroup::all();
+        $users = \App\Models\User::all();
+        $tasks = Task::where('id', '!=', $task->id)->get(); // Henter alle oppgaver unntatt den som redigeres
+
+        // Returnerer redigeringsvisning
+        return view('tdtask::tasks.edit', compact('task', 'groups', 'users', 'tasks'));
+    }
+
+    // -------------------------------------------------
+    // FUNCTION UPDATE
+    // Oppdaterer en eksisterende oppgave
+    // -------------------------------------------------
+    public function update(Request $request, Task $task)
+    {
+        // Validerer forespørselen
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'required|date',
+            'group_id' => 'nullable|exists:task_groups,id',
+            'assigned_to' => 'nullable|exists:users,id',
+            'child_task_id' => 'nullable|exists:tasks,id',
+        ]);
+
+        // Oppdaterer oppgaven med validerte data
+        $task->update($validatedData);
+
+        // Omadresserer til oppgavelisten
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
+    }
+
 }

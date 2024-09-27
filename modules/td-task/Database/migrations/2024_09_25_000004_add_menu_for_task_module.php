@@ -41,6 +41,30 @@ class AddMenuForTaskModule extends Migration
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
+                // Legg til meny elementer for å opprette ny task
+                [
+                    'menu_id' => $menuId,
+                    'parent_id' => null,
+                    'title' => 'Create Task',
+                    'url' => '/tasks/create',
+                    'icon' => 'bi bi-plus-circle',
+                    'permission' => null,
+                    'order' => 2,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                // Legg til meny elementer for å opprette ny wall
+                [
+                    'menu_id' => $menuId,
+                    'parent_id' => null,
+                    'title' => 'Create Wall',
+                    'url' => '/walls/create',
+                    'icon' => 'bi bi-plus-circle',
+                    'permission' => null,
+                    'order' => 3,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
             ]);
         }
 
