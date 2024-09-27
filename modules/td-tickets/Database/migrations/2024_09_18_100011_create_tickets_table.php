@@ -18,12 +18,13 @@ return new class extends Migration {
             $table->unsignedBigInteger('queue_id')->nullable(); // Kø
             $table->unsignedBigInteger('assigned_to')->nullable(); // Tildelt tekniker
 
-            // Fjern gammel priority og erstatt med priority_id
-            $table->unsignedBigInteger('priority_id')->nullable()->after('queue_id'); // Ny kolonne for priority_id
+            // Ny kolonne for priority_id
+            $table->unsignedBigInteger('priority_id')->nullable(); // Legger til priority_id
 
             $table->dateTime('due_date')->nullable(); // Forfallsdato
 
-            $table->unsignedBigInteger('ticket_category_id')->nullable()->after('queue_id'); // Ny kolonne for ticket_category_id
+            // Ny kolonne for ticket_category_id
+            $table->unsignedBigInteger('ticket_category_id')->nullable(); // Legger til ticket_category_id
 
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');
