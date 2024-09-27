@@ -6,32 +6,29 @@
 
 @section('content')
 
-    <div class="card mt-3">
-        <div class="card-header">
-            @foreach($tasks as $task)
-                <a class="row mt-1" href="{{ route('tasks.show', $task->id) }}">
-                        <b class="col-3">{{ $task->title }}</b>
-                        <p class="col-1 bi bi-hourglass-split"> {{ $task->due_date }}</p>
+    <div class="row">
 
-                        <!-- ------------------------------------------------- -->
-                        <!-- Group? -->
-                        <!-- ------------------------------------------------- -->
-                        @if(optional($task->group)->name)
-                            <p class="col-1 bi bi-collection-fill"> {{ $task->group->name }}</p>
-                        @else
-                            <p class="col-1 bi bi-collection"></p>
-                        @endif
-                        
-                        <!-- ------------------------------------------------- -->
-                        <!-- Assignet? -->
-                        <!-- ------------------------------------------------- -->
-                        @if(optional($task->assignee)->name)
-                            <p class="col-1 bi bi-person-check-fill"> {{ $task->assignee->name }}</p>
-                        @else
-                            <p class="col-1 bi bi-person-slash"> Unassignet</p>
-                        @endif
-                    </a>
-            @endforeach
-        </div>
+            <!-- ------------------------------------------------- -->
+            <!-- A card whit all walls -->
+            <!-- ------------------------------------------------- -->
+            <div class="col-md-6 mt-3">
+                @include('tdtask::partials.all_walls_card')
+            </div>
+
+            <!-- ------------------------------------------------- -->
+            <!-- A card whit all tasks -->
+            <!-- ------------------------------------------------- -->
+            <div class="col-md-6 mt-3">
+                @include('tdtask::partials.all_tasks_card')
+            </div>
+
+            <!-- ------------------------------------------------- -->
+            <!-- A card whit all groups -->
+            <!-- ------------------------------------------------- -->
+            <div class="col-md-6 mt-3">
+                @include('tdtask::partials.all_groups_card')
+            </div>
+
     </div>
+
 @endsection
