@@ -22,6 +22,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Walls routes (krever innlogging)
     Route::prefix('walls')->group(function () {
         Route::get('/', [TaskWallController::class, 'index'])->name('walls.index');
+        Route::get('/create', [TaskWallController::class, 'create'])->name('walls.create');
+        Route::post('/store', [TaskWallController::class, 'store'])->name('walls.store');
         Route::get('/{id}', [TaskWallController::class, 'show'])->name('walls.show');
     });
 });

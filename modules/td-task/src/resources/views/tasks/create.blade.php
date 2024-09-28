@@ -8,6 +8,11 @@
     <form class="card mt-3" action="{{ route('tasks.store') }}" method="POST">
         @csrf
 
+        <!-- Hvis oppgaven opprettes fra en vegg, inkluder wall_id som skjult felt -->
+        @if(request()->has('wall_id'))
+            <input type="hidden" name="wall_id" value="{{ request('wall_id') }}">
+        @endif
+
         <div class="card-body">
             <!-- Title -->
             <div class="mb-3">

@@ -53,6 +53,11 @@ class TaskController extends Controller
     public function index()
     {
         // -------------------------------------------------
+        // Get all walls
+        // -------------------------------------------------
+        $walls = TaskWall::all();
+
+        // -------------------------------------------------
         // Get all tasks
         // -------------------------------------------------
         $tasks = Task::with(['group', 'assignee'])->get();
@@ -63,14 +68,14 @@ class TaskController extends Controller
         $groups = TaskGroup::all();
 
         // -------------------------------------------------
-        // Get all groups
+        // Get users
         // -------------------------------------------------
         $users = \App\Models\User::all();
 
         // -------------------------------------------------
         // Return view whit tasks
         // -------------------------------------------------
-        return view('tdtask::tasks.index', compact('tasks', 'groups', 'users'));
+        return view('tdtask::tasks.index', compact('tasks', 'groups', 'users', 'walls'));
     }
 
 
@@ -111,9 +116,14 @@ class TaskController extends Controller
         $users = \App\Models\User::all();
 
         // -------------------------------------------------
+        // Get wall_id from request
+        // -------------------------------------------------
+        $wall_id = request()->input('wall_id');
+
+        // -------------------------------------------------
         // Return view for creating a new task
         // -------------------------------------------------
-        return view('tdtask::tasks.create', compact('tasks', 'groups', 'users'));
+        return view('tdtask::tasks.create', compact('tasks', 'groups', 'users', 'wall_id'));
     }
 
 
@@ -133,6 +143,10 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'required|date',
+            'group_id' => 'nullable|exists:task_groups,id',
+            'assigned_to' => 'nullable|exists:users,id',
+            'child_task_id' => 'nullable|exists:tasks,id',
+            'wall_id' => 'nullable|exists:task_walls,id',
         ]);
 
         // -------------------------------------------------
@@ -143,12 +157,19 @@ class TaskController extends Controller
         // -------------------------------------------------
         // Create a new task with validated data
         // -------------------------------------------------
-        Task::create($validatedData);
+        $task = Task::create($validatedData);
+
+        // -------------------------------------------------
+        // Redirect to the wall if wall_id is set
+        // -------------------------------------------------
+        if ($request->has('wall_id')) {
+            return redirect()->route('walls.show', $request->input('wall_id'))->with('success', 'Task created successfully and added to the wall.');
+        }
 
         // -------------------------------------------------
         // Redirect to the task index page
         // -------------------------------------------------
-        return redirect()->route('tasks.index');
+        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
 
     // -------------------------------------------------

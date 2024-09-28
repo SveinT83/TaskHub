@@ -8,6 +8,10 @@ namespace tronderdata\TdTask\Http\Controllers;
 // -------------------------------------------------
 // Dependencies
 // -------------------------------------------------
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use tronderdata\TdTask\Models\TaskWall;
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -71,4 +75,71 @@ class TaskWallController extends Controller
         // -------------------------------------------------
         return view('tdtask::walls.show', compact('wall'));
     }
+
+
+    
+    // -------------------------------------------------
+    // FUNCTION CREATE
+    // Viser skjemaet for å opprette en ny "wall"
+    // -------------------------------------------------
+    public function create()
+    {
+        return view('tdtask::walls.create');
+    }
+
+
+
+    // -------------------------------------------------
+    // FUNCTION STORE
+    // Lagre en ny "wall" i databasen og legg til en menyoppføring
+    // -------------------------------------------------
+    public function store(Request $request)
+    {
+        // -------------------------------------------------
+        // Validering av inputdata
+        // -------------------------------------------------
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        // -------------------------------------------------
+        // Legg til bruker ID som opprettet veggen
+        // -------------------------------------------------
+        $validatedData['created_by'] = Auth::id();
+
+        // -------------------------------------------------
+        // Finn "Tasks"-menyen ved hjelp av slug
+        // -------------------------------------------------
+        $taskMenu = DB::table('menus')->where('slug', 'tasks')->first();
+
+        if ($taskMenu) {
+
+            // -------------------------------------------------
+            // Create the wall and store the entire object
+            // -------------------------------------------------
+            $taskWall = TaskWall::create($validatedData);
+
+            // -------------------------------------------------
+            // Legg til veggen som et meny-element under "Tasks"-menyen
+            // -------------------------------------------------
+            DB::table('menu_items')->insert([
+                'menu_id' => $taskMenu->id,
+                'parent_id' => null, // Hvis du vil ha den som et hovedmenypunkt
+                'title' => $taskWall->name, // Bruk navnet på veggen
+                'url' => "/walls/{$taskWall->id}", // Lagre relativ URL
+                'icon' => 'bi bi-columns', // Valgfritt ikon for menyen
+                'permission' => null, // Sett tillatelser hvis nødvendig
+                'order' => 0, // Endre rekkefølgen hvis nødvendig
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // -------------------------------------------------
+        // Omadresser tilbake til veggoversikten med suksessmelding
+        // -------------------------------------------------
+        return redirect()->route('walls.index')->with('success', 'Wall created successfully and added to menu.');
+    }
+
 }

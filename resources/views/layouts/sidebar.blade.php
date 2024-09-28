@@ -7,26 +7,25 @@
     </li>
 
     @foreach($menus as $menu)
-        <!-- Sjekk om noen av child-elementene er aktive -->
+        <!-- Sjekk om menyen eller noen av child-elementene er aktive -->
         @php
-            $isActiveMenu = false;
-            foreach($menu->items as $item) {
-                if (request()->is(trim($item->url, '/')) || $item->children->contains(function($child) {
+            $isActiveMenu = request()->is(trim($menu->url, '/')) || $menu->items->contains(function($item) {
+                return request()->is(trim($item->url, '/')) || $item->children->contains(function($child) {
                     return request()->is(trim($child->url, '/'));
-                })) {
-                    $isActiveMenu = true;
-                    break;
-                }
-            }
+                });
+            });
         @endphp
 
         <!-- Hovedmenyelement med onclick for å toggles child-elementer -->
         <li class="nav-item">
-            <a class="nav-link {{ $isActiveMenu ? 'active' : '' }}" href="javascript:void(0);" onclick="toggleMenu('menu-{{ $menu->id }}')" aria-expanded="{{ $isActiveMenu ? 'true' : 'false' }}">
+            <a class="nav-link {{ $isActiveMenu ? 'active' : '' }}" 
+               href="{{ $menu->url ?? 'javascript:void(0);' }}" 
+               onclick="{{ $menu->items->isNotEmpty() ? "toggleMenu('menu-{$menu->id}', {$isActiveMenu})" : '' }}" 
+               aria-expanded="{{ $isActiveMenu ? 'true' : 'false' }}">
                 {{ $menu->name }}
             </a>
 
-            <!-- Child-elementer med sjekk for om de skal vises (display: block for aktive) -->
+            <!-- Child-elementer vises bare hvis menyen er aktiv -->
             @if($menu->items->isNotEmpty())
                 <ul class="nav flex-column ms-3" id="menu-{{ $menu->id }}" style="{{ $isActiveMenu ? 'display: block;' : 'display: none;' }}">
                     @foreach($menu->items as $item)
@@ -39,7 +38,10 @@
                             @endphp
 
                             @if($item->children->isNotEmpty())
-                                <a class="nav-link {{ $isActiveItem ? 'active' : '' }}" href="javascript:void(0);" onclick="toggleMenu('item-{{ $item->id }}')" aria-expanded="{{ $isActiveItem ? 'true' : 'false' }}">
+                                <a class="nav-link {{ $isActiveItem ? 'active' : '' }}" 
+                                   href="javascript:void(0);" 
+                                   onclick="toggleMenu('item-{{ $item->id }}', {{ $isActiveItem }})" 
+                                   aria-expanded="{{ $isActiveItem ? 'true' : 'false' }}">
                                     {{ $item->title }}
                                 </a>
                                 <ul class="nav flex-column ms-4" id="item-{{ $item->id }}" style="{{ $isActiveItem ? 'display: block;' : 'display: none;' }}">
@@ -64,15 +66,3 @@
         </li>
     @endforeach
 </ul>
-
-
-<script>
-    function toggleMenu(id) {
-        var menu = document.getElementById(id);
-        if (menu.style.display === "none") {
-            menu.style.display = "block";
-        } else {
-            menu.style.display = "none";
-        }
-    }
-</script>

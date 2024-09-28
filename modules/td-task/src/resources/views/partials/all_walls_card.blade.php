@@ -2,33 +2,28 @@
     <div class="card-header">
         <h2>Walls</h2>
     </div>
-    <div class="card-header">
-        @foreach($tasks as $task)
-            <a class="row border p-1" href="{{ route('tasks.show', $task->id) }}">
-                    <b class="col-md-3">{{ $task->title }}</b>
-                    <p class="col-md-3 bi bi-hourglass-split"> {{ $task->due_date }}</p>
+    <div class="card-body">
+        @foreach($walls as $wall)
+            <a class="row border p-1" href="{{ route('walls.show', $wall->id) }}">
+                <!-- Wall Name -->
+                <b class="col-md-3">{{ $wall->name }}</b>
 
-                    <!-- ------------------------------------------------- -->
-                    <!-- Group? -->
-                    <!-- ------------------------------------------------- -->
-                    @if(optional($task->group)->name)
-                        <p class="col-md-2 bi bi-collection-fill"> {{ $task->group->name }}</p>
-                    @else
-                        <p class="col-md-2 bi bi-collection"> Ungrouped</p>
-                    @endif
-                    
-                    <!-- ------------------------------------------------- -->
-                    <!-- Assignet? -->
-                    <!-- ------------------------------------------------- -->
-                    @if(optional($task->assignee)->name)
-                        <p class="col-md-2 bi bi-person-check-fill"> {{ $task->assignee->name }}</p>
-                    @else
-                        <p class="col-md-2 bi bi-person-slash"> Unassignet</p>
-                    @endif
-                </a>
+                <!-- Wall Description -->
+                <p class="col-md-5">{{ $wall->description }}</p>
+
+                <!-- Created by (user who created the wall) -->
+                @if(optional($wall->creator)->name)
+                    <p class="col-md-2 bi bi-person-check-fill"> Created by: {{ $wall->creator->name }}</p>
+                @else
+                    <p class="col-md-2 bi bi-person-slash"> Unassigned</p>
+                @endif
+
+                <!-- Created at -->
+                <p class="col-md-2 bi bi-calendar-fill"> {{ $wall->created_at->format('Y-m-d') }}</p>
+            </a>
         @endforeach
     </div>
     <div class="card-footer">
-        <a href="{{ route('tasks.create') }}" class="btn btn-outline-primary btn-sm bi bi-plus"> add</a>
+        <a href="{{ route('walls.create') }}" class="btn btn-outline-primary btn-sm bi bi-plus"> Add Wall</a>
     </div>
 </div>

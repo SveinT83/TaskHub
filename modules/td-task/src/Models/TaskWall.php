@@ -3,6 +3,7 @@
 namespace tronderdata\TdTask\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class TaskWall extends Model
 {

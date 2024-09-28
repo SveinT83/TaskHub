@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card mt-3">
     <div class="card-header">
         <h2>Groups</h2>
     </div>
