@@ -6,7 +6,7 @@ use tronderdata\TdTask\Http\Controllers\TaskWallController;
 
 // Middleware for autentiserte brukere
 Route::middleware(['web', 'auth'])->group(function () {
-    
+
     // Tasks routes (krever innlogging)
     Route::prefix('tasks')->group(function () {
         Route::get('/', [TaskController::class, 'index'])->name('tasks.index');
@@ -17,6 +17,11 @@ Route::middleware(['web', 'auth'])->group(function () {
         // Redigeringsruter
         Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
         Route::put('/{task}', [TaskController::class, 'update'])->name('tasks.update');
+
+        //Dyn edit Routes
+        Route::post('/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+        Route::put('/{task}/assignee', [TaskController::class, 'updateAssignee'])->name('tasks.updateAssignee');
+
     });
 
     // Walls routes (krever innlogging)

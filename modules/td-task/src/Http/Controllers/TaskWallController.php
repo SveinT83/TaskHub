@@ -19,21 +19,21 @@ use HTMLPurifier_Config;
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 // CLASS TaskWallController
-// 
+//
 // The TaskWallController is responsible for managing task "walls", which are used to group and organize tasks.
-// 
-// A "Wall" represents a collection of tasks that are grouped together under a specific category or project. 
-// Walls serve as a way to visually and logically organize tasks within the system, making it easier to manage 
+//
+// A "Wall" represents a collection of tasks that are grouped together under a specific category or project.
+// Walls serve as a way to visually and logically organize tasks within the system, making it easier to manage
 // related tasks for a specific project, department, or category.
 //
 // Functionality provided by this controller includes:
-// 
+//
 // - Displaying a list of all task walls.
 // - Showing the tasks that are grouped under a specific wall.
 // - Creating, editing, and deleting task walls (future functionality).
-// 
-// The idea behind walls is to give users a flexible structure for managing their tasks in a project-based or 
-// categorized manner, allowing for better task management and overview within the TaskHub system. Each wall can 
+//
+// The idea behind walls is to give users a flexible structure for managing their tasks in a project-based or
+// categorized manner, allowing for better task management and overview within the TaskHub system. Each wall can
 // contain multiple tasks, and walls themselves can be customized based on the needs of the user or organization.
 //
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ class TaskWallController extends Controller
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION SHOW
-    // Creating a view with a specific wallq
+    // Creating a view with a specific wall
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function show($id)
@@ -106,7 +106,7 @@ class TaskWallController extends Controller
     }
 
 
-    
+
     // -------------------------------------------------
     // FUNCTION CREATE
     // Viser skjemaet for å opprette en ny "wall"

@@ -19,7 +19,7 @@
             <!-- Description -->
             <div class="mb-3">
                 <label class="form-label fw-bold" for="description">Description</label>
-                <textarea name="description" class="form-control" required>{{ $task->description }}</textarea>
+                <textarea name="description" class="form-control" rows="20" required>{!! $task->description !!}</textarea>
             </div>
 
             <div class="row mt-3">
@@ -38,19 +38,6 @@
                         @foreach($tasks as $childTask)
                             <option value="{{ $childTask->id }}" {{ $task->child_task_id == $childTask->id ? 'selected' : '' }}>
                                 {{ $childTask->title }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <!-- Group (Optional) -->
-                <div class="col-md-3">
-                    <label class="form-label fw-bold" for="group_id">Group</label>
-                    <select name="group_id" class="form-select">
-                        <option value="">-- Select Group (optional) --</option>
-                        @foreach($groups as $group)
-                            <option value="{{ $group->id }}" {{ $task->group_id == $group->id ? 'selected' : '' }}>
-                                {{ $group->name }}
                             </option>
                         @endforeach
                     </select>

@@ -1,89 +1,173 @@
 @extends('layouts.app')
 
 @section('pageHeader')
-    <h1>Task Profile</h1>
+    <div class="row align-items-center">
+        <h5 class="col-md-10 card-title">Task: {{ $task->title }}</h5>
+
+        <!-- ------------------------------------------------- -->
+        <!-- Status Drop-Down -->
+        <!-- ------------------------------------------------- -->
+        <div class="col-md-2">
+            <select name="status_id" id="status" class="form-control" data-task-id="{{ $task->id }}">
+                @foreach($statuses as $status)
+                    <option value="{{ $status->id }}" {{ $task->status_id == $status->id ? 'selected' : '' }}>
+                        {{ $status->status_name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
 @endsection
 
 @section('content')
 
-<div class="card mt-3">
-    <div class="card-header text-bg-primary">
-        <h5 class="card-title">{{ $task->title }}</h5>
-    </div>
+    <div class="row">
 
-    <!-- -------------------------------------------------------------------------------------------------- -->
-    <!-- Card Body -->
-    <!-- -------------------------------------------------------------------------------------------------- -->
-    <div class="card-body bg-body-tertiary">
-        <div class="row">
-            <div class="col-12">
-                <p>{{ $task->description }}</p>
+        <!-- -------------------------------------------------------------------------------------------------- -->
+        <!-- Left Side -->
+        <!-- -------------------------------------------------------------------------------------------------- -->
+        <div class="col-md-6">
+            @include('tdtask::partials.task_desc_card')
+        </div>
+
+        <!-- -------------------------------------------------------------------------------------------------- -->
+        <!-- Right Side -->
+        <!-- -------------------------------------------------------------------------------------------------- -->
+        <div class="col-md-6">
+
+            <!-- ------------------------------------------------- -->
+            <!-- Mark As done -->
+            <!-- ------------------------------------------------- -->
+            @if($task->status_id != 4)
+                <div class="row mt-3">
+                    <form class="col-12" action="{{ route('tasks.updateStatus', $task->id) }}" method="POST">
+                        @csrf
+                        <div class="card">
+                            <input type="hidden" name="status_id" value="4">
+                            <button type="submit" class="btn btn-success">Mark as Done</button>
+                        </div>
+                    </form>
+                </div>
+            @endif
+
+            <!-- ------------------------------------------------- -->
+            <!-- Assignet -->
+            <!-- ------------------------------------------------- -->
+            <div class="row mt-3">
+                <form class="col-12" id="assigneeForm" action="{{ route('tasks.updateAssignee', $task->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="card">
+                        <label for="assignee" class="card-header">Assign to User</label>
+
+                        <div class="card-body">
+                            <select name="assigned_to" id="assignee" class="form-control" onchange="document.getElementById('assigneeForm').submit();">
+                                <option value="">Unassign</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ $task->assigned_to == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
+
+            <!-- ------------------------------------------------- -->
+            <!-- Stats -->
+            <!-- ------------------------------------------------- -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">Stats</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <p class="col-lg-4">Created: {{ $task->created_at }}</p>
+                                <p class="col-lg-4">Updated: {{ $task->updated_at }}</p>
+                                <p class="col-lg-4">Due: {{ $task->due_date }}</p>
+                            </div>
+                            <!-- Child tasks -->
+                            <div class="row mt-1">
+                                <ul class="list-group">
+                                    @if($task->childTasks->count() > 0)
+                                        @foreach($task->childTasks as $childTask)
+                                            <li class="list-group-item">
+                                                <a href="{{ route('tasks.show', $childTask->id) }}" class="col-lg-12">
+                                                    Child Task: {{ $childTask->title }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <li class="list-group-item">No Child Tasks</li>
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-
-    <!-- -------------------------------------------------------------------------------------------------- -->
-    <!-- Card Footer -->
-    <!-- -------------------------------------------------------------------------------------------------- -->
-    <div class="card-footer text-muted" style="font-size: 10px;">
-        <div class="row justify-content-start">
-            <p class="col-lg-1 bi bi-hourglass-split"> {{ $task->due_date }}</p>
-
-            <!-- ------------------------------------------------- -->
-            <!-- Status? -->
-            <!-- ------------------------------------------------- -->
-            @if(optional($task->status)->name)
-                <p class="col-lg-1 bi bi-check-circle-fill"> {{ $task->status->name }}</p>
-            @else
-                <p class="col-lg-1 bi bi-circle"> No Status</p>
-            @endif
-
-            <!-- ------------------------------------------------- -->
-            <!-- Parent Task (belongsTo or hasMany) -->
-            <!-- ------------------------------------------------- -->
-            @if($task->parentTask)
-                @if($task->parentTask instanceof \Illuminate\Database\Eloquent\Collection)
-                    <p class="col-lg-1">Child of:
-                        @foreach($task->parentTask as $parent)
-                            {{ $parent->title }}@if(!$loop->last), @endif
-                        @endforeach
-                    </p>
-                @else
-                    <p class="col-lg-1">Child of: {{ $task->parentTask->title }}</p>
-                @endif
-            @endif
-
-            <!-- ------------------------------------------------- -->
-            <!-- Child Task (belongsTo or hasMany) -->
-            <!-- ------------------------------------------------- -->
-            @if($task->childTask)
-                @if($task->childTask instanceof \Illuminate\Database\Eloquent\Collection)
-                    <p class="col-lg-1">Has child task(s):
-                        @foreach($task->childTask as $child)
-                            {{ $child->title }}@if(!$loop->last), @endif
-                        @endforeach
-                    </p>
-                @else
-                    <p class="col-lg-1">Child of: {{ $task->childTask->title }}</p>
-                @endif
-            @endif
-
-
-            <!-- ------------------------------------------------- -->
-            <!-- Assignet? -->
-            <!-- ------------------------------------------------- -->
-            @if(optional($task->assignee)->name)
-                <p class="col-lg-1 bi bi-person-check-fill"> {{ $task->assignee->name }}</p>
-            @else
-                <p class="col-lg-1 bi bi-person-slash"> Unassignet</p>
-            @endif
-        </div>
-    </div>
-
-</a>
-
+    <!--
         <div class="card-footer">
-            <a href="{{ route('tasks.index') }}" class="btn btn-secondary bi bi-backspace mt-1" type="submit"> Back</a>
+            <a href="{{ route('walls.show', $task->wall_id) }}" class="btn btn-secondary bi bi-backspace mt-1" type="submit"> Wall</a>
             <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-primary mt-1">Edit</a>
         </div>
+    -->
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Finn status select-boksen
+            const statusSelect = document.getElementById('status');
+
+            if (statusSelect) {
+                // Legg til en event listener for endring av status
+                statusSelect.addEventListener('change', function () {
+                    // Hent oppgave-ID og ny status
+                    const taskId = this.getAttribute('data-task-id');
+                    const newStatusId = this.value;
+
+                    // Debugging: Sjekk om taskId og newStatusId er riktig
+                    console.log('Task ID:', taskId);
+                    console.log('Selected Status ID:', newStatusId);
+
+                    // Send AJAX-forespørsel for å oppdatere status
+                    fetch(`/tasks/${taskId}/status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            status_id: newStatusId
+                        })
+                    })
+                    .then(response => {
+                        // Debugging: Sjekk om vi får en respons
+                        console.log('Response received:', response);
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Debugging: Sjekk dataen fra serveren
+                        console.log('Data from server:', data);
+
+                        if (data.success) {
+                            // alert('Status updated successfully!');
+                        } else {
+                            // alert('Failed to update status.');
+                        }
+                    })
+                    .catch(error => {
+                        // Debugging: Sjekk om det er noen feil i fetch-funksjonen
+                        console.error('Error occurred:', error);
+                    });
+                });
+            }
+        });
+    </script>
 @endsection

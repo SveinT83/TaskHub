@@ -34,30 +34,24 @@
             <!-- Parent Task (belongsTo or hasMany) -->
             <!-- ------------------------------------------------- -->
             @if($task->parentTask)
-                @if($task->parentTask instanceof \Illuminate\Database\Eloquent\Collection)
-                    <p class="text-muted">Child of:
-                        @foreach($task->parentTask as $parent)
-                            {{ $parent->title }}@if(!$loop->last), @endif
-                        @endforeach
-                    </p>
-                @else
-                    <p class="text-muted">Child of: {{ $task->parentTask->title }}</p>
-                @endif
+                <p class="text-muted">Child of:
+                    <a href="{{ route('tasks.show', $task->parentTask->id) }}">
+                        {{ $task->parentTask->title }}
+                    </a>
+                </p>
             @endif
 
             <!-- ------------------------------------------------- -->
             <!-- Child Task (belongsTo or hasMany) -->
             <!-- ------------------------------------------------- -->
-            @if($task->childTask)
-                @if($task->childTask instanceof \Illuminate\Database\Eloquent\Collection)
-                    <p class="text-muted">Has child task(s):
-                        @foreach($task->childTask as $child)
-                            {{ $child->title }}@if(!$loop->last), @endif
-                        @endforeach
-                    </p>
-                @else
-                    <p class="text-muted">Child of: {{ $task->childTask->title }}</p>
-                @endif
+            @if($task->childTasks->count() > 0)
+                <p class="text-muted">Has child task(s):
+                    @foreach($task->childTasks as $child)
+                        <a href="{{ route('tasks.show', $child->id) }}">
+                            {{ $child->title }}
+                        </a>@if(!$loop->last), @endif
+                    @endforeach
+                </p>
             @endif
 
 

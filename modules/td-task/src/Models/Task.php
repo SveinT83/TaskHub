@@ -19,7 +19,7 @@ class Task extends Model
     protected $fillable = ['title', 'description', 'due_date', 'created_by', 'child_task_id', 'status_id', 'group_id', 'assigned_to', 'wall_id'];
 
 
-    
+
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION CREATOR
     // Relationships between users, taskgroups, taskstatuses
@@ -40,12 +40,9 @@ class Task extends Model
     // Relationships between child tasks and tasks
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    public function childTask()
+    public function childTasks()
     {
-        // -------------------------------------------------
-        // Return the relationship between child tasks and tasks
-        // -------------------------------------------------
-        return $this->belongsTo(Task::class, 'child_task_id');
+        return $this->hasMany(Task::class, 'child_task_id');
     }
 
 
@@ -57,10 +54,7 @@ class Task extends Model
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function parentTask()
     {
-        // -------------------------------------------------
-        // Return the relationship between tasks and child tasks
-        // -------------------------------------------------
-        return $this->belongsTo(Task::class, 'parent_task_id');
+        return $this->belongsTo(Task::class, 'child_task_id');
     }
 
 
