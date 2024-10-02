@@ -21,7 +21,10 @@ Route::middleware(['web', 'auth'])->group(function () {
         //Dyn edit Routes
         Route::post('/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
         Route::put('/{task}/assignee', [TaskController::class, 'updateAssignee'])->name('tasks.updateAssignee');
-
+        Route::put('/{task}/update-wall', [TaskController::class, 'updateWall'])->name('tasks.updateWall');
+        Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        Route::post('{task}/comment', [TaskController::class, 'storeComment'])->name('tasks.comment');
+        Route::delete('{task}/comment/{comment}', [TaskController::class, 'deleteComment'])->name('tasks.comment.delete');
     });
 
     // Walls routes (krever innlogging)

@@ -41,21 +41,29 @@
     <!-- Only if there are tasks -->
     <!-- -------------------------------------------------------------------------------------------------- -->
        <!-- Iterate over all statuses -->
-       @foreach($statuses as $status)
-            <div class="card mt-3">
-                <div class="card-header text-bg-primary">
-                    <h2>{{ $status->name }}</h2> <!-- Status name as header -->
+        @foreach($statuses as $status)
+            @if($tasksGroupedByStatus->has($status->id))
+                <div class="card mt-3">
+                    <div class="card-header text-bg-primary">
+                        <h2>{{ $status->status_name }}</h2> <!-- Status name as header -->
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @if($tasksGroupedByStatus->has($status->id))
+                                    
+                                @foreach($tasksGroupedByStatus[$status->id] as $task)
+                                    <div class="col-lg-4 mt-1">
+                                        @include('tdtask::partials.task_card')
+                                    </div>
+                                @endforeach
+                                    
+                            @else
+                                <p>No tasks with this status</p>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    @if($tasksGroupedByStatus->has($status->id))
-                        @foreach($tasksGroupedByStatus[$status->id] as $task)
-                            @include('tdtask::partials.task_card')
-                        @endforeach
-                    @else
-                        <p>No tasks with this status</p>
-                    @endif
-                </div>
-            </div>
+            @endif
         @endforeach
 
         <!-- Section for tasks with no status (NULL) -->

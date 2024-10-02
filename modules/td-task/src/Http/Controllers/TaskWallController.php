@@ -77,7 +77,7 @@ class TaskWallController extends Controller
         // Get All Tasks grouped by status_id
         // -------------------------------------------------
         $tasksGroupedByStatus = $wall->tasks()
-            ->with(['group', 'assignee', 'status', 'parentTask', 'childTask']) // Include parent and child tasks
+            ->with(['group', 'assignee', 'status', 'parentTask', 'childTasks']) // Include parent and child tasks
             ->get()
             ->groupBy(function ($task) {
                 return $task->status_id ?? 'no_status'; // Group by status_id or 'no_status' for NULL

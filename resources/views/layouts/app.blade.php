@@ -47,6 +47,13 @@
                         <div class="row bg-primary-subtle p-3 border-bottom">
                             @yield('pageHeader')
                         </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                @include('partials.alerts')
+                            </div>
+                        </div>
+
                          @yield('content')
                     </div>
                 </div>

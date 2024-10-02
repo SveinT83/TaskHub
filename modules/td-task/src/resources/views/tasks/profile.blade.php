@@ -27,7 +27,25 @@
         <!-- Left Side -->
         <!-- -------------------------------------------------------------------------------------------------- -->
         <div class="col-md-6">
-            @include('tdtask::partials.task_desc_card')
+
+            <!-- ------------------------------------------------- -->
+            <!-- Task Description Card -->
+            <!-- ------------------------------------------------- -->
+            <div class="row">
+                <div class="col-12">
+                    @include('tdtask::partials.task_desc_card')
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------- -->
+            <!-- Task Comments Card -->
+            <!-- ------------------------------------------------- -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    @include('tdtask::partials.task_comments_card')
+                </div>
+            </div>
+
         </div>
 
         <!-- -------------------------------------------------------------------------------------------------- -->
@@ -76,6 +94,33 @@
             </div>
 
             <!-- ------------------------------------------------- -->
+            <!-- Wall -->
+            <!-- ------------------------------------------------- -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">Wall</div>
+                        <div class="card-body">
+                            <!-- Wall select -->
+                            <form id="wallForm" action="{{ route('tasks.updateWall', $task->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <!-- Select dropdown for walls -->
+                                <select name="wall_id" id="wall_id" class="form-select" onchange="document.getElementById('wallForm').submit();">
+                                    @foreach($walls as $wall)
+                                        <option value="{{ $wall->id }}" 
+                                            {{ $task->wall_id == $wall->id ? 'selected' : '' }}>
+                                            {{ $wall->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------- -->
             <!-- Stats -->
             <!-- ------------------------------------------------- -->
             <div class="row mt-3">
@@ -109,6 +154,25 @@
                 </div>
             </div>
 
+            <!-- ------------------------------------------------- -->
+            <!-- Delete Task -->
+            <!-- ------------------------------------------------- -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="deleteTaskForm" action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirmDeletion();">
+                                @csrf
+                                @method('DELETE')
+
+                                <!-- Delete button with confirmation alert -->
+                                <button type="submit" class="btn btn-outline-danger">Delete Task</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <!--
@@ -121,6 +185,10 @@
 
 @section('scripts')
     <script>
+        function confirmDeletion() {
+            return confirm('Are you sure you want to delete this task? This action cannot be undone.');
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // Finn status select-boksen
             const statusSelect = document.getElementById('status');

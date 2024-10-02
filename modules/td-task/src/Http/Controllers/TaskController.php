@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use tronderdata\TdTask\Models\TaskComment;
 use tronderdata\TdTask\Models\Task;
 use tronderdata\TdTask\Models\TaskGroup;
 use tronderdata\TdTask\Models\TaskStatus;
@@ -103,9 +104,19 @@ class TaskController extends Controller
         $users = \App\Models\User::all();
 
         // -------------------------------------------------
+        // Get walls
+        // -------------------------------------------------
+        $walls = TaskWall::all();
+
+        // -------------------------------------------------
+        // Get comments related to the task
+        // -------------------------------------------------
+        $comments = TaskComment::where('task_id', $id)->get();
+
+        // -------------------------------------------------
         // Return view with task
         // -------------------------------------------------
-        return view('tdtask::tasks.profile', compact('task', 'statuses', 'users'));
+        return view('tdtask::tasks.profile', compact('task', 'statuses', 'users', 'walls', 'comments'));
     }
 
 
@@ -279,6 +290,107 @@ class TaskController extends Controller
         // Returner tilbake med en suksessmelding
         // -------------------------------------------------
         return redirect()->back()->with('success', 'Assignee updated successfully!');
+    }
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION UPDATE WALL
+    // Update the assignee of a task
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function updateWall(Request $request, Task $task)
+    {
+        // Valider at den valgte "wall_id" er gyldig
+        $validatedData = $request->validate([
+            'wall_id' => 'nullable|exists:task_walls,id',
+        ]);
+
+        // Oppdater oppgavens wall_id
+        $task->update([
+            'wall_id' => $validatedData['wall_id'],
+        ]);
+
+        // Omadresser tilbake til oppgavevisningen med en suksessmelding
+        return redirect()->route('tasks.show', $task->id)->with('success', 'Task successfully moved to another wall.');
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION DESTROY
+    // Sletter en oppgave basert på ID
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function destroy($id)
+    {
+        // -------------------------------------------------
+        // Finn oppgaven ved ID
+        // -------------------------------------------------
+        $task = Task::findOrFail($id);
+
+        // -------------------------------------------------
+        // Sjekk om oppgaven har child oppgaver
+        // -------------------------------------------------
+        if ($task->childTasks()->count() > 0) {
+            // -------------------------------------------------
+            // Returner en feilmelding hvis det finnes child oppgaver
+            // -------------------------------------------------
+            return redirect()->back()->withErrors('You must delete the child tasks before deleting this task.');
+        }
+
+        // -------------------------------------------------
+        // Slett oppgaven
+        // -------------------------------------------------
+        $task->delete();
+
+        // -------------------------------------------------
+        // Redirect til oppgavelisten med en suksessmelding
+        // -------------------------------------------------
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION STORE COMMENT
+    // Save a new comment for a task
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function storeComment(Request $request, $taskId)
+    {
+        // -------------------------------------------------
+        // Validate the request
+        // -------------------------------------------------
+        $validatedData = $request->validate([
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        // -------------------------------------------------
+        // Create a new comment for the task
+        // -------------------------------------------------
+        TaskComment::create([
+            'task_id' => $taskId,
+            'user_id' => Auth::id(),
+            'comment' => $validatedData['comment'],
+        ]);
+
+        // -------------------------------------------------
+        // Redirect back to the task with a success message
+        // -------------------------------------------------
+        return redirect()->route('tasks.show', $taskId)->with('success', 'Comment added successfully.');
+    }
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION DELETE COMMENT
+    // Delete a comment for a task
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function deleteComment($taskId, $commentId)
+    {
+        // Finn kommentaren basert på ID
+        $comment = \tronderdata\TdTask\Models\TaskComment::findOrFail($commentId);
+
+        // Slett kommentaren hvis autorisasjonen er godkjent
+        $comment->delete();
+
+        // Omadresser til oppgavens profil med en suksessmelding
+        return redirect()->route('tasks.show', $taskId)->with('success', 'Comment deleted successfully.');
     }
 
 }

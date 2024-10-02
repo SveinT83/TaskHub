@@ -6,7 +6,7 @@
     <!-- -------------------------------------------------------------------------------------------------- -->
     <!-- Card Body -->
     <!-- -------------------------------------------------------------------------------------------------- -->
-    <div class="card-body bg-body-tertiary">
+    <div class="card-body bg-body-tertiary" style="min-height: 200px; max-height: 300px; overflow-y: auto;">
         <p>{!! $task->description !!}</p>
     </div>
 
