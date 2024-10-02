@@ -44,9 +44,7 @@
         "psr-4": {
             "App\\": "app/",
             "Modules\\TdClients\\": "app/Modules/TdClients/",
-            "tronderdata\\TdClient\\database\\": "modules/td-client/database/",
             "tronderdata\\TdTickets\\": "modules/td-tickets/src/",
-            "tronderdata\\TdTickets\\database\\": "modules/td-tickets/database/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "tronderdata\\tdTask\\": "modules/td-task/src/"

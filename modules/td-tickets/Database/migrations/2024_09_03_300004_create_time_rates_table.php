@@ -10,9 +10,9 @@ class CreateTimeRatesTable extends Migration
     {
         Schema::create('time_rates', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // F.eks. 'On Site', 'Remote Support', 'Internal Work'
-            $table->decimal('price', 10, 2); // Pris per time
-            $table->boolean('taxable')->default(true); // Om prisen er skattepliktig
+            $table->string('name');
+            $table->decimal('price', 10, 2);
+            $table->boolean('taxable')->default(true);
             $table->timestamps();
         });
     }
