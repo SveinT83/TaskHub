@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use tronderdata\TdTask\Models\TaskWall;
+use tronderdata\TdTask\Models\TaskStatus;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 // CLASS TaskWallController
@@ -71,9 +74,35 @@ class TaskWallController extends Controller
         $wall = TaskWall::findOrFail($id);
 
         // -------------------------------------------------
+        // Get All Tasks grouped by status_id
+        // -------------------------------------------------
+        $tasksGroupedByStatus = $wall->tasks()
+            ->with(['group', 'assignee', 'status', 'parentTask', 'childTask']) // Include parent and child tasks
+            ->get()
+            ->groupBy(function ($task) {
+                return $task->status_id ?? 'no_status'; // Group by status_id or 'no_status' for NULL
+            });
+
+        // -------------------------------------------------
+        // Clean HTML in the description for each task
+        // -------------------------------------------------
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        foreach ($tasksGroupedByStatus as $status => $tasks) {
+            foreach ($tasks as $task) {
+                // Rens HTML før du sender til visningen
+                $task->description = $purifier->purify($task->description);
+            }
+        }
+
+        // -------------------------------------------------
+        // Get all statuses for display purposes
+        // -------------------------------------------------
+        $statuses = TaskStatus::all();
+
+        // -------------------------------------------------
         // Return view with wall
         // -------------------------------------------------
-        return view('tdtask::walls.show', compact('wall'));
+        return view('tdtask::walls.show', compact('wall', 'tasksGroupedByStatus', 'statuses'));
     }
 
 

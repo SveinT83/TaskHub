@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ezyang/htmlpurifier": "^4.17",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
@@ -13,8 +14,8 @@
         "laravel/tinker": "^2.9",
         "spatie/laravel-permission": "^6.9",
         "tronderdata/td-clients": "dev-main",
-        "tronderdata/td-tickets": "dev-main",
-        "tronderdata/td-task": "dev-main"
+        "tronderdata/td-task": "dev-main",
+        "tronderdata/td-tickets": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -86,7 +86,15 @@ class TaskController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function show($id)
     {
-        $task = Task::with(['group', 'assignee', 'status'])->findOrFail($id);
+        // -------------------------------------------------
+        // Get task by id and get data related from colums order by group
+        // -------------------------------------------------
+        $task = Task::with(['group', 'assignee', 'status', 'parentTask', 'childTask'])
+        ->findOrFail($id);
+
+        // -------------------------------------------------
+        // Return view with task
+        // -------------------------------------------------
         return view('tdtask::tasks.profile', compact('task'));
     }
 

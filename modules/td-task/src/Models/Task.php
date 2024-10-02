@@ -60,7 +60,7 @@ class Task extends Model
         // -------------------------------------------------
         // Return the relationship between tasks and child tasks
         // -------------------------------------------------
-        return $this->hasMany(Task::class, 'child_task_id');
+        return $this->belongsTo(Task::class, 'parent_task_id');
     }
 
 
@@ -81,7 +81,7 @@ class Task extends Model
 
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    // FUNCTION ParentTask
+    // FUNCTION Group
     // Relationships to task groups for tasks
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------

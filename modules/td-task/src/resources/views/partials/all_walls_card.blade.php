@@ -1,25 +1,39 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header text-bg-primary">
         <h2>Walls</h2>
     </div>
-    <div class="card-body">
+    <div class="card-body bg-body-tertiary">
         @foreach($walls as $wall)
-            <a class="row border p-1" href="{{ route('walls.show', $wall->id) }}">
+            <a class="card mb-2" href="{{ route('walls.show', $wall->id) }}">
+                
                 <!-- Wall Name -->
-                <b class="col-md-3">{{ $wall->name }}</b>
+                <div class="card-header bg-secondary-subtle">
+                    <h3>{{ $wall->name }}</h3>
+                </div>
 
-                <!-- Wall Description -->
-                <p class="col-md-5">{{ $wall->description }}</p>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Wall Description -->
+                        <p class="col-md-12">{{ $wall->description }}</p>
+                    </div>
+                </div>
 
-                <!-- Created by (user who created the wall) -->
-                @if(optional($wall->creator)->name)
-                    <p class="col-md-2 bi bi-person-check-fill"> Created by: {{ $wall->creator->name }}</p>
-                @else
-                    <p class="col-md-2 bi bi-person-slash"> Unassigned</p>
-                @endif
+                <div class="card-footer">
+                    <div class="row">
+                        <!-- Created by (user who created the wall) -->
+                        @if(optional($wall->creator)->name)
+                            <div class="col-md-3">
+                                <p class="bi bi-person-check-fill" style="font-size: 10px;"> Created by: <i>{{ $wall->creator->name }}</i></p>
+                            </div>
+                        @else
+                            <p class="col-md-3 bi bi-person-slash" style="font-size: 10px;""> Unassigned</p>
+                        @endif
 
-                <!-- Created at -->
-                <p class="col-md-2 bi bi-calendar-fill"> {{ $wall->created_at->format('Y-m-d') }}</p>
+                        <!-- Created at -->
+                        <p class="col-md-3 bi bi-calendar-fill" style="font-size: 10px;""> {{ $wall->created_at->format('Y-m-d') }}</p>
+                    </div>
+                </div>
+
             </a>
         @endforeach
     </div>
