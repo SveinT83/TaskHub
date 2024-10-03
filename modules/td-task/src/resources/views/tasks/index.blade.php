@@ -51,7 +51,9 @@
                         <!-- all tasks in seperate small cards -->
                         <!-- ------------------------------------------------- -->
                         <div class="card-body bg-body-tertiary">
-                            @include('tdtask::partials.all_tasks_card')
+                            <div class="row">
+                                @include('tdtask::partials.all_tasks_card')
+                            </div>
                         </div>
 
                     </div>

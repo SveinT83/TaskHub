@@ -1,7 +1,7 @@
 
 @foreach($tasks as $task)
     <div class="col-md-4 mt-1">
-        <a class="card" href="{{ route('tasks.show', $task->id) }}">
+        <a class="card h-100" href="{{ route('tasks.show', $task->id) }}">
             <div class="card-header bg-secondary-subtle">
                 <h5 class="card-title">{{ $task->title }}</h5>
             </div>

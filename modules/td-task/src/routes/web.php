@@ -19,7 +19,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::put('/{task}', [TaskController::class, 'update'])->name('tasks.update');
 
         //Dyn edit Routes
-        Route::post('/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+        Route::put('/{id}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
         Route::put('/{task}/assignee', [TaskController::class, 'updateAssignee'])->name('tasks.updateAssignee');
         Route::put('/{task}/update-wall', [TaskController::class, 'updateWall'])->name('tasks.updateWall');
         Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');

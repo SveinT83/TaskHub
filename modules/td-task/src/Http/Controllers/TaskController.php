@@ -249,19 +249,22 @@ class TaskController extends Controller
     // Update the status of a task
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    public function updateStatus(Request $request, Task $task)
+    public function updateStatus(Request $request, $id)
     {
-        // Valider at status_id er gyldig
+        // Finn oppgaven
+        $task = Task::findOrFail($id); // Finn eksisterende task med ID
+    
+        // Valider forespørselen hvis nødvendig (for eksempel status_id)
         $request->validate([
             'status_id' => 'required|exists:task_statuses,id',
         ]);
-
-        // Oppdater statusen på oppgaven
-        $task->status_id = $request->status_id;
-        $task->save();
-
-        // Returner suksessrespons
-        return response()->json(['success' => true]);
+    
+        // Oppdater statusen til tasken
+        $task->status_id = $request->input('status_id');
+        $task->save(); // Oppdaterer i databasen i stedet for å opprette ny
+    
+        // Omadresser til task-siden med en suksessmelding
+        return redirect()->route('tasks.show', $task->id)->with('success', 'Task status updated successfully!');
     }
 
 
@@ -300,18 +303,11 @@ class TaskController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function updateWall(Request $request, Task $task)
     {
-        // Valider at den valgte "wall_id" er gyldig
-        $validatedData = $request->validate([
-            'wall_id' => 'nullable|exists:task_walls,id',
-        ]);
-
-        // Oppdater oppgavens wall_id
-        $task->update([
-            'wall_id' => $validatedData['wall_id'],
-        ]);
-
-        // Omadresser tilbake til oppgavevisningen med en suksessmelding
-        return redirect()->route('tasks.show', $task->id)->with('success', 'Task successfully moved to another wall.');
+        $task = Task::findOrFail($id);
+        $task->status_id = $request->input('status_id');
+        $task->save();
+    
+        return redirect()->route('tasks.show', $task->id)->with('success', 'Task status updated successfully!');
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
