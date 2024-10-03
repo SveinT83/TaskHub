@@ -326,6 +326,21 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         // -------------------------------------------------
+        // Hent nåværende bruker
+        // -------------------------------------------------
+        $user = Auth::user();
+
+        // -------------------------------------------------
+        // Sjekk om brukeren har tillatelse til å slette oppgaven
+        // -------------------------------------------------
+        if ($user->id !== $task->created_by && $user->id !== $task->assigned_to && !$user->hasPermissionTo('task.delete') && !$user->hasPermissionTo('task.admin')) {
+            // -------------------------------------------------
+            // Returner en feilmelding hvis brukeren ikke har rettigheter
+            // -------------------------------------------------
+            return redirect()->back()->withErrors('You do not have permission to delete this task.');
+        }
+
+        // -------------------------------------------------
         // Sjekk om oppgaven har child oppgaver
         // -------------------------------------------------
         if ($task->childTasks()->count() > 0) {
@@ -386,11 +401,20 @@ class TaskController extends Controller
         // Finn kommentaren basert på ID
         $comment = \tronderdata\TdTask\Models\TaskComment::findOrFail($commentId);
 
-        // Slett kommentaren hvis autorisasjonen er godkjent
-        $comment->delete();
+        // Sjekk om brukeren har tillatelse til å slette kommentaren
+        $user = Auth::user();
 
-        // Omadresser til oppgavens profil med en suksessmelding
-        return redirect()->route('tasks.show', $taskId)->with('success', 'Comment deleted successfully.');
+        // Sjekk om brukeren er forfatteren av kommentaren eller har tillatelse til å slette den
+        if ($user->id === $comment->user_id || $user->hasPermissionTo('task.edit') || $user->hasPermissionTo('task.admin')) {
+            // Slett kommentaren
+            $comment->delete();
+
+            // Omadresser til oppgavens profil med en suksessmelding
+            return redirect()->route('tasks.show', $taskId)->with('success', 'Comment deleted successfully.');
+        } else {
+            // Om brukeren ikke har tilgang, vis en feilmelding
+            return redirect()->route('tasks.show', $taskId)->with('error', 'You do not have permission to delete this comment.');
+        }
     }
 
 }
