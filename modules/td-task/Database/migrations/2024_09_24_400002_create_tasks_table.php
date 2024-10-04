@@ -1,11 +1,10 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class CreateOrUpdateTasksTable extends Migration
+class CreateTasksTable extends Migration
 {
     public function up()
     {
@@ -42,8 +41,8 @@ class CreateOrUpdateTasksTable extends Migration
                 $table->timestamps();
             });
         } else {
-            // Hvis tasks tabellen finnes, sjekk om fremmednøkkelen til status_id allerede er satt
-            if (!DB::select('SHOW KEYS FROM tasks WHERE Column_name = "status_id" AND Key_name = "foreign"')) {
+            // Hvis tasks tabellen finnes, sjekk om kolonnen status_id allerede er satt
+            if (!Schema::hasColumn('tasks', 'status_id')) {
                 // Hvis fremmednøkkelen ikke er satt, legger vi til
                 Schema::table('tasks', function (Blueprint $table) {
                     $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete(); // Status for oppgaven
@@ -54,15 +53,18 @@ class CreateOrUpdateTasksTable extends Migration
 
     public function down()
     {
-        // Fjern fremmednøkkelen først hvis tasks tabellen eksisterer
-        Schema::table('tasks', function (Blueprint $table) {
-            if (Schema::hasColumn('tasks', 'status_id')) {
-                $table->dropForeign(['status_id']); // Dropper fremmednøkkelen
-            }
-        });
+        // Hvis tasks-tabellen eksisterer, fjern fremmednøkkelen først
+        if (Schema::hasTable('tasks')) {
+            Schema::table('tasks', function (Blueprint $table) {
+                if (Schema::hasColumn('tasks', 'status_id')) {
+                    $table->dropForeign(['status_id']); // Dropper fremmednøkkelen
+                    $table->dropColumn('status_id'); // Dropper kolonnen
+                }
+            });
 
-        // Slett tasks tabellen
-        Schema::dropIfExists('tasks');
+            // Slett tasks tabellen
+            Schema::dropIfExists('tasks');
+        }
 
         // Slett task_statuses tabellen
         Schema::dropIfExists('task_statuses');

@@ -11,23 +11,29 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // Opprett "menus" tabellen
-        Schema::create('menus', function (Blueprint $table) {
-            $table->id(); // Automatisk generert primærnøkkel
-            $table->string('name')->unique(); // Unik navn for menyen
-            $table->string('slug')->unique(); // Slug for å identifisere menyen
-            $table->string('description')->nullable(); // Valgfri beskrivelse
-            $table->timestamps();
-        });
+        // Sjekk om tabellen allerede eksisterer før du oppretter den
+        if (!Schema::hasTable('menus')) {
+            // Opprett "menus" tabellen
+            Schema::create('menus', function (Blueprint $table) {
+                $table->id(); // Automatisk generert primærnøkkel
+                $table->string('name')->unique(); // Unik navn for menyen
+                $table->string('slug')->unique(); // Slug for å identifisere menyen
+                $table->string('url')->nullable(); // Valgfri URL for menyen
+                $table->string('description')->nullable(); // Valgfri beskrivelse
+                $table->timestamps();
+            });
+        }
 
-        // Sjekk om Admin-menyen eksisterer, og opprett den hvis den ikke finnes
-        $adminMenuExists = DB::table('menus')->where('slug', 'admin')->exists();
-        if (!$adminMenuExists) {
+        // Sjekk om det finnes en meny med slug "admin" eller "settings", og opprett den hvis den ikke finnes
+        $settingsMenuExists = DB::table('menus')->where('slug', 'settings')->exists();
+
+        if (!$settingsMenuExists) {
             DB::table('menus')->insert([
-                'id' => 1, // Sørg for at Admin-menyen får ID 1
-                'name' => 'Admin',
-                'slug' => 'admin',
-                'description' => 'The admin menu',
+                'id' => 99, // Sett ID til 99 for å plassere menyen sist
+                'name' => 'Settings', // Navnet på menyen
+                'slug' => 'settings', // Slug for å identifisere menyen
+                'url' => '/settings', // URL-en vi lager en rute til senere
+                'description' => 'Settings menu for managing application settings',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
