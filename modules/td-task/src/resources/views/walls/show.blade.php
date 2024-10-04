@@ -24,12 +24,24 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="row mt-2">
-                        <div class="col-lg-2">
+                    <div class="row mt-2 align-items-center">
+
+                        <div class="col-auto">
                             <a href="{{ route('tasks.create', ['wall_id' => $wall->id]) }}" class="btn btn-primary bi bi-plus"> Add task</a>
                         </div>
-                        <p class="col-lg-2" style="font-size: 10px;"><strong> Created:</strong> {{ $wall->created_at }}</p>
-                        <p class="col-lg-2" style="font-size: 10px;"><strong>Updated:</strong> {{ $wall->updated_at }}</p>
+                        <div class="col-auto">
+                            <p style="font-size: 10px;"><strong> Created:</strong> {{ $wall->created_at }}</p>
+                            <p style="font-size: 10px;"><strong>Updated:</strong> {{ $wall->updated_at }}</p>
+                        </div>
+
+                        <form class="col-auto" action="{{ route('walls.destroy', $wall->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this wall?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger {{ $canDeleteWall ? '' : 'disabled' }}" {{ $canDeleteWall ? '' : 'disabled' }}>
+                                Delete Wall
+                            </button>
+                        </form>
+                        
                     </div>
                 </div>
             </div>
@@ -44,7 +56,7 @@
         @foreach($statuses as $status)
             @if($tasksGroupedByStatus->has($status->id))
                 <div class="card mt-3">
-                    <div class="card-header text-bg-primary">
+                    <div class="card-header bg-info-subtle">
                         <h2>{{ $status->status_name }}</h2> <!-- Status name as header -->
                     </div>
                     <div class="card-body">

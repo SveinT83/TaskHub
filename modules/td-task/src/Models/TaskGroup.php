@@ -19,7 +19,6 @@ class TaskGroup extends Model
 
 
 
-    // Relasjon til bruker som opprettet gruppen
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION CREATOR
     // A function that returns the relationship between task groups and users

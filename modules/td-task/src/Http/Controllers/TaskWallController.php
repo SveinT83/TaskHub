@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use tronderdata\TdTask\Models\TaskWall;
 use tronderdata\TdTask\Models\TaskStatus;
 use HTMLPurifier;
@@ -100,9 +101,31 @@ class TaskWallController extends Controller
         $statuses = TaskStatus::all();
 
         // -------------------------------------------------
+        // Logikk for slett-knappen
+        // -------------------------------------------------
+        // Brukeren kan slette veggen hvis:
+        // 1. De har superadmin- eller task-admin-rettigheter, ELLER
+        // 2. De er eieren av veggen (created_by), ELLER
+        // 3. Alle oppgaver er fullført (ingen oppgaver er igjen)
+        
+        $canDeleteWall = Auth::user()->can('task.admin') || Auth::user()->can('superadmin.delete') || Auth::id() === $wall->created_by;
+
+        // Sjekk om det er oppgaver som ikke er "done"
+        $allTasksDone = $wall->tasks->every(function ($task) {
+            return $task->status && $task->status->status_name === 'Completed';
+        });
+
+        // Hvis veggen har oppgaver som ikke er "done", kan den ikke slettes
+        if ($wall->tasks->isEmpty()) {
+            $allTasksDone = true; // Hvis det ikke er oppgaver, sett $allTasksDone til true
+        }
+
+        $canDeleteWall = $canDeleteWall && $allTasksDone;
+
+        // -------------------------------------------------
         // Return view with wall
         // -------------------------------------------------
-        return view('tdtask::walls.show', compact('wall', 'tasksGroupedByStatus', 'statuses'));
+        return view('tdtask::walls.show', compact('wall', 'tasksGroupedByStatus', 'statuses', 'canDeleteWall'));
     }
 
 
@@ -113,7 +136,15 @@ class TaskWallController extends Controller
     // -------------------------------------------------
     public function create()
     {
-        return view('tdtask::walls.create');
+        // -------------------------------------------------
+        // check if user can create a template
+        // -------------------------------------------------
+        $canCreateTemplate = Gate::allows('superadmin.create') || Gate::allows('task.admin');
+
+        // -------------------------------------------------
+        // Return view with wall creation form
+        // -------------------------------------------------
+        return view('tdtask::walls.create', compact('canCreateTemplate'));
     }
 
 
@@ -130,6 +161,7 @@ class TaskWallController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'template' => 'nullable|boolean',
         ]);
 
         // -------------------------------------------------
@@ -150,6 +182,20 @@ class TaskWallController extends Controller
             $taskWall = TaskWall::create($validatedData);
 
             // -------------------------------------------------
+            // Håndter tilfeller der veggen er en template
+            // -------------------------------------------------
+            $title = $taskWall->name;
+            $isTemplate = $request->input('template', false); // Sjekker om det er en template
+
+            if ($isTemplate) {
+                // Hvis veggen er en template, legg til prefiks og sett nødvendig permission
+                $title = 'tp: ' . $taskWall->name;
+                $permission = 'task.admin'; // Kun de med task.admin tillatelse skal se denne
+            } else {
+                $permission = null; // Vanlige walls har ingen spesielle tillatelser
+            }
+
+            // -------------------------------------------------
             // Legg til veggen som et meny-element under "Tasks"-menyen
             // -------------------------------------------------
             DB::table('menu_items')->insert([
@@ -166,9 +212,59 @@ class TaskWallController extends Controller
         }
 
         // -------------------------------------------------
-        // Omadresser tilbake til veggoversikten med suksessmelding
+        // Lag dynamisk suksessmelding basert på om det er en template eller en vanlig wall
         // -------------------------------------------------
-        return redirect()->route('walls.index')->with('success', 'Wall created successfully and added to menu.');
+        $message = $isTemplate ? 'Template created successfully and added to menu.' : 'Wall created successfully and added to menu.';
+
+        // -------------------------------------------------
+        // Omadresser tilbake til veggoversikten med dynamisk suksessmelding
+        // -------------------------------------------------
+        return redirect()->route('tasks.index')->with('success', $message);
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION DESTROY
+    // Slett en vegg hvis alle tilknyttede tasks er fullført, og brukeren har nødvendige rettigheter
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function destroy($id)
+    {
+        // Hent veggen basert på ID
+        $wall = TaskWall::findOrFail($id);
+
+        // Sjekk om brukeren har nødvendige rettigheter eller er eieren av veggen
+        $user = Auth::user();
+
+        $canDeleteWall = $user->can('task.admin') || $user->can('superadmin.delete') || $user->id === $wall->created_by;
+
+        // Hvis brukeren ikke har nødvendige rettigheter, redirect med feilmelding
+        if (!$canDeleteWall) {
+            return redirect()->route('walls.show', $wall->id)
+                            ->with('error', 'You do not have permission to delete this wall.');
+        }
+
+        // Hent alle tasks knyttet til veggen
+        $tasks = $wall->tasks;
+
+        // Sjekk om alle tasks er merket som "done"
+        $allTasksDone = $tasks->every(function ($task) {
+            return $task->status && $task->status->status_name === 'Completed'; // Sjekker om statusen er "Completed"
+        });
+
+        // Hvis ikke alle oppgaver er fullført, redirect med feilmelding
+        if (!$allTasksDone) {
+            return redirect()->route('walls.show', $wall->id)
+                            ->with('error', 'You cannot delete this wall because not all tasks are marked as "done".');
+        }
+
+        // Slett tilhørende meny-element
+        DB::table('menu_items')->where('url', "/walls/{$id}")->delete();
+
+        // Hvis alle tasks er fullført, slett veggen
+        $wall->delete();
+
+        return redirect()->route('tasks.index')->with('success', 'Wall and associated menu item deleted successfully.');
     }
 
 }

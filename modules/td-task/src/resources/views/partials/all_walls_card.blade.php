@@ -3,7 +3,7 @@
         <h2>Walls</h2>
     </div>
     <div class="card-body bg-body-tertiary">
-        @foreach($walls as $wall)
+        @forelse($walls as $wall)
             <a class="card mb-2" href="{{ route('walls.show', $wall->id) }}">
                 
                 <!-- Wall Name -->
@@ -26,7 +26,7 @@
                                 <p class="bi bi-person-check-fill" style="font-size: 10px;"> Created by: <i>{{ $wall->creator->name }}</i></p>
                             </div>
                         @else
-                            <p class="col-md-3 bi bi-person-slash" style="font-size: 10px;""> Unassigned</p>
+                            <p class="col-md-3 bi bi-person-slash" style="font-size: 10px;"> Unassigned</p>
                         @endif
 
                         <!-- Created at -->
@@ -35,7 +35,11 @@
                 </div>
 
             </a>
-        @endforeach
+         @empty
+
+            <p class="text-muted">No walls have been created yet.</p>
+
+        @endforelse
     </div>
     <div class="card-footer">
         <a href="{{ route('walls.create') }}" class="btn btn-outline-primary btn-sm bi bi-plus"> Add Wall</a>

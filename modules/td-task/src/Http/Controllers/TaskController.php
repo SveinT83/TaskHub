@@ -150,9 +150,14 @@ class TaskController extends Controller
         $wall_id = request()->input('wall_id');
 
         // -------------------------------------------------
+        // Get all wall_id from walls table
+        // -------------------------------------------------
+        $walls = TaskWall::all();
+
+        // -------------------------------------------------
         // Return view for creating a new task
         // -------------------------------------------------
-        return view('tdtask::tasks.create', compact('tasks', 'groups', 'users', 'wall_id'));
+        return view('tdtask::tasks.create', compact('tasks', 'groups', 'users', 'wall_id', 'walls'));
     }
 
 
@@ -171,7 +176,7 @@ class TaskController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'due_date' => 'required|date',
+            'due_date' => 'nullable|date',
             'group_id' => 'nullable|exists:task_groups,id',
             'assigned_to' => 'nullable|exists:users,id',
             'child_task_id' => 'nullable|exists:tasks,id',
