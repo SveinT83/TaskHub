@@ -142,9 +142,14 @@ class TaskWallController extends Controller
         $canCreateTemplate = Gate::allows('superadmin.create') || Gate::allows('task.admin');
 
         // -------------------------------------------------
+        // Hent alle templates som kan brukes som mal
+        // -------------------------------------------------
+        $templates = TaskWall::where('template', true)->get();
+
+        // -------------------------------------------------
         // Return view with wall creation form
         // -------------------------------------------------
-        return view('tdtask::walls.create', compact('canCreateTemplate'));
+        return view('tdtask::walls.create', compact('canCreateTemplate', 'templates'));
     }
 
 
@@ -162,6 +167,7 @@ class TaskWallController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'template' => 'nullable|boolean',
+            'template_id' => 'nullable|exists:task_walls,id'
         ]);
 
         // -------------------------------------------------
@@ -196,15 +202,36 @@ class TaskWallController extends Controller
             }
 
             // -------------------------------------------------
+            // Kopier oppgaver fra en template hvis template_id er valgt
+            // -------------------------------------------------
+            if ($request->filled('template_id')) {
+                $template = TaskWall::findOrFail($request->input('template_id')); // Finn templaten
+
+                // Sjekk om templaten har noen oppgaver
+                if ($template->tasks()->exists()) {
+                    foreach ($template->tasks as $task) {
+                        // Kopier hver oppgave fra templaten til den nye veggen
+                        $newTask = $task->replicate(); // Lager en kopi av tasken
+                        $newTask->wall_id = $taskWall->id; // Setter vegg-ID til den nye veggen
+
+                        // Hvis det er påkrevde felter som mangler, kan du fylle dem ut her
+                        $newTask->created_by = Auth::id(); // Eks: Sørg for at den nye oppgaven har en oppretter
+
+                        $newTask->save(); // Lagre kopien
+                    }
+                }
+            }
+
+            // -------------------------------------------------
             // Legg til veggen som et meny-element under "Tasks"-menyen
             // -------------------------------------------------
             DB::table('menu_items')->insert([
                 'menu_id' => $taskMenu->id,
                 'parent_id' => null, // Hvis du vil ha den som et hovedmenypunkt
-                'title' => $taskWall->name, // Bruk navnet på veggen
+                'title' => $title, // Bruk navnet på veggen, evt. prefikset tittel for templates
                 'url' => "/walls/{$taskWall->id}", // Lagre relativ URL
                 'icon' => 'bi bi-columns', // Valgfritt ikon for menyen
-                'permission' => null, // Sett tillatelser hvis nødvendig
+                'permission' => $permission, // Sett tillatelser for templates
                 'order' => 0, // Endre rekkefølgen hvis nødvendig
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -219,7 +246,7 @@ class TaskWallController extends Controller
         // -------------------------------------------------
         // Omadresser tilbake til veggoversikten med dynamisk suksessmelding
         // -------------------------------------------------
-        return redirect()->route('tasks.index')->with('success', $message);
+        return redirect()->route('walls.show', $taskWall->id)->with('success', $message);
     }
 
 
@@ -265,6 +292,24 @@ class TaskWallController extends Controller
         $wall->delete();
 
         return redirect()->route('tasks.index')->with('success', 'Wall and associated menu item deleted successfully.');
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION GET TEMPLATE
+    // Henter template data basert på ID
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function getTemplate($id)
+    {
+        // Finn templaten basert på ID
+        $template = TaskWall::where('id', $id)->where('template', true)->firstOrFail();
+        
+        // Returner navn og beskrivelse som JSON
+        return response()->json([
+            'name' => $template->name,
+            'description' => $template->description
+        ]);
     }
 
 }

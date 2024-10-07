@@ -35,9 +35,11 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::delete('client/users/{user}', [ClientUserController::class, 'destroy'])->name('client.users.destroy');
     Route::get('client/users/{user}/profile', [ClientUserController::class, 'profile'])->name('client.users.profile');
 
-    // Admin-ruter for å konfigurere klientmodulen
-    Route::get('/admin/clients/config', [ClientConfigController::class, 'index'])->name('admin.clients.config');
+});
 
+// Admin-ruter for å konfigurere klientmodulen
+Route::middleware(['auth'])->prefix('admin/clients')->group(function () {
+    Route::get('index', [ClientConfigController::class, 'index'])->name('admin.clients.config');
 });
 
 // API-ruter for klientmodulen

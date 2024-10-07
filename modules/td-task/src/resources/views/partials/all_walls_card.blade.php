@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header text-bg-primary">
-        <h2>Walls</h2>
+        <h2 class="card-title">Walls</h2>
     </div>
     <div class="card-body bg-body-tertiary">
         @forelse($walls as $wall)

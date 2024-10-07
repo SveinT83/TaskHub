@@ -113,4 +113,15 @@ class Task extends Model
         return $this->hasMany(TaskComment::class);
     }
 
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION WALL
+    // Relationships between task walls and tasks
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function wall()
+    {
+        return $this->belongsTo(TaskWall::class, 'wall_id');
+    }
+
 }

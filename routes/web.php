@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\MenuConfigurationController;
 use App\Http\Controllers\EmailAccountController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Integrations\Nextcloud\NextcloudController;
 use Illuminate\Support\Facades\Route;
 //Temp
@@ -88,6 +89,11 @@ Route::middleware(['auth'])->group(function () {
 //E-postkontoer
 Route::middleware(['auth'])->group(function () {
     Route::resource('admin/email/email_accounts', EmailAccountController::class);
+});
+
+//admin
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 });
 
 require __DIR__.'/auth.php';

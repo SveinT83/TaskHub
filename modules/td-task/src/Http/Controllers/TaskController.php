@@ -48,7 +48,7 @@ class TaskController extends Controller
 {
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION INDEX
-    // Creating a view with all tasks
+    // Creating a view with all walls and tasks
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function index()
@@ -59,14 +59,21 @@ class TaskController extends Controller
         $walls = TaskWall::all();
 
         // -------------------------------------------------
-        // Get all tasks
+        // Get tasks excluding those with status 'Complete'
         // -------------------------------------------------
-        $tasks = Task::with(['group', 'assignee'])->get();
+        $tasks = Task::with(['assignee', 'status'])
+            ->where(function ($query) {
+                $query->whereDoesntHave('status', function ($subQuery) {
+                    $subQuery->where('status_name', 'Complete');
+                })
+                ->orWhereNull('status_id'); // Inkluder oppgaver uten status
+            })
+            ->get();
 
         // -------------------------------------------------
-        // Get all groups
+        // Get all statuses
         // -------------------------------------------------
-        $groups = TaskGroup::all();
+        $statuses = TaskStatus::all();
 
         // -------------------------------------------------
         // Get users
@@ -76,7 +83,7 @@ class TaskController extends Controller
         // -------------------------------------------------
         // Return view whit tasks
         // -------------------------------------------------
-        return view('tdtask::tasks.index', compact('tasks', 'groups', 'users', 'walls'));
+        return view('tdtask::tasks.index', compact('tasks', 'statuses', 'users', 'walls'));
     }
 
 
@@ -352,14 +359,26 @@ class TaskController extends Controller
         }
 
         // -------------------------------------------------
+        // Find the wall if it exists
+        // -------------------------------------------------
+        $wall = $task->wall;
+
+        // -------------------------------------------------
         // Slett oppgaven
         // -------------------------------------------------
         $task->delete();
 
         // -------------------------------------------------
+        // Redirect to the wall if wall_id is set
+        // -------------------------------------------------
+        if ($wall) {
+            return redirect()->route('walls.show', $wall->id)->with('success', 'Task deleted successfully.');
+        }
+
+        // -------------------------------------------------
         // Redirect til oppgavelisten med en suksessmelding
         // -------------------------------------------------
-        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
+        return redirect()->route('wall.show')->with('success', 'Task deleted successfully.');
     }
 
 

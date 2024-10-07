@@ -7,13 +7,15 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <p class="col-lg-6 bi bi-hourglass-split"> {{ $task->due_date }}</p>
+                    @if($task->due_date)
+                        <p class="col-lg-6 bi bi-hourglass-split"> {{ $task->due_date }}</p>
+                    @endif
 
                     <!-- ------------------------------------------------- -->
                     <!-- Status? -->
                     <!-- ------------------------------------------------- -->
-                    @if(optional($task->status)->name)
-                        <p class="col-lg-6 bi bi-check-circle-fill"> {{ $task->status->name }}</p>
+                    @if(optional($task->status)->status_name)
+                        <p class="col-lg-6 bi bi-check-circle-fill"> {{ $task->status->status_name }}</p>
                     @else
                         <p class="col-lg-6 bi bi-circle"> No Status</p>
                     @endif

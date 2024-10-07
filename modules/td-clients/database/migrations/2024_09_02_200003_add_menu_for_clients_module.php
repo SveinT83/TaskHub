@@ -60,7 +60,7 @@ class AddMenuForClientsModule extends Migration
             'menu_id' => 1, // Admin meny er alltid 1
             'parent_id' => null,
             'title' => 'Clients',
-            'url' => '#',
+            'url' => 'admin/clients/index',
             'order' => 0,
             'created_at' => now(),
             'updated_at' => now(),

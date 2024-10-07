@@ -49,7 +49,7 @@ class AddMenuForTaskModule extends Migration
             'menu_id' => 1,
             'parent_id' => null,
             'title' => 'Tasks',
-            'url' => '#',
+            'url' => '/admin/task/index',
             'icon' => 'bi bi-list-task',
             'order' => 0,
             'created_at' => now(),

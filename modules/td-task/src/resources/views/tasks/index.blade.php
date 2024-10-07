@@ -40,7 +40,7 @@
                     <!-- ------------------------------------------------- -->
                     <div class="card">
                         <div class="card-header text-bg-primary">
-                            <h5 class="card-title">All Tasks</h5>
+                            <h2 class="card-title">All Tasks</h2>
                         </div>
 
                         <!-- ------------------------------------------------- -->
