@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use tronderdata\TdTask\Models\TaskComment;
 use tronderdata\TdTask\Models\Task;
-use tronderdata\TdTask\Models\TaskGroup;
 use tronderdata\TdTask\Models\TaskStatus;
 use tronderdata\TdTask\Models\TaskWall;
 
@@ -265,16 +264,16 @@ class TaskController extends Controller
     {
         // Finn oppgaven
         $task = Task::findOrFail($id); // Finn eksisterende task med ID
-    
+
         // Valider forespørselen hvis nødvendig (for eksempel status_id)
         $request->validate([
             'status_id' => 'required|exists:task_statuses,id',
         ]);
-    
+
         // Oppdater statusen til tasken
         $task->status_id = $request->input('status_id');
         $task->save(); // Oppdaterer i databasen i stedet for å opprette ny
-    
+
         // Omadresser til task-siden med en suksessmelding
         return redirect()->route('tasks.show', $task->id)->with('success', 'Task status updated successfully!');
     }
@@ -318,7 +317,7 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
         $task->status_id = $request->input('status_id');
         $task->save();
-    
+
         return redirect()->route('tasks.show', $task->id)->with('success', 'Task status updated successfully!');
     }
 

@@ -78,7 +78,7 @@ class TaskWallController extends Controller
         // Get All Tasks grouped by status_id
         // -------------------------------------------------
         $tasksGroupedByStatus = $wall->tasks()
-            ->with(['group', 'assignee', 'status', 'parentTask', 'childTasks']) // Include parent and child tasks
+            ->with(['assignee', 'status', 'parentTask', 'childTasks']) // Include parent and child tasks
             ->get()
             ->groupBy(function ($task) {
                 return $task->status_id ?? 'no_status'; // Group by status_id or 'no_status' for NULL
@@ -107,7 +107,7 @@ class TaskWallController extends Controller
         // 1. De har superadmin- eller task-admin-rettigheter, ELLER
         // 2. De er eieren av veggen (created_by), ELLER
         // 3. Alle oppgaver er fullført (ingen oppgaver er igjen)
-        
+
         $canDeleteWall = Auth::user()->can('task.admin') || Auth::user()->can('superadmin.delete') || Auth::id() === $wall->created_by;
 
         // Sjekk om det er oppgaver som ikke er "done"
