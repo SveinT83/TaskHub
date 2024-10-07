@@ -65,6 +65,12 @@
                     </select>
                 </div>
 
+                <!-- Estimert tidsforbruk (i minutter) -->
+                <div class="col-md-3 mt-2">
+                    <label for="estimated_time" class="form-label fw-bold">Estimated Time (in minutes)</label>
+                    <input type="number" name="estimated_time" class="form-control" placeholder="Enter estimated time" min="0">
+                </div>
+
             </div>
 
             <!-- Submit -->

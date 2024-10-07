@@ -146,6 +146,43 @@
             </div>
 
             <!-- ------------------------------------------------- -->
+            <!-- Spend Time -->
+            <!-- ------------------------------------------------- -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row row-cols-auto p-1">
+                                    <div class="col-lg-4">
+                                        <label for="actual_time" class="form-label fw-bold">Estimated Time (in minutes)</label>
+                                        <input type="number" name="actual_time" class="form-control" placeholder="Enter actual time spent" min="0" value="{{ $task->estimated_time }}" disabled>
+                                    </div>
+
+                                    <!-- Form to update actual time spent -->
+                                    @if(Auth::id() === $task->assigned_to || Auth::user()->can('task.admin'))
+                                        <div class="col-lg-4">
+                                            <form action="{{ route('tasks.updateActualTime', $task->id) }}" method="POST" id="actualTimeForm">
+                                                @csrf
+                                                @method('PUT') <!-- Spoofing PUT method -->
+                                            
+                                                <label for="actual_time" class="form-label fw-bold">Actual Time (in minutes)</label>
+                                                <input type="number" name="actual_time" class="form-control" placeholder="Enter actual time spent" min="0" value="{{ $task->actual_time }}">
+                                                
+                                                <!-- Submit button is hidden initially -->
+                                                <button type="submit" class="btn btn-primary mt-2" id="updateTimeButton" style="display:none;">Update Time</button>
+                                            </form>
+                                        </div>
+                                    @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSRF Token -->
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+
+            <!-- ------------------------------------------------- -->
             <!-- Delete Task -->
             <!-- ------------------------------------------------- -->
             <div class="row mt-3">
@@ -207,12 +244,6 @@
 
         </div>
     </div>
-    <!--
-        <div class="card-footer">
-            <a href="{{ route('walls.show', $task->wall_id) }}" class="btn btn-secondary bi bi-backspace mt-1" type="submit"> Wall</a>
-            <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-primary mt-1">Edit</a>
-        </div>
-    -->
 @endsection
 
 @section('scripts')
@@ -220,5 +251,7 @@
         function submitStatusForm() {
             document.getElementById('statusForm').submit();
         }
+
+
     </script>
 @endsection

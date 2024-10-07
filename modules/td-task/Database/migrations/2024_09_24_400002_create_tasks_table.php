@@ -35,9 +35,10 @@ class CreateTasksTable extends Migration
                 $table->text('description')->nullable();
                 $table->date('due_date')->nullable();
                 $table->foreignId('created_by')->constrained('users');
-                $table->foreignId('child_task_id')->nullable()->constrained('tasks')->nullOnDelete(); // Underoppgaver
-                $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete(); // Status for oppgaven
-                $table->foreignId('group_id')->nullable()->constrained('task_groups')->nullOnDelete(); // Oppgavegruppe
+                $table->foreignId('child_task_id')->nullable()->constrained('tasks')->nullOnDelete();
+                $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete();
+                $table->integer('estimated_time')->nullable();
+                $table->integer('actual_time')->nullable();
                 $table->timestamps();
             });
         } else {

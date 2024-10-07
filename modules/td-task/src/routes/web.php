@@ -28,6 +28,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
         Route::post('{task}/comment', [TaskController::class, 'storeComment'])->name('tasks.comment');
         Route::delete('{task}/comment/{comment}', [TaskController::class, 'deleteComment'])->name('tasks.comment.delete');
+        Route::put('/{id}/update-actual-time', [TaskController::class, 'updateActualTime'])->name('tasks.updateActualTime'); // Oppdater faktisk tid brukt
     });
 
     // Walls routes (krever innlogging)
@@ -47,7 +48,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/api/templates/{id}', [TaskWallController::class, 'getTemplate']);
 
     // Gruppe for Task API-er (beskyttet av API-middleware)
-    Route::middleware('auth:api')->prefix('tasks')->group(function () {
+    Route::middleware('auth:api')->prefix('api.tasks')->group(function () {
         
         // Task API routes
         Route::get('/', [TaskApiController::class, 'index'])->name('api.tasks.index'); // Hent alle oppgaver

@@ -16,13 +16,13 @@ class Task extends Model
     // -------------------------------------------------
     // Fillable
     // -------------------------------------------------
-    protected $fillable = ['title', 'description', 'due_date', 'created_by', 'child_task_id', 'status_id', 'group_id', 'assigned_to', 'wall_id'];
+    protected $fillable = ['title', 'description', 'due_date', 'created_by', 'child_task_id', 'status_id', 'assigned_to', 'wall_id', 'estimated_time', 'actual_time'];
 
 
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION CREATOR
-    // Relationships between users, taskgroups, taskstatuses
+    // Relationships between creators and tasks
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function creator()

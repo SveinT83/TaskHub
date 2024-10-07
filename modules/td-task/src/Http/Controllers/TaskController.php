@@ -96,7 +96,7 @@ class TaskController extends Controller
         // -------------------------------------------------
         // Get task by id and get data related from colums order by group
         // -------------------------------------------------
-        $task = Task::with(['group', 'assignee', 'status', 'parentTask', 'childTasks'])
+        $task = Task::with(['assignee', 'status', 'parentTask', 'childTasks'])
         ->findOrFail($id);
 
         // -------------------------------------------------
@@ -143,11 +143,6 @@ class TaskController extends Controller
         // -------------------------------------------------
         // Get all groups
         // -------------------------------------------------
-        $groups = TaskGroup::all();
-
-        // -------------------------------------------------
-        // Get all groups
-        // -------------------------------------------------
         $users = \App\Models\User::all();
 
         // -------------------------------------------------
@@ -163,7 +158,7 @@ class TaskController extends Controller
         // -------------------------------------------------
         // Return view for creating a new task
         // -------------------------------------------------
-        return view('tdtask::tasks.create', compact('tasks', 'groups', 'users', 'wall_id', 'walls'));
+        return view('tdtask::tasks.create', compact('tasks', 'users', 'wall_id', 'walls'));
     }
 
 
@@ -187,6 +182,7 @@ class TaskController extends Controller
             'assigned_to' => 'nullable|exists:users,id',
             'child_task_id' => 'nullable|exists:tasks,id',
             'wall_id' => 'nullable|exists:task_walls,id',
+            'estimated_time' => 'nullable|integer|min:0',
         ]);
 
         // -------------------------------------------------
@@ -220,13 +216,12 @@ class TaskController extends Controller
     public function edit(Task $task)
     {
         // Henter alle grupper og brukere for valglister
-        $groups = TaskGroup::all();
         $users = \App\Models\User::all();
         $tasks = Task::where('id', '!=', $task->id)->get();
         $statuses = TaskStatus::all();
 
         // Returnerer redigeringsvisning
-        return view('tdtask::tasks.edit', compact('task', 'groups', 'users', 'tasks', 'statuses'));
+        return view('tdtask::tasks.edit', compact('task', 'users', 'tasks', 'statuses'));
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -241,9 +236,10 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'required|date',
-            'group_id' => 'nullable|exists:task_groups,id',
             'assigned_to' => 'nullable|exists:users,id',
             'child_task_id' => 'nullable|exists:tasks,id',
+            'estimated_time' => 'nullable|integer|min:0',
+            'actual_time' => 'nullable|integer|min:0',
         ]);
 
         // Oppdaterer oppgaven med validerte data
@@ -434,6 +430,28 @@ class TaskController extends Controller
             // Om brukeren ikke har tilgang, vis en feilmelding
             return redirect()->route('tasks.show', $taskId)->with('error', 'You do not have permission to delete this comment.');
         }
+    }
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION UPDATE ACTUAL TIME
+    // Update the actual time spent on a task
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function updateActualTime(Request $request, $id)
+    {
+        $task = Task::findOrFail($id);
+
+        // Validering av input
+        $request->validate([
+            'actual_time' => 'required|numeric|min:0',
+        ]);
+
+        // Oppdater "actual_time"
+        $task->actual_time = $request->input('actual_time');
+        $task->save();
+
+        // Omdiriger til oppgaveprofilen med en suksessmelding
+        return redirect()->route('tasks.show', $task->id)->with('success', 'Actual time updated successfully.');
     }
 
 }
