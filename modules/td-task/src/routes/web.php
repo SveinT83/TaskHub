@@ -47,17 +47,23 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::get('/api/templates/{id}', [TaskWallController::class, 'getTemplate']);
 
-    // Gruppe for Task API-er (beskyttet av API-middleware)
+    // --------------------------------------------------------------------------------------------------
+    // API routes
+    // --------------------------------------------------------------------------------------------------
     Route::middleware('auth:api')->prefix('api.tasks')->group(function () {
         
+        // -------------------------------------------------
         // Task API routes
+        // -------------------------------------------------
         Route::get('/', [TaskApiController::class, 'index'])->name('api.tasks.index'); // Hent alle oppgaver
         Route::get('/{id}', [TaskApiController::class, 'show'])->name('api.tasks.show'); // Hent en spesifikk oppgave
         Route::post('/', [TaskApiController::class, 'store'])->name('api.tasks.store'); // Opprett ny oppgave
         Route::put('/{id}', [TaskApiController::class, 'update'])->name('api.tasks.update'); // Oppdater en oppgave
         Route::delete('/{id}', [TaskApiController::class, 'destroy'])->name('api.tasks.destroy'); // Slett en oppgave
         
+        // -------------------------------------------------
         // TaskWall API routes
+        // -------------------------------------------------
         Route::get('/walls', [TaskWallApiController::class, 'index'])->name('api.walls.index'); // Hent alle vegger
         Route::get('/walls/{id}', [TaskWallApiController::class, 'show'])->name('api.walls.show'); // Hent en spesifikk vegg
         Route::post('/walls', [TaskWallApiController::class, 'store'])->name('api.walls.store'); // Opprett ny vegg
