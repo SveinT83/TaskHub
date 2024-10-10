@@ -29,14 +29,14 @@
 <!-- ------------------------------------------------- -->
 <!-- Task If task module exists -->
 <!-- ------------------------------------------------- -->
+@if($tasks->count() > 0)
 <div class="card mt-3">
     <div class="card-header">
-        <p>Task's <i>(Demo)</i></p>
+        <p>Tasks</p>
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col">
-                
                 <table class="table">
                     <thead>
                         <tr>
@@ -45,24 +45,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($tasks as $task)
                         <tr>
-                            <th scope="row"><input class="form-check-input" type="checkbox" value="" id="#"></th>
-                            <td>Task 1</td>
+                            <th scope="row"><input class="form-check-input" type="checkbox" value="{{ $task->id }}" id="{{ $task->id }}"></th>
+                            <td>{{ $task->title }}</td>
                         </tr>
-                        <tr>
-                            <th scope="row"><input class="form-check-input" type="checkbox" value="" id="#"></th>
-                            <td>Task 2</td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><input class="form-check-input" type="checkbox" value="" id="#"></th>
-                            <td>Task 3</td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+@else
+<div class="card mt-3">
+    <div class="card-header">
+        <p>No tasks available</p>
+    </div>
+</div>
+@endif
 
 <!-- ------------------------------------------------- -->
 <!-- KB - If KB Module exists -->

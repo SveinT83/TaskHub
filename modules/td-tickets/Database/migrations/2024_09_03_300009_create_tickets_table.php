@@ -17,15 +17,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('status_id')->default(1); // Standardstatus (f.eks. Open)
             $table->unsignedBigInteger('queue_id')->nullable(); // Kø
             $table->unsignedBigInteger('assigned_to')->nullable(); // Tildelt tekniker
+            $table->unsignedBigInteger('priority_id')->nullable(); // Prioritet
+            $table->unsignedBigInteger('ticket_category_id')->nullable(); // Kategori
 
-            // Ny kolonne for priority_id
-            $table->unsignedBigInteger('priority_id')->nullable(); // Legger til priority_id
+            $table->unsignedBigInteger('task_wall_id')->nullable(); // Task Wall ID for tilknytning til task wall (ny kolonne)
 
             $table->dateTime('due_date')->nullable(); // Forfallsdato
-
-            // Ny kolonne for ticket_category_id
-            $table->unsignedBigInteger('ticket_category_id')->nullable(); // Legger til ticket_category_id
-
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');
 
@@ -36,10 +33,11 @@ return new class extends Migration {
             $table->foreign('status_id')->references('id')->on('tickets_status');
             $table->foreign('queue_id')->references('id')->on('tickets_queues');
             $table->foreign('assigned_to')->references('id')->on('users');
-
-            // Fremmednøkler for de nye feltene
             $table->foreign('ticket_category_id')->references('id')->on('ticket_categories')->onDelete('set null');
             $table->foreign('priority_id')->references('id')->on('ticket_priorities')->onDelete('set null');
+
+            // Fremmednøkkel for task_wall_id
+            $table->foreign('task_wall_id')->references('id')->on('task_walls')->onDelete('set null');
         });
     }
 

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use tronderdata\TdTickets\Http\Controllers\TicketController;
 use tronderdata\TdTickets\Http\Controllers\TicketConfigController;
+use tronderdata\TdTickets\Http\Controllers\TicketTaskController;
 
 Route::middleware(['web', 'auth'])->group(function () {
 
@@ -28,4 +29,11 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // Admin-ruter for å konfigurere klientmodulen
     Route::get('/admin/tickets/config', [TicketConfigController::class, 'index'])->name('admin.tickets.config');
+});
+
+// Ticket Task routes
+Route::prefix('tickets/{ticketId}/tasks')->group(function () {
+    Route::post('/store', [TicketTaskController::class, 'storeTask'])->name('tickets.tasks.store');
+    Route::delete('/{taskId}/delete', [TicketTaskController::class, 'deleteTask'])->name('tickets.tasks.delete');
+    Route::put('/{taskId}/update', [TicketTaskController::class, 'updateTask'])->name('tickets.tasks.update');
 });

@@ -16,6 +16,7 @@ use tronderdata\TdTickets\Models\TicketTimeSpend;
 use tronderdata\TdTickets\Models\TicketPriority;
 use tronderdata\TdTickets\Mail\TicketReplyMail;
 use tronderdata\TdTickets\Models\TicketCategory;
+use tronderdata\TdTickets\Http\Controllers\TicketTaskController;
 use tronderdata\TdClients\Models\Client;
 use tronderdata\TdClients\Models\ClientUser;
 use App\Models\User;
@@ -75,26 +76,6 @@ class TicketController extends Controller
     }
 
 
-
-    // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    // FUNCTION myTickets
-    // Function for listing tickets assigned to the logged in user.
-    //
-    // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    public function myTickets(Request $request)
-    {
-        $userId = auth()->id();
-
-        $tickets = Ticket::where('assigned_to', $userId);
-
-        // De samme filtrerings- og sorteringsalternativene som i index()
-
-        $tickets = $tickets->paginate(10);
-
-        return view('tdtickets::tickets.my_tickets', compact('tickets'));
-    }
-
-
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION show
     // Function for showing a single ticket.
@@ -110,7 +91,10 @@ class TicketController extends Controller
         // Hent alle TimeRates
         $timeRates = TimeRate::all();
 
-        return view('tdtickets::tickets.show', compact('ticket', 'replies', 'timeRates'));
+        // Bruk TicketTaskController for å hente tasks knyttet til denne ticket
+        $tasks = (new TicketTaskController)->showTicketTasks($id);
+
+        return view('tdtickets::tickets.show', compact('ticket', 'replies', 'timeRates', 'tasks'));
     }
 
 
@@ -176,7 +160,7 @@ class TicketController extends Controller
             try {
                 $this->sendTicketReplyEmail($ticket, $ticketReply, $request->input('email'));
             } catch (\Exception $e) {
-                \Log::error('Failed to send ticket reply email: ' . $e->getMessage());
+
                 return redirect()->back()->with('error', 'E-postsending feilet.');
             }
         }
@@ -191,10 +175,12 @@ class TicketController extends Controller
     // Function for listing time spends for a ticket.
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    /*
     public function timeSpends()
     {
         return $this->hasMany(TicketTimeSpend::class);
     }
+        */
 
 
 
@@ -231,7 +217,7 @@ class TicketController extends Controller
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function createNewTicket(Request $request) {
-        
+
         // -------------------------------------------------
         // Client: Get all clients from Client model - use tronderdata\TdClients\Models\Client; at the top
         // -------------------------------------------------
@@ -302,14 +288,14 @@ class TicketController extends Controller
     // FUNCTION Get Users By Client
     // Function for getting users by client. Used in ticket form.
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    
+
     /**
      * Hent alle brukere for en spesifikk klient.
      *
      * @param Client $client
      * @return \Illuminate\Http\JsonResponse
      */
-    
+
     public function getUsersByClient($client) {
 
         // -------------------------------------------------

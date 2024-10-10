@@ -5,6 +5,7 @@ namespace tronderdata\TdTickets\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use tronderdata\TdClients\Models\ClientUser;
 
 class Ticket extends Model
 {
@@ -95,6 +96,15 @@ class Ticket extends Model
     public function priority()
     {
         return $this->belongsTo(TicketPriority::class, 'priority_id');
+    }
+
+    /**
+     * Relasjon til TicketTimeSpend
+     * En ticket kan ha flere tidsregistreringer.
+     */
+    public function timeSpends()
+    {
+        return $this->hasMany(TicketTimeSpend::class, 'ticket_id');
     }
 
     protected $casts = [
