@@ -1,4 +1,13 @@
-<x-guest-layout>
+@extends('layouts.guest')
+
+@section('title', 'Home')
+
+
+@section('pageHeader')
+    <h1>Dashboard</h1>
+@endsection
+
+@section('content')
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -49,4 +58,4 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+@endsection

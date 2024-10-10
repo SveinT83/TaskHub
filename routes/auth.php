@@ -19,6 +19,10 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    //Register routes
+    //Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    //Route::post('register', [RegisteredUserController::class, 'store']);
+
     // Hvis Nextcloud er aktivert, legg til påloggingsruter for Nextcloud
     Route::get('login/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('login.nextcloud');
     Route::get('login/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
