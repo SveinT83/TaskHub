@@ -116,6 +116,9 @@ class NextcloudController extends Controller
             $existingUser->nextcloud_token = $accessToken;
             $existingUser->save();
 
+            // **Generer API-token for Sanctum**
+            $apiToken = $existingUser->createToken('API Token')->plainTextToken;
+
             return redirect()->route('dashboard')->with('success', 'Du er logget inn via Nextcloud!');
 
         } catch (\Exception $e) {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 // Importer Ticket-modellen med riktig namespace
 use tronderdata\TdTickets\Models\Ticket;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -27,26 +28,6 @@ class TicketTaskController extends Controller
             'path' => 'modules/td-task',  // Filstien til modulen
             'version_file' => 'module.json',  // Filen hvor versjonsnummer er definert
             'supported_version' => '1.0.0',  // Versjonen som tickets-modulen er kompatibel med
-
-            'api' => [
-                // -------------------------------------------------
-                // TaskWall API routes
-                // -------------------------------------------------
-                'getWalls' => '/api.tasks/walls',           // API for å hente alle vegger
-                'getWall' => '/api.tasks/walls/{id}',       // API for å hente en spesifikk vegg
-                'storeWall' => '/api.tasks/walls',          // API for å opprette ny vegg
-                'updateWall' => '/api.tasks/walls/{id}',    // API for å oppdatere en vegg
-                'deleteWall' => '/api.tasks/walls/{id}',    // API for å slette en vegg
-
-                // -------------------------------------------------
-                // Task API routes
-                // -------------------------------------------------
-                'getTasks' => '/api.tasks',                 // API for å hente alle oppgaver
-                'getTask' => '/api.tasks/{id}',             // API for å hente en spesifikk oppgave
-                'storeTask' => '/api.tasks',                // API for å opprette ny oppgave
-                'updateTask' => '/api.tasks/{id}',          // API for å oppdatere en oppgave
-                'deleteTask' => '/api.tasks/{id}',          // API for å slette en oppgave
-            ],
         ],
     ];
 
@@ -136,18 +117,15 @@ class TicketTaskController extends Controller
         switch ($activeModule['name']) {
 
             // -------------------------------------------------
-            // Case TD-TASK
+            // Case TD-TASK: Fetch tasks directly from the TdTask module
             // -------------------------------------------------
             case 'td-task':
 
-                // -------------------------------------------------
-                // Get the API URL for fetching tasks
-                // -------------------------------------------------
-                $apiUrl = $activeModule['api']['getTasks']; // Use API to fetch tasks
-                $wallId = $ticket->task_wall_id;
+                // Importer TdTask-modellen og Task-modellen med riktig namespace
+                $taskModel = '\tronderdata\TdTask\Models\Task'; // Path til Task-modellen i td-task modulen
 
-                // Fetch tasks using the API
-                $tasks = $this->fetchTasksFromApi($apiUrl, $wallId); // Fetch tasks from the API using the wall ID
+                // Hent oppgaver som er knyttet til ticketens task_wall_id
+                $tasks = $taskModel::where('wall_id', $ticket->task_wall_id)->get();
 
                 // -------------------------------------------------
                 // Return the tasks
@@ -165,33 +143,25 @@ class TicketTaskController extends Controller
 
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    // FUNCTION fetchTasksFromApi
-    // Henter tasks fra API basert på wall_id
+    // FUNCTION showTaskDetails
+    // Henter detaljer for en spesifikk task
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    protected function fetchTasksFromApi($apiUrl, $wallId)
+    public function getTaskDetails($ticketId, $taskId)
     {
-        // -------------------------------------------------
-        // Validate the API URL
-        // -------------------------------------------------
-        $url = str_replace('{id}', $wallId, $apiUrl);
+        // Sjekk om task-modulen er aktiv
+        $activeModule = $this->getActiveModule();
+        if (!$activeModule) {
+            return response()->json(['error' => 'No active module found'], 404);
+        }
 
-        // -------------------------------------------------
-        // Execute the API request
-        // -------------------------------------------------
-        try {
-            $client = new \GuzzleHttp\Client(); // Bruk Guzzle eller annet HTTP-klientbibliotek
-            $response = $client->get($url);
-            $tasks = json_decode($response->getBody(), true); // Anta at API-et returnerer JSON
-
-            return collect($tasks); // Returner oppgavene som en collection
-
-        // -------------------------------------------------
-        // Handle any exceptions that occur during the API request
-        // -------------------------------------------------
-        } catch (\Exception $e) {
-            // Logg eventuelle feil og returner en tom collection
-            //\Log::error("Failed to fetch tasks: " . $e->getMessage());
-            return collect();
+        // Hent task basert på ID fra td-task modulen
+        switch ($activeModule['name']) {
+            case 'td-task':
+                $taskModel = '\tronderdata\TdTask\Models\Task';  // Path til Task-modellen i td-task modulen
+                $task = $taskModel::findOrFail($taskId);
+                return response()->json($task);  // Returner task som JSON
+            default:
+                return response()->json(['error' => 'Module not supported'], 404);
         }
     }
 
@@ -203,7 +173,6 @@ class TicketTaskController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function storeTask(Request $request, $ticketId)
     {
-
         // -------------------------------------------------
         // Validate the request data
         // -------------------------------------------------
@@ -217,92 +186,60 @@ class TicketTaskController extends Controller
         // -------------------------------------------------
         // Get the ticket by ID
         // -------------------------------------------------
-        $ticket = Ticket::findOrFail($ticketId);
+        $ticket = \tronderdata\TdTickets\Models\Ticket::findOrFail($ticketId);
 
         // -------------------------------------------------
         // Check if the ticket has a task wall ID from the ticket table
         // -------------------------------------------------
         if (!$ticket->task_wall_id) {
-
-            // -------------------------------------------------
-            // Create a new wall for the ticket if no wall is present
-            // -------------------------------------------------
+            // Opprett ny Task Wall hvis ingen eksisterer
             $wall = $this->createWallForTicket($ticket);
 
-            // -------------------------------------------------
-            // Update the ticket with the new wall ID
-            // -------------------------------------------------
+            // Oppdater ticket med den nye wall ID
             $ticket->task_wall_id = $wall->id;
             $ticket->save();
         }
 
         // -------------------------------------------------
-        // Get the active task module
+        // Fetch the correct task model from the td-task module
         // -------------------------------------------------
-        $activeModule = $this->getActiveModule();
+        $taskModel = '\tronderdata\TdTask\Models\Task';
 
         // -------------------------------------------------
-        // If no active task module is found, return an error
+        // Create a new task for the ticket's wall
         // -------------------------------------------------
-        if (!$activeModule) {
-            return redirect()->back()->with('error', 'No active task module found.');
+        $task = new $taskModel;
+        $task->title = $validatedData['title'];
+        $task->description = $validatedData['description'];
+        $task->due_date = $validatedData['due_date'];
+        $task->wall_id = $ticket->task_wall_id; // Assign task to the ticket's wall
+        $task->created_by = Auth::id(); // Set the creator of the task
+
+        // Hvis child_task_id er til stede, knytt den til oppgaven
+        if ($request->filled('child_task_id')) {
+            $task->child_task_id = $request->input('child_task_id');
         }
 
         // -------------------------------------------------
-        // Construct the API URL for storing a task
+        // Save the task
         // -------------------------------------------------
-        $apiUrl = $activeModule['api']['storeTask']; // Fetch the API route from the active module
-        $taskData = [
-            'title' => $validatedData['title'],
-            'description' => $validatedData['description'],
-            'due_date' => $validatedData['due_date'],
-            'wall_id' => $ticket->task_wall_id,  // Link the task to the ticket's wall ID
-            'child_task_id' => $request->input('child_task_id')
-        ];
+        $task->save();
 
         // -------------------------------------------------
-        // Send a POST request to the API to create the task
+        // Return success message
         // -------------------------------------------------
-        try {
-            $client = new \GuzzleHttp\Client();
-            $response = $client->post($apiUrl, [
-                'json' => $taskData,  // Send task data as JSON
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $request->user()->api_token,  // Use user API token for authentication
-                    'Accept' => 'application/json'
-                ]
-            ]);
-
-            $result = json_decode($response->getBody(), true);
-
-            // If the task creation was successful, redirect back to the ticket
-            if (isset($result['success']) && $result['success']) {
-                return redirect()->route('tickets.show', $ticketId)->with('success', 'Task successfully created and linked to the ticket.');
-            } else {
-                // If the API response indicates failure, return an error
-                return redirect()->back()->with('error', 'Failed to create the task via the API.');
-            }
-
-        } catch (\Exception $e) {
-            // Log any errors and return an error message to the user
-            Log::error("Failed to create task: " . $e->getMessage());
-            return redirect()->back()->with('error', 'An error occurred while creating the task.');
-        }
+        return redirect()->route('tickets.show', $ticketId)->with('success', 'Task successfully created and linked to the ticket.');
     }
 
 
 
-    // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    // FUNCTION CREATE WALL FOR TICKET
-    // Create a new wall for a ticket
-    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     protected function createWallForTicket(Ticket $ticket)
     {
         // -------------------------------------------------
         // Get the active task module
         // -------------------------------------------------
         $activeModule = $this->getActiveModule();
-
+    
         // -------------------------------------------------
         // If no active module is found, throw an exception or handle it
         // -------------------------------------------------
@@ -310,52 +247,96 @@ class TicketTaskController extends Controller
             Log::error("No active task module found.");
             throw new \Exception("No task module available to create a wall.");
         }
-
+    
         // -------------------------------------------------
-        // Use API to create the wall based on the active module
+        // Use the model directly when we identify td-task
         // -------------------------------------------------
         switch ($activeModule['name']) {
-
-            // -------------------------------------------------
-            // Case TD-TASK (using API)
-            // -------------------------------------------------
-            case 'td-task':
-                try {
-                    // API URL for creating a wall
-                    $apiUrl = $activeModule['api']['storeWall'];
-
-                    // Data to be sent to the API
-                    $data = [
-                        'name' => 'Wall for Ticket ' . $ticket->title,
-                        'description' => 'This wall was automatically created for Ticket #' . $ticket->id,
-                        'created_by' => Auth::id(),
-                    ];
-
-                    // Call the API to create the wall
-                    $client = new \GuzzleHttp\Client(); // Using Guzzle HTTP client for API calls
-                    $response = $client->post($apiUrl, [
-                        'json' => $data,
-                        'headers' => [
-                            'Authorization' => 'Bearer ' . auth()->user()->currentAccessToken()->token,
-                        ],
-                    ]);
-
-                    // Parse the response and return the created wall object
-                    $createdWall = json_decode($response->getBody()->getContents(), true);
-                    return (object)$createdWall; // Return wall as an object
-
-                } catch (\Exception $e) {
-                    Log::error("Failed to create wall via API: " . $e->getMessage());
-                    throw new \Exception("Failed to create wall via API.");
+    
+        // -------------------------------------------------
+        // Case TD-TASK (direct model use)
+        // -------------------------------------------------
+        case 'td-task':
+            try {
+                // -------------------------------------------------
+                // Sjekk om TaskWall-modellen fra td-task-modulen eksisterer
+                // -------------------------------------------------
+                if (class_exists('\tronderdata\TdTask\Models\TaskWall')) {
+                    // Bruk den dynamiske modellen
+                    $taskWallModel = '\tronderdata\TdTask\Models\TaskWall';
+            
+                    // Opprett en ny vegg
+                    $wall = new $taskWallModel();
+                    $wall->name = 'Wall for Ticket #' . $ticket->id . ' - ' . $ticket->title;  // Inkluder ticket ID i veggens navn
+                    $wall->description = 'This wall was automatically created for Ticket #' . $ticket->id;
+                    $wall->created_by = Auth::id();  // Sett den innloggede brukeren som skaperen av veggen
+                    $wall->save();
+            
+                    // -------------------------------------------------
+                    // Finn "Tasks"-menyen ved hjelp av slug
+                    // -------------------------------------------------
+                    $taskMenu = DB::table('menus')->where('slug', 'tasks')->first();
+            
+                    if ($taskMenu) {
+                        // Legg til veggen som et nytt meny-element under "Tasks"
+                        DB::table('menu_items')->insert([
+                            'menu_id' => $taskMenu->id,
+                            'parent_id' => null,  // Set null for main menu item
+                            'title' => 'Ticket: #' . $ticket->id,  // Navn på meny-elementet inkluderer Ticket-ID
+                            'url' => "/walls/{$wall->id}",  // URL peker til veggen
+                            'icon' => 'bi bi-columns',  // Valgfritt ikon
+                            'permission' => null,  // Ingen spesifikk tillatelse for vanlige vegger
+                            'order' => 0,  // Standard rekkefølge
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+            
+                    // Returner den opprettede veggen
+                    return $wall;
+            
+                } else {
+                    // Hvis modulen ikke eksisterer, logg en melding og håndter situasjonen
+                    Log::error("TaskWall-modellen er ikke tilgjengelig.");
+                    throw new \Exception("TaskWall-modulen er ikke tilgjengelig, og veggen kan ikke opprettes.");
                 }
-
-            // -------------------------------------------------
-            // Other task module cases can be added here as needed
-            // -------------------------------------------------
-
-            default:
-                Log::error("Unknown task module: " . $activeModule['name']);
-                throw new \Exception("Unknown task module: " . $activeModule['name']);
+            
+            } catch (\Exception $e) {
+                Log::error("Failed to create wall via direct model: " . $e->getMessage());
+                throw new \Exception("Failed to create wall via direct model.");
+            }
         }
     }
+    
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION COMPLETE TASK
+    // Mark a task as completed or not completed
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function completeTask(Request $request, $ticketId, $taskId)
+    {
+        try {
+            // Hent task basert på ID
+            $task = \tronderdata\TdTask\Models\Task::findOrFail($taskId);
+
+            // Veksle status mellom "Closed" (4) og "Open" (1)
+            if ($task->status_id == 4) {
+                $task->status_id = 1; // Sett til "Open"
+            } else {
+                $task->status_id = 4; // Sett til "Closed"
+            }
+
+            $task->save();
+
+            // Returner en vellykket JSON-respons med den oppdaterte tasken
+            return response()->json(['success' => true, 'task' => $task]);
+        } catch (\Exception $e) {
+            \Log::error("Failed to update task status: " . $e->getMessage());
+
+            // Returner en feilmelding i JSON-format
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
 }

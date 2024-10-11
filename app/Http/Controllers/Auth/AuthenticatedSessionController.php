@@ -38,6 +38,10 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            // Generer token for API-autentisering
+            $user = Auth::user();
+            $token = $user->createToken('API Token')->plainTextToken;
+
             return redirect()->intended('dashboard');
         }
 

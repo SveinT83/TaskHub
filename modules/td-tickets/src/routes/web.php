@@ -30,13 +30,14 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Admin-ruter for å konfigurere klientmodulen
     Route::get('/admin/tickets/config', [TicketConfigController::class, 'index'])->name('admin.tickets.config');
 
+
     // Ticket Task routes
-    Route::post('/tickets/{ticketId}/tasks', [TicketTaskController::class, 'storeTask'])->name('tasks.store');
+    Route::prefix('tickets/{ticketId}/tasks')->group(function () {
+        Route::post('/store', [TicketTaskController::class, 'storeTask'])->name('tickets.tasks.store');
+        Route::delete('/{taskId}/delete', [TicketTaskController::class, 'deleteTask'])->name('tickets.tasks.delete');
+        Route::put('/{taskId}/update', [TicketTaskController::class, 'updateTask'])->name('tickets.tasks.update');
+        Route::get('/{taskId}/details', [TicketTaskController::class, 'getTaskDetails'])->name('tickets.tasks.details');
+        Route::put('/{taskId}/complete', [TicketTaskController::class, 'completeTask'])->name('tickets.tasks.complete');
+    });
 });
 
-// Ticket Task routes
-Route::prefix('tickets/{ticketId}/tasks')->group(function () {
-    Route::post('/store', [TicketTaskController::class, 'storeTask'])->name('tickets.tasks.store');
-    Route::delete('/{taskId}/delete', [TicketTaskController::class, 'deleteTask'])->name('tickets.tasks.delete');
-    Route::put('/{taskId}/update', [TicketTaskController::class, 'updateTask'])->name('tickets.tasks.update');
-});

@@ -83,6 +83,7 @@ class TicketController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function show(Request $request, $id)
     {
+
         $ticket = Ticket::with(['assignedUser', 'replies.user', 'replies.timeSpends.timeRate'])->findOrFail($id);
 
         // Hent alle svar for å vise dem på siden
