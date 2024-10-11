@@ -94,6 +94,11 @@ class TicketController extends Controller
         // Bruk TicketTaskController for å hente tasks knyttet til denne ticket
         $tasks = (new TicketTaskController)->showTicketTasks($id);
 
+        // Hvis ingen tasks finnes (modulen er inkompatibel eller ingen oppgaver finnes)
+        if ($tasks === 'no-module') {
+            $tasks = null; // Sett til null for å skjule widgeten hvis ingen kompatibel modul finnes
+        }
+
         return view('tdtickets::tickets.show', compact('ticket', 'replies', 'timeRates', 'tasks'));
     }
 

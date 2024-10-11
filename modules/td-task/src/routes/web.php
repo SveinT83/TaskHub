@@ -50,8 +50,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     // --------------------------------------------------------------------------------------------------
     // API routes
     // --------------------------------------------------------------------------------------------------
-    Route::middleware('auth:api')->prefix('api.tasks')->group(function () {
-        
+    Route::middleware('auth:sanctum')->prefix('api.tasks')->group(function () {
+
         // -------------------------------------------------
         // Task API routes
         // -------------------------------------------------
@@ -60,7 +60,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::post('/', [TaskApiController::class, 'store'])->name('api.tasks.store'); // Opprett ny oppgave
         Route::put('/{id}', [TaskApiController::class, 'update'])->name('api.tasks.update'); // Oppdater en oppgave
         Route::delete('/{id}', [TaskApiController::class, 'destroy'])->name('api.tasks.destroy'); // Slett en oppgave
-        
+
         // -------------------------------------------------
         // TaskWall API routes
         // -------------------------------------------------

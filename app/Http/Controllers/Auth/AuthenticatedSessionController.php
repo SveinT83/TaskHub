@@ -37,6 +37,7 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
+
             return redirect()->intended('dashboard');
         }
 

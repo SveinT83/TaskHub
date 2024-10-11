@@ -29,6 +29,9 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // Admin-ruter for å konfigurere klientmodulen
     Route::get('/admin/tickets/config', [TicketConfigController::class, 'index'])->name('admin.tickets.config');
+
+    // Ticket Task routes
+    Route::post('/tickets/{ticketId}/tasks', [TicketTaskController::class, 'storeTask'])->name('tasks.store');
 });
 
 // Ticket Task routes

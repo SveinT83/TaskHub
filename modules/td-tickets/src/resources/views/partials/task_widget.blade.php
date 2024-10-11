@@ -54,7 +54,8 @@
         <!-- ------------------------------------------------- -->
         <!-- Create task Form Show only if "Create Task is pressed -->
         <!-- ------------------------------------------------- -->
-        <form class="row justify-content-center border-top mt-3" id="createTaskForm" style="display:none;"> <!-- Skjult som standard -->
+        <form class="row justify-content-center border-top mt-3" id="createTaskForm" style="display:none;" action="{{ route('tickets.tasks.store', ['ticketId' => $ticket->id]) }}" method="POST">
+            @csrf
 
             <!-- Task Name -->
             <div class="col-12 mt-1 mb-3">

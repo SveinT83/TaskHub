@@ -30,7 +30,9 @@
 <!-- TASK'S -->
 <!-- Shows the task's related to the ticket -->
 <!-- ------------------------------------------------- -->
-@include('tdtickets::partials.task_widget')
+@if($tasks !== null)
+    @include('tdtickets::partials.task_widget')
+@endif
 
 <!-- ------------------------------------------------- -->
 <!-- KB - If KB Module exists -->
