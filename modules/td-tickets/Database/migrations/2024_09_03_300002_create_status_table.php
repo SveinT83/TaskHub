@@ -8,22 +8,24 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('tickets_status', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('tickets_status')) {
+            Schema::create('tickets_status', function (Blueprint $table) {
+                $table->id();
 
-            $table->string('name')->unique();
-            $table->string('description')->nullable();
-            $table->string('color')->nullable();
-            $table->boolean('is_default')->default(false);
+                $table->string('name')->unique();
+                $table->string('description')->nullable();
+                $table->string('color')->nullable();
+                $table->boolean('is_default')->default(false);
 
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
+                $table->unsignedBigInteger('created_by');
+                $table->unsignedBigInteger('updated_by');
 
-            $table->timestamps();
+                $table->timestamps();
 
-            // Indekser
-            $table->index('is_default');
-        });
+                // Indekser
+                $table->index('is_default');
+            });
+        }
     }
 
     public function down()

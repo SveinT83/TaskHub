@@ -8,19 +8,21 @@ class CreateTicketTimeSpendsTable extends Migration
 {
     public function up()
     {
-        Schema::create('ticket_time_spends', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('ticket_reply_id')->nullable();
-            $table->unsignedBigInteger('ticket_id'); // Referanse til ticket
-            $table->unsignedBigInteger('time_rate_id')->nullable(); // Referanse til time_rate
-            $table->integer('time_spend')->nullable(); // Tid brukt i minutter
-            $table->boolean('billed')->default(false); // Faktureres
-            $table->timestamps();
+        if (!Schema::hasTable('ticket_time_spends')) {
+            Schema::create('ticket_time_spends', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('ticket_reply_id')->nullable();
+                $table->unsignedBigInteger('ticket_id'); // Referanse til ticket
+                $table->unsignedBigInteger('time_rate_id')->nullable(); // Referanse til time_rate
+                $table->integer('time_spend')->nullable(); // Tid brukt i minutter
+                $table->boolean('billed')->default(false); // Faktureres
+                $table->timestamps();
 
-            // Utenlandske nøkler
-            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
-            $table->foreign('time_rate_id')->references('id')->on('time_rates')->onDelete('restrict');
-        });
+                // Utenlandske nøkler
+                $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
+                $table->foreign('time_rate_id')->references('id')->on('time_rates')->onDelete('restrict');
+            });
+        }
     }
 
     public function down()
