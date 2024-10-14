@@ -1,6 +1,6 @@
 
     <!-- resources/views/livewire/category.blade.php -->
-<div>
+    <div>
 
         <!-- Kategorilisten -->
         <div class="card">

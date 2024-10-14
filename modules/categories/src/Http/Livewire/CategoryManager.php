@@ -1,9 +1,9 @@
 <?php
 
-namespace tronderdata\Categories\Http\Livewire;
+namespace tronderdata\categories\Http\Livewire;
 
 use Livewire\Component;
-use tronderdata\Categories\Models\Category;
+use tronderdata\categories\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -21,7 +21,7 @@ class CategoryManager extends Component
         // Henter alle kategorier for å vise i Livewire-komponenten
         $this->categories = Category::all();
 
-        return view('categories::livewire.Category', ['categories' => $this->categories]);
+        return view('categories::livewire.categoryManager', ['categories' => $this->categories]);
     }
 
     // Funksjon for å legge til ny kategori

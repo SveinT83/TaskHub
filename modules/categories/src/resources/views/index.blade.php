@@ -5,6 +5,6 @@
 @endsection
 
 @section('content')
-    <livewire:category />
+    <livewire:categories />
 @endsection
 

@@ -9,8 +9,7 @@ use App\Http\Controllers\EmailAccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Integrations\Nextcloud\NextcloudController;
 use Illuminate\Support\Facades\Route;
-//Temp
-use App\Http\Controllers\TaskController;
+use Livewire\Livewire;
 
 Route::get('/', function () {
     return view('welcome');

@@ -1,6 +1,6 @@
 <?php
 
-namespace tronderdata\Categories\Models;
+namespace tronderdata\categories\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
