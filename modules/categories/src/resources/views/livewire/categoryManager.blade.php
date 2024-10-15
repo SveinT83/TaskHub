@@ -60,25 +60,11 @@
                     <!-- -------------------------------------------------------------------------------------------------- -->
                     <!-- Else show category list -->
                     <!-- -------------------------------------------------------------------------------------------------- -->
-                    <ul class="list-group list-group-flush">
-                        @foreach($categories as $category)
-                            <li class="list-group-item">
-                                <strong>{{ $category->name }}</strong>
-
-                                <!-- Knapp for sletting -->
-                                <button wire:click="deleteCategory({{ $category->id }})">Delete</button>
-                
-                                <!-- Rekursivt vis barnkategorier -->
-                                @if($category->children->count())
-                                    <ul class="list-group list-group-flush">
-                                        @foreach($category->children as $child)
-                                            @include('categories::partials.category-item', ['category' => $child])
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </li>
+                        @foreach ($categories as $category)
+                            <div class="row border mt-3">
+                                @include('categories::partials.category-item', ['category' => $category])
+                            </div>
                         @endforeach
-                    </ul>
                 @endif
 
             </div>

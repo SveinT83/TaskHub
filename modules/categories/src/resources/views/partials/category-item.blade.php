@@ -1,14 +1,13 @@
-<li class="list-group-item">
-    <strong>{{ $category->name }}</strong>
-    
-    <!-- Knapp for sletting -->
-    <button wire:click="deleteCategory({{ $category->id }})">Delete</button>
+<!-- partials/category-item.blade.php -->
+<a href="#">{{ $category->name }}</a>
 
-    @if($category->children->count())
-        <ul>
-            @foreach($category->children as $child)
-                @include('categories::livewire.partials.category-item', ['category' => $child])
-            @endforeach
-        </ul>
-    @endif
-</li>
+<!-- Hvis denne kategorien har child-kategorier, vis dem rekursivt -->
+@if ($category->children && $category->children->count() > 0)
+    @foreach ($category->children as $child)
+        <div class="row mt-2">
+            <div class="col ms-3 bi bi-arrow-return-right">
+                @include('categories::partials.category-item', ['category' => $child])
+            </div>
+        </div>
+    @endforeach
+@endif

@@ -12,7 +12,7 @@ class Category extends Model
     // Relasjon til child-kategorier
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id', 'id')->orderBy('order')->orderBy('id');
+        return $this->hasMany(Category::class, 'parent_id')->orderBy('order')->orderBy('id');
     }
 
     // Relasjon til parent-kategori
