@@ -7,7 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     // Angi hvilke felter som kan fylles ut ved masseopprettelse
-    protected $fillable = ['name', 'description', 'active', 'module'];
+    protected $fillable = ['name', 'description', 'slug', 'parent_id', 'created_by', 'active', 'module'];
 
-    // Eventuelle relasjoner eller tilpasninger for modellen kan legges til her
+    // Relasjon til child-kategorier
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id', 'id')->orderBy('order')->orderBy('id');
+    }
+
+    // Relasjon til parent-kategori
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
 }

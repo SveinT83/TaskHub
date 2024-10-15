@@ -60,21 +60,27 @@
                     <!-- -------------------------------------------------------------------------------------------------- -->
                     <!-- Else show category list -->
                     <!-- -------------------------------------------------------------------------------------------------- -->
-                    @foreach($categories as $category)
+                    <ul class="list-group list-group-flush">
+                        @foreach($categories as $category)
+                            <li class="list-group-item">
+                                <strong>{{ $category->name }}</strong>
 
-                        <!-- ------------------------------------------------- -->
-                        <!-- Category Row -->
-                        <!-- ------------------------------------------------- -->
-                        <div class="row mt-1 border">
-                            <div class="col">
-                                {{ $category->name }}
-                            </div>
-                            <div class="col">
+                                <!-- Knapp for sletting -->
                                 <button wire:click="deleteCategory({{ $category->id }})">Delete</button>
-                            </div>
-                        </div>
-                    @endforeach
+                
+                                <!-- Rekursivt vis barnkategorier -->
+                                @if($category->children->count())
+                                    <ul class="list-group list-group-flush">
+                                        @foreach($category->children as $child)
+                                            @include('categories::partials.category-item', ['category' => $child])
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
                 @endif
+
             </div>
         </div>
 </div>

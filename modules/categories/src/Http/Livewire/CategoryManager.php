@@ -15,44 +15,78 @@ class CategoryManager extends Component
     public $parent_id;
     public $categories;
 
-    // Kjøres når komponenten renderes
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION RENDER
+    // Renders the Livewire component
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function render()
     {
-        // Henter alle kategorier for å vise i Livewire-komponenten
-        $this->categories = Category::all();
+        // -------------------------------------------------
+        // Get all categories with their children sorted by order and id
+        // -------------------------------------------------
+        $this->categories = Category::whereNull('parent_id')->with('children')->orderBy('order')->orderBy('id')->get();
 
+        //dd($this->categories);
+
+        // -------------------------------------------------
+        // Return view
+        // -------------------------------------------------
         return view('categories::livewire.categoryManager', ['categories' => $this->categories]);
     }
 
-    // Funksjon for å legge til ny kategori
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION ADD CATEGORY
+    // Adds a new category to the database
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function addCategory()
     {
-        // Validerer input
+        // Valider input
         $this->validate([
             'newCategory' => 'required|string|max:255',
             'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
         ]);
 
+        // Feilsøk: Sjekk verdien av newCategory før generering av slug
+        if (!$this->newCategory) {
+            session()->flash('error', 'Category name is required.');
+            return;
+        }
+
         // Generer slug automatisk
         $slug = Str::slug($this->newCategory);
+        if (empty($slug)) {
+            session()->flash('error', 'Failed to generate slug.');
+            return;
+        }
 
-        // Oppretter ny kategori
-        Category::create([
+        // Opprett ny kategori
+        $category = Category::create([
             'name' => $this->newCategory,
             'description' => $this->description,
-            'parent_id' => $this->parent_id,
-            'slug' => $slug, // Pass på at slug blir satt her
+            'parent_id' => $this->parent_id,  // Dette feltet kan være null
+            'slug' => $slug,
             'created_by' => Auth::id(),
         ]);
 
-        // Tilbakestiller feltene
+        if (!$category) {
+            session()->flash('error', 'Failed to create category.');
+            return;
+        }
+
+        // Tilbakestill feltene
         $this->newCategory = '';
         $this->description = '';
         $this->parent_id = null;
 
-        // Oppdaterer kategorilisten
+        // Oppdater kategorilisten
         $this->categories = Category::all();
+
+        // Lukk skjemaet og send suksessmelding
+        $this->showForm = false;
+        session()->flash('success', 'Category added successfully!');
     }
 
     // Funksjon for å slette en kategori
