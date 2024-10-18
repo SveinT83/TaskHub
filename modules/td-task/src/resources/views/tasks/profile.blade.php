@@ -146,6 +146,30 @@
             </div>
 
             <!-- ------------------------------------------------- -->
+            <!-- Category -->
+            <!-- ------------------------------------------------- -->
+            @if(!empty($categories) && count($categories) > 0)
+                <form class="card mt-3" id="categoryForm" action="{{ route('tasks.updateCategory', $task->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="card-header">Category</div>
+
+                    <div class="card-body">
+                        <!-- Select dropdown for categories -->
+                        <select name="category_id" id="category_id" class="form-control" onchange="document.getElementById('categoryForm').submit();">
+                            <option value="">No Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ $task->category_id == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            @endif
+
+            <!-- ------------------------------------------------- -->
             <!-- Spend Time -->
             <!-- ------------------------------------------------- -->
             <div class="row mt-3">
@@ -251,7 +275,5 @@
         function submitStatusForm() {
             document.getElementById('statusForm').submit();
         }
-
-
     </script>
 @endsection

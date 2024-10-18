@@ -120,9 +120,19 @@ class TaskController extends Controller
         $comments = TaskComment::where('task_id', $id)->get();
 
         // -------------------------------------------------
+        // Get all categories, if the categories module exists
+        // -------------------------------------------------
+        $categories = [];
+
+        // If td-categories
+        if (class_exists(\tronderdata\categories\Models\Category::class)) {
+            $categories = \tronderdata\categories\Models\Category::all();
+        }
+
+        // -------------------------------------------------
         // Return view with task
         // -------------------------------------------------
-        return view('tdtask::tasks.profile', compact('task', 'statuses', 'users', 'walls', 'comments'));
+        return view('tdtask::tasks.profile', compact('task', 'statuses', 'users', 'walls', 'comments', 'categories'));
     }
 
 
@@ -240,6 +250,7 @@ class TaskController extends Controller
             'child_task_id' => 'nullable|exists:tasks,id',
             'estimated_time' => 'nullable|integer|min:0',
             'actual_time' => 'nullable|integer|min:0',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         // Oppdaterer oppgaven med validerte data
@@ -452,6 +463,27 @@ class TaskController extends Controller
 
         // Omdiriger til oppgaveprofilen med en suksessmelding
         return redirect()->route('tasks.show', $task->id)->with('success', 'Actual time updated successfully.');
+    }
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION UPDATE CATEGORY
+    // Update the category of a task
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function updateCategory(Request $request, Task $task)
+    {
+        // Valider at category_id er en gyldig kategori-ID
+        $request->validate([
+            'category_id' => 'nullable|exists:categories,id',
+        ]);
+
+        // Oppdater kategori-ID for oppgaven
+        $task->category_id = $request->input('category_id');
+        $task->save();
+
+        // Returner tilbake med en suksessmelding
+        return redirect()->route('tasks.show', $task->id)->with('success', 'Task category updated successfully!');
     }
 
 }

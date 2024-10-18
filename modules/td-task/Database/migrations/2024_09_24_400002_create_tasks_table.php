@@ -37,16 +37,17 @@ class CreateTasksTable extends Migration
                 $table->foreignId('created_by')->constrained('users');
                 $table->foreignId('child_task_id')->nullable()->constrained('tasks')->nullOnDelete();
                 $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete();
+                $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete(); // Legger til category_id
                 $table->integer('estimated_time')->nullable();
                 $table->integer('actual_time')->nullable();
                 $table->timestamps();
             });
         } else {
-            // Hvis tasks tabellen finnes, sjekk om kolonnen status_id allerede er satt
-            if (!Schema::hasColumn('tasks', 'status_id')) {
-                // Hvis fremmednøkkelen ikke er satt, legger vi til
+            // Hvis tasks tabellen finnes, sjekk om kolonnen category_id allerede er satt
+            if (!Schema::hasColumn('tasks', 'category_id')) {
+                // Hvis fremmednøkkelen ikke er satt, legg den til
                 Schema::table('tasks', function (Blueprint $table) {
-                    $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete(); // Status for oppgaven
+                    $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete(); // Legger til category_id
                 });
             }
         }
@@ -54,9 +55,14 @@ class CreateTasksTable extends Migration
 
     public function down()
     {
-        // Hvis tasks-tabellen eksisterer, fjern fremmednøkkelen først
+        // Hvis tasks-tabellen eksisterer, fjern fremmednøklene først
         if (Schema::hasTable('tasks')) {
             Schema::table('tasks', function (Blueprint $table) {
+                if (Schema::hasColumn('tasks', 'category_id')) {
+                    $table->dropForeign(['category_id']); // Dropper fremmednøkkelen
+                    $table->dropColumn('category_id'); // Dropper kolonnen
+                }
+
                 if (Schema::hasColumn('tasks', 'status_id')) {
                     $table->dropForeign(['status_id']); // Dropper fremmednøkkelen
                     $table->dropColumn('status_id'); // Dropper kolonnen

@@ -36,14 +36,7 @@ class AddKbMenuItems extends Migration
             [
                 'menu_id' => $kbMenuId,
                 'title' => 'New Artickle',
-                'url' => '/kb/new/artickle',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'menu_id' => $kbMenuId,
-                'title' => 'New Category',
-                'url' => '/kb/new/category',
+                'url' => '/kb/article-form',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -65,8 +58,7 @@ class AddKbMenuItems extends Migration
     public function down()
     {
         // Optionally, you can delete the inserted menu items on rollback
-        DB::table('menu_items')->where('url', '/kb/new/artickle')->delete();
-        DB::table('menu_items')->where('url', '/kb/new/category')->delete();
+        DB::table('menu_items')->where('url', '/kb/article-form')->delete();
         DB::table('menus')->where('slug', 'kb')->delete();
     }
 }
