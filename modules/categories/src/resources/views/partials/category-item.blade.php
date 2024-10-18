@@ -1,5 +1,5 @@
 <!-- partials/category-item.blade.php -->
-<a href="#">{{ $category->name }}</a>
+<a href="#" wire:click.prevent="editCategory({{ $category->id }})">{{ $category->name }}</a>
 
 <!-- Hvis denne kategorien har child-kategorier, vis dem rekursivt -->
 @if ($category->children && $category->children->count() > 0)

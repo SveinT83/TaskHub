@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     // Angi hvilke felter som kan fylles ut ved masseopprettelse
-    protected $fillable = ['name', 'description', 'slug', 'parent_id', 'created_by', 'active', 'module'];
+    protected $fillable = ['name', 'description', 'parent_id', 'slug', 'status', 'created_by', 'updated_by'];
 
     // Relasjon til child-kategorier
     public function children()

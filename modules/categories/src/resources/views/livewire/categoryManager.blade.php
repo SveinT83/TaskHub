@@ -10,12 +10,12 @@
             <!-- ------------------------------------------------- -->
             <div class="card-header">
                 <div class="row align-items-center">
-                    <h3 class="col-11">Categories</h3>
+                    <h3 class="col-10">Categories</h3>
 
                     <!-- ------------------------------------------------- -->
                     <!-- New Category Button -->
                     <!-- ------------------------------------------------- -->
-                    <button class="col-1 btn btn-link" wire:click="$toggle('showForm')"><h3 class="bi bi-plus"></h3> </button>
+                    <button class="col-2 btn btn-link bi bi-plus" wire:click="$toggle('showForm')"> Add category</button>
                 </div>
             </div>
             <div class="card-body">
@@ -28,32 +28,7 @@
                     <!-- ------------------------------------------------- -->
                     <!-- New category form -->
                     <!-- ------------------------------------------------- -->
-                    <form class="row" wire:submit.prevent="addCategory">
-                        <div class="mb-3">
-                            <label for="newCategory" class="form-label fw-bold">Category Name:</label>
-                            <input type="text" class="form-control" id="newCategory" wire:model="newCategory">
-                            @error('newCategory') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="description" class="form-label fw-bold">Description:</label>
-                            <textarea class="form-control" id="description" wire:model="description"></textarea>
-                            @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="parentCategory" class="form-label fw-bold">Parent Category:</label>
-                            <select class="form-select" id="parentCategory" wire:model="parent_id">
-                                <option value="">No Parent</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('parent_id') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-
-                        <button type="submit" class="btn btn-success">Add Category</button>
-                    </form>
+                    @include('categories::partials.new-category-form')
 
                 @else
 
