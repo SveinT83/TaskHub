@@ -11,6 +11,14 @@
         <form class="card-body" wire:submit.prevent="save">
 
             <!-- ------------------------------------------------- -->
+            <!-- If Slug, put it in a row -->
+            <!-- ------------------------------------------------- -->
+            @if($isEditMode)
+                <div class="row">
+                <div class="col-md-6">
+            @endif
+
+            <!-- ------------------------------------------------- -->
             <!-- Title -->
             <!-- ------------------------------------------------- -->
             <div class="mb-3">
@@ -18,6 +26,22 @@
                 <input type="text" class="form-control" wire:model="title" required>
                 @error('title') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
+
+            <!-- ------------------------------------------------- -->
+            <!-- Slug -->
+            <!-- ------------------------------------------------- -->
+            @if($isEditMode)
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="slug" class="form-label fw-bold">Slug</label>
+                        <input type="text" class="form-control" wire:model="slug" required>
+                        @error('slug') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                </div>
+            @endif
 
             <!-- ------------------------------------------------- -->
             <!-- Content -->
@@ -62,7 +86,14 @@
             <!-- ------------------------------------------------- -->
             <div class="d-flex justify-content-between">
                 <button type="submit" class="btn btn-success">Save</button>
-                <a href="{{ route('kb.index') }}" class="btn btn-secondary">Back</a>
+                
+                @if($isEditMode)
+                    <!-- Hvis vi er i edit mode, gå til artikkelvisningen -->
+                    <a href="{{ route('kb.show', $articleId) }}" class="btn btn-secondary">Back</a>
+                @else
+                    <!-- Hvis vi er i opprettelsesmodus, gå tilbake til listen -->
+                    <a href="{{ route('kb.index') }}" class="btn btn-secondary">Back</a>
+                @endif
             </div>
         </form>
     </div>

@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 class ArticleForm extends Component
 {
-
     // -------------------------------------------------
     // Define the public properties
     // -------------------------------------------------
@@ -21,8 +20,6 @@ class ArticleForm extends Component
     public $isEditMode = false;
     public $categories = []; // Legg til en egenskap for kategorier
 
-
-
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION MOUNT
     // Mount function is used to initialize the component with the given data. In this case, we are initializing the component with the article data
@@ -31,19 +28,32 @@ class ArticleForm extends Component
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function mount($articleId = null)
     {
+        // -------------------------------------------------
+        // If articleId is not provided, try to get it from the request query parameters
+        // -------------------------------------------------
+        if (!$articleId) {
+            $articleId = request()->query('articleId');
+        }
 
         // -------------------------------------------------
         // If articleId is provided, then we are in edit mode
         // -------------------------------------------------
         if ($articleId) {
             $this->isEditMode = true;
-            $article = Article::findOrFail($articleId);
-            $this->articleId = $article->id;
-            $this->title = $article->title;
-            $this->slug = $article->slug;
-            $this->content = $article->content;
-            $this->category_id = $article->category_id;
-            $this->status = $article->status;
+            $article = Article::find($articleId);
+
+            if ($article) {
+                $this->articleId = $article->id;
+                $this->title = $article->title;
+                $this->slug = $article->slug;
+                $this->content = $article->content;
+                $this->category_id = $article->category_id;
+                $this->status = $article->status;
+                
+            } else {
+                // Hvis artikkelen ikke finnes, omdiriger tilbake til listen
+                return redirect()->route('kb.index')->with('error', 'Article not found.');
+            }
         }
 
         // -------------------------------------------------
@@ -72,42 +82,40 @@ class ArticleForm extends Component
         // -------------------------------------------------
         // Validate the data
         // -------------------------------------------------
-        $data = $this->validate([
+        $rules = [
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug,' . $this->articleId,
             'content' => 'required|string',
-            'category_id' => 'nullable|integer',
             'status' => 'required|string|in:draft,published,archived',
-        ]);
+        ];
+
+        if (class_exists('\tronderdata\categories\Models\Category')) {
+            $rules['category_id'] = 'nullable|exists:categories,id';
+        }
+
+        $data = $this->validate($rules);
 
         // -------------------------------------------------
-        // If the category model exists, then validate the category_id
+        // If the article exists, update it
         // -------------------------------------------------
         if ($this->isEditMode) {
-            // Finn artikkelen og oppdater, hvis den eksisterer
             $article = Article::find($this->articleId);
             if ($article) {
                 $article->update($data);
             }
-
-        // -------------------------------------------------
-        // Else create a new article
-        // -------------------------------------------------
         } else {
-
             // -------------------------------------------------
-            // Create a new article
+            // Else create a new article
             // -------------------------------------------------
-            Article::create($data);
+            $article = Article::create($data);
+            $this->articleId = $article->id;
         }
 
         // -------------------------------------------------
         // Redirect to the article list page with success message
         // -------------------------------------------------
-        return redirect()->route('kb.index')->with('success', 'Article saved successfully!');
+        return redirect()->route('kb.show', $this->articleId)->with('success', 'Article saved successfully!');
     }
-
-
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION RENDER
@@ -116,7 +124,6 @@ class ArticleForm extends Component
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function render()
     {
-
         // -------------------------------------------------
         // Return the article form view
         // -------------------------------------------------
