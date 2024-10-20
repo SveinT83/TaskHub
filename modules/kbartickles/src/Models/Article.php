@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // PROTECTED FILLABLE
+    // Define the fillable fields for the article model
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     protected $fillable = [
         'title', 
         'slug', 
@@ -14,5 +20,15 @@ class Article extends Model
         'status',
     ];
 
-    // Legg til eventuelle relasjoner eller tilpasninger for modellen her
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION CATEGORY
+    // Define the relationship between the article and the category
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function category()
+    {
+        return $this->belongsTo(\tronderdata\categories\Models\Category::class, 'category_id');
+    }
 }

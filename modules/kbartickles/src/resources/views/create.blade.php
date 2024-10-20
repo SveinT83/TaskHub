@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('pageHeader')
-    <h1>Create Article</h1>
+    <h2>Kb Articles</h2>
 @endsection
 
 @section('content')
-    <livewire:article-form />
+    <livewire:article-form :articleId="$articleId" />
 @endsection

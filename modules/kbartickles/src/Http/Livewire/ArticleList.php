@@ -11,7 +11,7 @@ class ArticleList extends Component
 
     public function mount()
     {
-        $this->articles = Article::all();
+        $this->articles = Article::with('category')->get();
     }
 
     public function render()

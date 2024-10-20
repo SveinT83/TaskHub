@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('pageHeader')
-    <h1>Articles</h1>
+    <h2>Kb Articles</h2>
 @endsection
 
 @section('content')
