@@ -3,6 +3,7 @@
 namespace tronderdata\kbartickles\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Article extends Model
 {
@@ -13,12 +14,25 @@ class Article extends Model
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     protected $fillable = [
+        'user_id',
         'title', 
         'slug', 
         'content', 
         'category_id', 
         'status',
     ];
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION USER
+    // Define the relationship between the article and the user
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
 
 

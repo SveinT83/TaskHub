@@ -5,6 +5,7 @@ namespace tronderdata\kbartickles\Http\Livewire;
 use Livewire\Component;
 use tronderdata\kbartickles\Models\Article;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleForm extends Component
 {
@@ -78,7 +79,7 @@ class ArticleForm extends Component
         // Generate slug from the title
         // -------------------------------------------------
         $this->slug = Str::slug($this->title);
-
+    
         // -------------------------------------------------
         // Validate the data
         // -------------------------------------------------
@@ -88,13 +89,18 @@ class ArticleForm extends Component
             'content' => 'required|string',
             'status' => 'required|string|in:draft,published,archived',
         ];
-
+    
         if (class_exists('\tronderdata\categories\Models\Category')) {
             $rules['category_id'] = 'nullable|exists:categories,id';
         }
-
+    
         $data = $this->validate($rules);
-
+    
+        // -------------------------------------------------
+        // Add the user_id to the data
+        // -------------------------------------------------
+        $data['user_id'] = auth()->id();
+    
         // -------------------------------------------------
         // If the article exists, update it
         // -------------------------------------------------
@@ -110,12 +116,14 @@ class ArticleForm extends Component
             $article = Article::create($data);
             $this->articleId = $article->id;
         }
-
+    
         // -------------------------------------------------
         // Redirect to the article list page with success message
         // -------------------------------------------------
         return redirect()->route('kb.show', $this->articleId)->with('success', 'Article saved successfully!');
     }
+    
+    
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION RENDER

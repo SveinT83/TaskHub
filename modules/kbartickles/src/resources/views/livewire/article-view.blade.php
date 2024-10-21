@@ -81,6 +81,11 @@
                     <!-- Status -->
                     <!-- ------------------------------------------------- -->
                     <p class="col bi bi-eye"> {{ ucfirst($article->status) }}</p>
+
+                    <!-- ------------------------------------------------- -->
+                    <!-- author -->
+                    <!-- ------------------------------------------------- -->
+                    <p class="col bi bi-person"> {{ $article->user ? $article->user->name : 'Unknown Author' }}</p>
                 </div>
             </div>
     
