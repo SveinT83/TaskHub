@@ -46,6 +46,8 @@ class CategoryManager extends Component
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function addCategory()
     {
+
+        dd("Add category");
         // Valider input
         $this->validate([
             'newCategory' => 'required|string|max:255',
@@ -104,6 +106,10 @@ class CategoryManager extends Component
 
         // Oppdater kategorilisten etter sletting
         $this->categories = Category::all();
+
+        // Lukk skjemaet og send suksessmelding
+        $this->showForm = false;
+        session()->flash('success', 'Category deleted!');
     }
 
     // Metode for å legge til eller oppdatere kategori
@@ -113,9 +119,14 @@ class CategoryManager extends Component
             'newCategory' => 'required|string|max:255',
             'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
-            'slug' => 'required_if:isEditMode,true|string|max:255|unique:categories,slug,' . $this->categoryId,
-            'status' => 'required_if:isEditMode,true|in:active,inactive',
+            'slug' => $this->isEditMode ? 'required|string|max:255|unique:categories,slug,' . $this->categoryId : 'nullable|string',
+            'status' => $this->isEditMode ? 'required|in:active,inactive' : 'nullable|in:active,inactive',
         ]);
+
+        // Sørg for at slug og status har riktige verdier
+        $this->slug = $this->slug ?? Str::slug($this->newCategory);
+        $this->status = $this->status ?? 'active';
+        $this->parent_id = $this->parent_id ?: null;
 
         if ($this->isEditMode) {
             // Oppdater eksisterende kategori
@@ -130,11 +141,12 @@ class CategoryManager extends Component
             ]);
         } else {
 
-            // Generer slug automatisk
+            // Generer slug automatisk og håndter duplikater
             $slug = Str::slug($this->newCategory);
-            if (empty($slug)) {
-                session()->flash('error', 'Failed to generate slug.');
-                return;
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Category::where('slug', $slug)->exists()) {
+                $slug = $originalSlug . '-' . $counter++;
             }
 
             // Opprett ny kategori
