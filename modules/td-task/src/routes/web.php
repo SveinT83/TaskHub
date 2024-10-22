@@ -16,6 +16,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/create', [TaskController::class, 'create'])->name('tasks.create');
         Route::post('/store', [TaskController::class, 'store'])->name('tasks.store');
         Route::get('/{id}', [TaskController::class, 'show'])->name('tasks.show');
+        Route::put('/{task}/update-category', [TaskController::class, 'updateCategory'])->name('tasks.updateCategory');
 
         // Redigeringsruter
         Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');

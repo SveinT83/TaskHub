@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
-class CreateUsersTable extends Migration
+class CreateUsersTable2 extends Migration
 {
     public function up()
     {

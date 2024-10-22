@@ -19,6 +19,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        @livewireStyles
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -35,8 +37,6 @@
 
             <div class="d-flex w-100" style="min-height: calc(100vh - 90px);">
                 <div class="bg-secondary-subtle d-none d-md-block p-3" style="width: 250px;">
-                    <h2>Sidebar</h2>
-
                     @isset($menus)
                         @include('layouts.sidebar')
                     @endisset
@@ -44,7 +44,7 @@
                 <!-- Page Content -->
                 <div class="flex-grow-1">
                     <div class="container-fluid">
-                        <div class="row bg-primary-subtle p-3 border-bottom">
+                        <div class="row bg-primary-subtle p-3 border-bottom justify-content-start">
                             @yield('pageHeader')
                         </div>
 
@@ -61,6 +61,7 @@
         </div>
 
         @yield('scripts') <!-- For tilpassede scripts -->
+        @livewireScripts
 
     </body>
 </html>

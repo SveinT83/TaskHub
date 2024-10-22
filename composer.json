@@ -12,7 +12,10 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
+        "livewire/livewire": "^3.5",
         "spatie/laravel-permission": "^6.9",
+        "tronderdata/categories": "dev-main",
+        "tronderdata/kbartickles": "dev-main",
         "tronderdata/td-clients": "dev-main",
         "tronderdata/td-task": "dev-main",
         "tronderdata/td-tickets": "dev-main"
@@ -38,6 +41,14 @@
         {
             "type": "path",
             "url": "./modules/td-task"
+        },
+        {
+            "type": "path",
+            "url": "./modules/kbartickles"
+        },
+        {
+            "type": "path",
+            "url": "./modules/categories"
         }
     ],
     "autoload": {
@@ -47,7 +58,9 @@
             "tronderdata\\TdTickets\\": "modules/td-tickets/src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "tronderdata\\tdTask\\": "modules/td-task/src/"
+            "tronderdata\\tdTask\\": "modules/td-task/src/",
+            "tronderdata\\kbartickles\\": "modules/kbartickles/src/",
+            "tronderdata\\categories\\": "modules/categories/src/"
         }
     },
     "autoload-dev": {
@@ -77,7 +90,9 @@
             "providers": [
                 "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider",
                 "Tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider",
-                "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider"
+                "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider",
+                "tronderdata\\kbartickles\\Providers\\KbarticklesServiceProvider",
+                "tronderdata\\categories\\Providers\\CategoriesServiceProvider"
             ]
         }
     },

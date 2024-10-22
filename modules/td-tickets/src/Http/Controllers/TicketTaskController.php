@@ -239,7 +239,7 @@ class TicketTaskController extends Controller
         // Get the active task module
         // -------------------------------------------------
         $activeModule = $this->getActiveModule();
-    
+
         // -------------------------------------------------
         // If no active module is found, throw an exception or handle it
         // -------------------------------------------------
@@ -247,12 +247,12 @@ class TicketTaskController extends Controller
             Log::error("No active task module found.");
             throw new \Exception("No task module available to create a wall.");
         }
-    
+
         // -------------------------------------------------
         // Use the model directly when we identify td-task
         // -------------------------------------------------
         switch ($activeModule['name']) {
-    
+
         // -------------------------------------------------
         // Case TD-TASK (direct model use)
         // -------------------------------------------------
@@ -264,19 +264,19 @@ class TicketTaskController extends Controller
                 if (class_exists('\tronderdata\TdTask\Models\TaskWall')) {
                     // Bruk den dynamiske modellen
                     $taskWallModel = '\tronderdata\TdTask\Models\TaskWall';
-            
+
                     // Opprett en ny vegg
                     $wall = new $taskWallModel();
                     $wall->name = 'Wall for Ticket #' . $ticket->id . ' - ' . $ticket->title;  // Inkluder ticket ID i veggens navn
                     $wall->description = 'This wall was automatically created for Ticket #' . $ticket->id;
                     $wall->created_by = Auth::id();  // Sett den innloggede brukeren som skaperen av veggen
                     $wall->save();
-            
+
                     // -------------------------------------------------
                     // Finn "Tasks"-menyen ved hjelp av slug
                     // -------------------------------------------------
                     $taskMenu = DB::table('menus')->where('slug', 'tasks')->first();
-            
+
                     if ($taskMenu) {
                         // Legg til veggen som et nytt meny-element under "Tasks"
                         DB::table('menu_items')->insert([
@@ -291,23 +291,23 @@ class TicketTaskController extends Controller
                             'updated_at' => now(),
                         ]);
                     }
-            
+
                     // Returner den opprettede veggen
                     return $wall;
-            
+
                 } else {
                     // Hvis modulen ikke eksisterer, logg en melding og håndter situasjonen
                     Log::error("TaskWall-modellen er ikke tilgjengelig.");
                     throw new \Exception("TaskWall-modulen er ikke tilgjengelig, og veggen kan ikke opprettes.");
                 }
-            
+
             } catch (\Exception $e) {
                 Log::error("Failed to create wall via direct model: " . $e->getMessage());
                 throw new \Exception("Failed to create wall via direct model.");
             }
         }
     }
-    
+
 
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -332,7 +332,7 @@ class TicketTaskController extends Controller
             // Returner en vellykket JSON-respons med den oppdaterte tasken
             return response()->json(['success' => true, 'task' => $task]);
         } catch (\Exception $e) {
-            \Log::error("Failed to update task status: " . $e->getMessage());
+            Log::error("Failed to update task status: " . $e->getMessage());
 
             // Returner en feilmelding i JSON-format
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);

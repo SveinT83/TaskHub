@@ -16,7 +16,35 @@ class Task extends Model
     // -------------------------------------------------
     // Fillable
     // -------------------------------------------------
-    protected $fillable = ['title', 'description', 'due_date', 'created_by', 'child_task_id', 'status_id', 'assigned_to', 'wall_id', 'estimated_time', 'actual_time'];
+    protected $fillable = ['title', 'description', 'due_date', 'created_by', 'child_task_id', 'status_id', 'assigned_to', 'wall_id', 'category_id', 'estimated_time', 'actual_time'];
+
+
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION CATEGORY
+    // Relationships between category and tasks, if category exists
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    public function category()
+    {
+        // --------------------------------------------------------------------------------------------------
+        // If any of this category exists, return the relationship between category and tasks
+        // --------------------------------------------------------------------------------------------------
+
+        // -------------------------------------------------
+        // TD-Categories
+        // -------------------------------------------------
+        if (class_exists(\tronderdata\categories\Models\Category::class)) {
+            
+            // Return
+            return $this->belongsTo(\tronderdata\categories\Models\Category::class, 'category_id');
+        }
+
+        // -------------------------------------------------
+        // Return null if category does not exist
+        // -------------------------------------------------
+        return null;
+    }
 
 
 

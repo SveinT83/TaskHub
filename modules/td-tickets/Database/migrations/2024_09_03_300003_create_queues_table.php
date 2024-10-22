@@ -8,17 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tickets_queues', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('tickets_queues')) {
+            Schema::create('tickets_queues', function (Blueprint $table) {
+                $table->id();
 
-            $table->string('name')->unique();
-            $table->string('description')->nullable();
+                $table->string('name')->unique();
+                $table->string('description')->nullable();
 
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
+                $table->unsignedBigInteger('created_by');
+                $table->unsignedBigInteger('updated_by');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void
