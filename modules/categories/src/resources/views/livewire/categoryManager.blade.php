@@ -15,7 +15,9 @@
                     <!-- ------------------------------------------------- -->
                     <!-- New Category Button -->
                     <!-- ------------------------------------------------- -->
-                    <button class="col-2 btn btn-link bi bi-plus" wire:click="$toggle('showForm')"> Add category</button>
+                    @if(auth()->user()->can('category.create') || auth()->user()->can('category.admin'))
+                        <button class="col-2 btn btn-link bi bi-plus" wire:click="$toggle('showForm')"> Add category</button>
+                    @endif
                 </div>
             </div>
             <div class="card-body">

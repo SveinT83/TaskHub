@@ -39,15 +39,17 @@
         </div>
     @endif
 
-    <button type="submit" class="btn btn-success bi bi-floppy">
-        {{ $isEditMode ? 'Update Category' : 'Add Category' }}
-    </button>
+    @if(auth()->user()->can('category.create') || auth()->user()->can('category.admin'))
+        <button type="submit" class="btn btn-success bi bi-floppy">
+            {{ $isEditMode ? 'Update Category' : 'Add Category' }}
+        </button>
+
+        @if($isEditMode)
+            <!-- Delete Button -->
+            <button type="button" class="btn btn-danger btn-sm mt-2 bi bi-trash" wire:click="deleteCategory({{ $categoryId }})">Delete Category</button>
+        @endif
+    @endif
 
     <!-- Abort Button -->
     <button type="button" class="btn btn-outline-secondary btn-sm mt-1 bi bi-x-lg" wire:click="$toggle('showForm')"> Cancel</button>
-
-    @if($isEditMode)
-        <!-- Delete Button -->
-        <button type="button" class="btn btn-danger btn-sm mt-2 bi bi-trash" wire:click="deleteCategory({{ $categoryId }})">Delete Category</button>
-    @endif
 </form>
