@@ -1,9 +1,5 @@
 <?php
-<<<<<<< Updated upstream
 // Virker
-=======
-
->>>>>>> Stashed changes
 // SidebarMenu.php
 namespace App\Livewire;
 
@@ -45,35 +41,22 @@ class SidebarMenu extends Component
                 // If the item is active, mark it and the parent menu as active
                 if ($this->isActive($item->url)) {
                     $this->activeMenuIds[] = $item->id;
-<<<<<<< Updated upstream
-                    $this->expandedMenus[$menu->id] = true;
-                    $itemIsActive = true;
-                    $menuIsActive = true;
-=======
                     $this->activeMenuIds[] = $menu->id;
 
                     // Automatically expand the menu if it has an active item
                     $this->expandedMenus[$menu->id] = true;
->>>>>>> Stashed changes
                 }
 
                 // Check each child of the item
                 foreach ($item->children as $child) {
                     if ($this->isActive($child->url)) {
                         $this->activeMenuIds[] = $child->id;
-<<<<<<< Updated upstream
-                        $this->expandedMenus[$menu->id] = true;
-                        $this->expandedMenus[$item->id] = true;
-                        $itemIsActive = true;
-                        $menuIsActive = true;
-=======
                         $this->activeMenuIds[] = $item->id;
                         $this->activeMenuIds[] = $menu->id;
 
                         // Automatically expand the parent and child menus if the child is active
                         $this->expandedMenus[$menu->id] = true;
                         $this->expandedMenus[$item->id] = true;
->>>>>>> Stashed changes
                     }
                 }
 
@@ -93,10 +76,6 @@ class SidebarMenu extends Component
 
     public function isActive($url)
     {
-<<<<<<< Updated upstream
-        // Check if the current request URL matches the given URL or its sub-paths
-        return request()->is(trim($url, '/')) || request()->is(trim($url, '/') . '/*');
-=======
         return request()->is(trim($url, '/')) || request()->is(trim($url, '/') . '/*');
     }
 
@@ -115,7 +94,6 @@ class SidebarMenu extends Component
     {
         $this->expandedMenus[$menuId] = true;
         $this->emit('menuToggled', $menuId);
->>>>>>> Stashed changes
     }
 
     public function render()
