@@ -1,5 +1,9 @@
 <?php
+<<<<<<< Updated upstream
 // Virker
+=======
+
+>>>>>>> Stashed changes
 // SidebarMenu.php
 namespace App\Livewire;
 
@@ -21,6 +25,7 @@ class SidebarMenu extends Component
         $this->setActiveMenus();
     }
 
+    // SidebarMenu.php
     private function setActiveMenus()
     {
         foreach ($this->menus as $menu) {
@@ -40,19 +45,35 @@ class SidebarMenu extends Component
                 // If the item is active, mark it and the parent menu as active
                 if ($this->isActive($item->url)) {
                     $this->activeMenuIds[] = $item->id;
+<<<<<<< Updated upstream
                     $this->expandedMenus[$menu->id] = true;
                     $itemIsActive = true;
                     $menuIsActive = true;
+=======
+                    $this->activeMenuIds[] = $menu->id;
+
+                    // Automatically expand the menu if it has an active item
+                    $this->expandedMenus[$menu->id] = true;
+>>>>>>> Stashed changes
                 }
 
                 // Check each child of the item
                 foreach ($item->children as $child) {
                     if ($this->isActive($child->url)) {
                         $this->activeMenuIds[] = $child->id;
+<<<<<<< Updated upstream
                         $this->expandedMenus[$menu->id] = true;
                         $this->expandedMenus[$item->id] = true;
                         $itemIsActive = true;
                         $menuIsActive = true;
+=======
+                        $this->activeMenuIds[] = $item->id;
+                        $this->activeMenuIds[] = $menu->id;
+
+                        // Automatically expand the parent and child menus if the child is active
+                        $this->expandedMenus[$menu->id] = true;
+                        $this->expandedMenus[$item->id] = true;
+>>>>>>> Stashed changes
                     }
                 }
 
@@ -72,8 +93,29 @@ class SidebarMenu extends Component
 
     public function isActive($url)
     {
+<<<<<<< Updated upstream
         // Check if the current request URL matches the given URL or its sub-paths
         return request()->is(trim($url, '/')) || request()->is(trim($url, '/') . '/*');
+=======
+        return request()->is(trim($url, '/')) || request()->is(trim($url, '/') . '/*');
+    }
+
+    public function toggleMenu($menuId, $url = null)
+    {
+        // Toggle the current menu's expansion state
+        $this->expandedMenus[$menuId] = !($this->expandedMenus[$menuId] ?? false);
+
+        // Navigate to the URL if provided
+        if ($url) {
+            return redirect()->to($url);
+        }
+    }
+
+    public function triggerToggle($menuId)
+    {
+        $this->expandedMenus[$menuId] = true;
+        $this->emit('menuToggled', $menuId);
+>>>>>>> Stashed changes
     }
 
     public function render()
