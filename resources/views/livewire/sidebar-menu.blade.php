@@ -17,7 +17,7 @@
                             <ul>
                                 @foreach ($item->children as $child)
                                     <li class="{{ in_array($child->id, $activeMenuIds) ? 'active' : '' }}">
-                                        <a href="{{ $child->url }}">{{ $child->title }}</a>
+                                        <a href="{{ $child->url }}">-- {{ $child->title }}</a>
                                     </li>
                                 @endforeach
                             </ul>

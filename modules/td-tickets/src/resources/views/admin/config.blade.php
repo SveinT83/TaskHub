@@ -5,7 +5,5 @@
 @endsection
 
 @section('content')
-<div class="container-fluid mt-3">
-
-</div>
+    <livewire:ticket-config />
 @endsection
