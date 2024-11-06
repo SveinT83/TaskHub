@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin\Configurations;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EmailAccount;
 
@@ -11,13 +12,13 @@ class EmailAccountController extends Controller
     public function index()
     {
         $emailAccounts = EmailAccount::all();
-        return view('admin/email/email_accounts.index', compact('emailAccounts'));
+        return view('admin/configurations/email/email_accounts.index', compact('emailAccounts'));
     }
 
     // Vis skjemaet for å opprette en ny e-postkonto
     public function create()
     {
-        return view('admin/email/email_accounts.create');
+        return view('admin/configurations/email/email_accounts.create');
     }
 
     // Lagre en ny e-postkonto i databasen
@@ -46,19 +47,19 @@ class EmailAccountController extends Controller
 
         EmailAccount::create($request->all());
 
-        return redirect()->route('admin/email/email_accounts.index')->with('success', 'E-postkonto opprettet.');
+        return redirect()->route('admin/configurations/email/email_accounts.index')->with('success', 'E-postkonto opprettet.');
     }
 
     // Vis en spesifikk e-postkonto
     public function show(EmailAccount $emailAccount)
     {
-        return view('admin/email/email_accounts.show', compact('emailAccount'));
+        return view('admin/configurations/email/email_accounts.show', compact('emailAccount'));
     }
 
     // Vis skjemaet for å redigere en e-postkonto
     public function edit(EmailAccount $emailAccount)
     {
-        return view('admin/email/email_accounts.edit', compact('emailAccount'));
+        return view('admin/configurations/email/email_accounts.edit', compact('emailAccount'));
     }
 
     // Oppdater en e-postkonto i databasen

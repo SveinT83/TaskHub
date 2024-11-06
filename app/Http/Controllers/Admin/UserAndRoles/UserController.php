@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin\UserAndRoles;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
@@ -13,14 +14,14 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('roles')->get();
-        return view('users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     // Viser skjema for å opprette ny bruker
     public function create()
     {
         $roles = Role::all(); // Henter alle tilgjengelige roller
-        return view('users.create', compact('roles'));
+        return view('admin.users.create', compact('roles'));
     }
 
     // Lagrer ny bruker
@@ -52,7 +53,7 @@ class UserController extends Controller
         $roles = Role::all(); // Henter alle roller
         $userRoles = $user->roles->pluck('name')->toArray(); // Henter brukerens nåværende roller
 
-        return view('users.edit', compact('user', 'roles', 'userRoles'));
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles'));
     }
 
     // Oppdaterer en bruker

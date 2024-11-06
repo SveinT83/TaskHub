@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<div class="container"><
+<div class="container">
 
     <form action="{{ route('permissions.update', $permission->id) }}" method="POST">
         @csrf

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Integrations\Nextcloud;
+namespace App\Http\Controllers\Admin\Integrations\Nextcloud;
 
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
@@ -27,7 +27,7 @@ class NextcloudController extends Controller
         $menus = Menu::with(['items' => function ($query) {
             $query->whereNull('parent_id')->with('children');
         }])->get();
-        
+
         view()->share('menus', $menus); // Del menyene med alle visninger
     }
 
@@ -71,8 +71,6 @@ class NextcloudController extends Controller
 
             $data = json_decode($response->getBody()->getContents(), true);
 
-            \Log::info('Nextcloud token response:', $data ?? []);
-
             if (!isset($data['access_token'])) {
                 throw new \Exception('Ingen tilgangstoken ble returnert fra Nextcloud.');
             }
@@ -89,8 +87,6 @@ class NextcloudController extends Controller
 
             $userData = simplexml_load_string($userResponse->getBody()->getContents(), "SimpleXMLElement", LIBXML_NOCDATA);
             $userData = json_decode(json_encode($userData), true);
-
-            \Log::info('Nextcloud user response (XML):', $userData ?? []);
 
             if (!isset($userData['data']['id'])) {
                 throw new \Exception('Feil under henting av brukerdata fra Nextcloud.');
@@ -122,11 +118,10 @@ class NextcloudController extends Controller
             return redirect()->route('dashboard')->with('success', 'Du er logget inn via Nextcloud!');
 
         } catch (\Exception $e) {
-            \Log::error('Nextcloud authentication error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'Det oppstod en feil under Nextcloud-innloggingen: ' . $e->getMessage());
         }
     }
-    
+
 
     public function showSettings()
     {

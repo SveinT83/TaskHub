@@ -1,6 +1,7 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin\Configurations;
 
+use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class MenuConfigurationController extends Controller
     public function index()
     {
         $menus = Menu::all(); // Henter alle menyer
-        return view('configurations.menus.index', compact('menus'));
+        return view('admin.configurations.menus.index', compact('menus'));
     }
 
     // Lagre en ny meny
@@ -25,14 +26,14 @@ class MenuConfigurationController extends Controller
 
         Menu::create($request->all());
 
-        return redirect()->route('menu.configurations')->with('success', 'Menu created successfully');
+        return redirect()->route('admin.configurations.menus')->with('success', 'Menu created successfully');
     }
 
     // Vis menyens elementer
     public function show(Menu $menu)
     {
         $menuItems = $menu->items; // Henter alle elementene til menyen
-        return view('configurations.menus.items', compact('menu', 'menuItems'));
+        return view('admin.configurations.menus.items', compact('menu', 'menuItems'));
     }
 
     // Lagre nytt menyelement
@@ -47,13 +48,13 @@ class MenuConfigurationController extends Controller
 
         $menu->items()->create($request->all());
 
-        return redirect()->route('menu.items', $menu)->with('success', 'Menu item created successfully');
+        return redirect()->route('admin.configurations.menus.items', $menu)->with('success', 'Menu item created successfully');
     }
 
     // Rediger menyelement
     public function editItem(Menu $menu, MenuItem $item)
     {
-        return view('configurations.menus.edit_item', compact('menu', 'item'));
+        return view('admin.configurations.menus.edit_item', compact('menu', 'item'));
     }
 
     // Oppdater menyelement
@@ -68,6 +69,8 @@ class MenuConfigurationController extends Controller
 
         $item->update($request->all());
 
-        return redirect()->route('menu.items', $menu)->with('success', 'Menu item updated successfully');
+        //return redirect()->route('items', $menu)->with('success', 'Menu item updated successfully');
+        $menus = Menu::all(); // Henter alle menyer
+        return view('admin.configurations.menus.index', compact('menus'))->with('success', 'Menu item updated successfully');
     }
 }

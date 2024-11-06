@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin\UserAndRoles;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -17,14 +18,14 @@ class RoleController extends Controller
 
         $user = Auth::user(); // Få tilgang til innlogget bruker
 
-        return view('roles.index', compact('roles', 'permissions'));
+        return view('admin/users/roles.index', compact('roles', 'permissions'));
     }
 
     // Viser skjema for å opprette ny rolle
     public function create()
     {
         $permissions = Permission::all();
-        return view('roles.create', compact('permissions'));
+        return view('admin/users/roles.create', compact('permissions'));
     }
 
     // Lagrer ny rolle
@@ -39,7 +40,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $permissions = Permission::all();
-        return view('roles.edit', compact('role', 'permissions'));
+        return view('admin/users/roles.edit', compact('role', 'permissions'));
     }
 
     // Oppdaterer en rolle
@@ -64,7 +65,7 @@ class RoleController extends Controller
     // Viser skjema for å opprette ny tillatelse
     public function createPermission()
     {
-        return view('permissions.create');
+        return view('admin.users.permissions.create');
     }
 
     // Lagrer ny tillatelse
@@ -77,7 +78,7 @@ class RoleController extends Controller
     // Viser skjema for redigering av tillatelse
     public function editPermission(Permission $permission)
     {
-        return view('permissions.edit', compact('permission'));
+        return view('admin.users.permissions.edit', compact('permission'));
     }
 
     // Oppdaterer en tillatelse
