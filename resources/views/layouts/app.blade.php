@@ -24,7 +24,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+            @livewire('layouts.navigation.navigation')
 
             <!-- Page Heading -->
             @isset($header)
@@ -36,9 +36,9 @@
             @endisset
 
             <div class="d-flex w-100" style="min-height: calc(100vh - 90px);">
-                <div class="bg-secondary-subtle d-none d-md-block p-3" style="width: 250px;">
-                    @livewire('sidebar-menu')
-                </div>
+                <!-- <div class="bg-secondary-subtle d-none d-md-block p-3" style="width: 250px;"> -->
+                    @livewire('layouts.navigation.sidebar-menu')
+                <!-- </div> -->
                 <!-- Page Content -->
                 <div class="flex-grow-1">
                     <div class="container-fluid">

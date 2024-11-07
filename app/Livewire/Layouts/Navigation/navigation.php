@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Layouts\Navigation;
 
 use Livewire\Component;
 use App\Models\Menu;  // Menu-modellen som kobler mot menydata
 
-class HeaderMenu extends Component
+class navigation extends Component
 {
     public $menus = [];
 
@@ -19,7 +19,7 @@ class HeaderMenu extends Component
     public function render()
     {
         // Gjør menydataene tilgjengelige for 'layouts.navigation'
-        return view('layouts.navigation', [
+        return view('layouts.navigation.navigation', [
             'menus' => $this->menus  // Sender menyene til Blade-filen
         ]);
     }

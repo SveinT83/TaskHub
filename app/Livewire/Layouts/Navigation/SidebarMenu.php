@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Layouts\Navigation;
 
 use Livewire\Component;
 use App\Models\Menu;
 
 /**
  * SidebarMenu Component
- * 
+ *
  * This Livewire component dynamically generates a collapsible/expandable sidebar menu
  * based on data fetched from the Menu and MenuItem tables. It handles the opening/
  * closing of menu items, remembers the expanded state across page reloads, and
@@ -44,9 +44,9 @@ class SidebarMenu extends Component
     /**
      * Sets active menus based on the current URL. It iterates through all top-level menu items and their children
      * to check whether they match the current URL.
-     * 
+     *
      * What the method does:
-     *  - If a menu item (or one of its children) matches the current URL, it is marked as active 
+     *  - If a menu item (or one of its children) matches the current URL, it is marked as active
      *    and all parents are expanded to ensure visibility.
      */
     private function setActiveMenus()
@@ -54,7 +54,7 @@ class SidebarMenu extends Component
         // Traverse all menus to determine which ones are currently active
         foreach ($this->menus as $menu) {
             foreach ($menu->items as $item) {
-                
+
                 // If the main/parent menu item is active based on the URL, mark it as active and expand it
                 if ($this->isActive($item->url)) {
                     $this->activeMenuIds[] = $item->id;
@@ -76,7 +76,7 @@ class SidebarMenu extends Component
     /**
      * (Private Method) Expands all children for a given parent if the item (or one of its children) is active.
      * This method is recursive and it will continue to expand submenus until all nested items are expanded.
-     * 
+     *
      * @param  Collection $children  The child menu items to be expanded
      */
     private function expandChildren($children)
@@ -95,7 +95,7 @@ class SidebarMenu extends Component
     /**
      * Checks if the current URL matches the passed URL of a menu item.
      * Used to determine which menu item should be marked as active.
-     * 
+     *
      * @param  string  $url  The menu item URL to check
      * @return bool    Returns true if the current request URL matches, otherwise false
      */
@@ -108,7 +108,7 @@ class SidebarMenu extends Component
     /**
      * Toggles the expanded/collapsed state of a menu item.
      * When a user clicks on a menu item, this method handles showing or hiding its child elements.
-     * 
+     *
      * @param  int  $menuId  The ID of the menu or menu item to toggle
      * @param  string|null  $url  An optional URL for redirecting the user when a menu item is clicked
      */
@@ -129,12 +129,12 @@ class SidebarMenu extends Component
     /**
      * Render method that returns the Blade view responsible for displaying the sidebar menu.
      * The view will have access to the menus, active menu IDs, and expanded menu states.
-     * 
+     *
      * @return \Illuminate\View\View  The Blade view that renders the sidebar
      */
     public function render()
     {
-        return view('livewire.sidebar-menu', [
+        return view('layouts.navigation.sidebar-menu', [
             'menus' => $this->menus,                 // Passes the menus fetched from the database
             'activeMenuIds' => $this->activeMenuIds, // Passes the list of active menu IDs
             'expandedMenus' => $this->expandedMenus, // Passes the expanded/collapsed state of each menu item
