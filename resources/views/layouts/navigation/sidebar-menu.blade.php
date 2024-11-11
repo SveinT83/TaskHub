@@ -1,86 +1,132 @@
 <!-- sidebar-menu.blade.php -->
 
-<!--
-    This Blade file renders a dynamic sidebar menu that contains top-level menus.
-    If the user clicks on a menu, it expands to show child menu items. Child elements
-    can also have their own children, which are shown recursively when clicked.
+<!-- ------------------------------------------------- -->
+<!-- This is the sidebar menu that will be displayed on the left side of the screen. -->
+<!-- ------------------------------------------------- -->
+    <div class="accordion" id="accordionSideMenu" style="margin: 0px; padding: 0px; width: 100%;">
 
-    The Livewire component manages the state (expanded/collapsed) of the menus without
-    needing a full page refresh. When a user toggles a menu, the state of which menus are collapsed
-    or expanded is stored temporarily in the Livewire component.
--->
+        <!-- ------------------------------------------------- -->
+        <!-- For each menu item, create an accordion item. -->
+        <!-- ------------------------------------------------- -->
+        @foreach ($menus as $menu)
 
-<ul class="list-group list-group-item-dark" style="width: 250px;">
-    <!-- Loop through each top-level menu from the menus table -->
-    @foreach ($menus as $menu)
-        <!--
-            Display the main menu item (from the menu table).
-            This is always visible, regardless of whether it is expanded or not.
-            Clicking this link triggers the toggling of expanded/collapsed state
-            via the Livewire component.
-        -->
-        <a class="list-group-item" href="javascript:void(0);" wire:click.prevent="toggleMenu({{ $menu->id }}, '{{ $menu->url }}')">
-            <!-- Display the menu name fetched from the menu table -->
-            {{ $menu->name }}
-        </a>
+            <!-- ------------------------------------------------- -->
+            <!-- Accordion item -->
+            <!-- ------------------------------------------------- -->
+            <div class="accordion-item">
 
-        <!--
-            The child items (from menu_items) should only be displayed if the
-            parent menu is expanded.
-            The expandedMenus array in the Livewire component tracks which menus are in
-            the expanded state.
-        -->
-        @if (isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id])
+                <!-- ------------------------------------------------- -->
+                <!-- Accordion header -->
+                <!-- ------------------------------------------------- -->
+                <h2 class="accordion-header">
+                    <button class="accordion-button {{ isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id] ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ $menu->id }}"
+                            aria-expanded="{{ isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id] ? 'true' : 'false' }}"
+                            aria-controls="collapse{{ $menu->id }}">
+                        {{ $menu->name }}
+                    </button>
+                </h2>
 
-            <!-- Loop through each "menu item" (children of this top-level menu) -->
-            @foreach ($menu->items as $item)
-                <!--
-                    Only show top-level items (those without a parent ID).
+                <!-- ------------------------------------------------- -->
+                <!-- Accordion Collapse Body -->
+                <!-- ------------------------------------------------- -->
+                <div id="collapse{{ $menu->id }}" 
+                    class="accordion-collapse collapse {{ isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id] ? 'show' : '' }}" 
+                    data-bs-parent="#accordionSideMenu">
 
-                    Every menu item that does not have a parent (null parent_id)
-                    is considered a top-level item. If it has a parent_id, it
-                    means it's a sub-item of another parent item.
-                -->
-                @if (is_null($item->parent_id))
-                    <!--<li class="list-group-item {{ in_array($item->id, $activeMenuIds) ? 'active' : '' }}">-->
-                        <a class="list-group-item {{ in_array($item->id, $activeMenuIds) ? 'active' : '' }}" href="javascript:void(0);" wire:click.prevent="toggleMenu({{ $item->id }}, '{{ $item->url }}')">
-                            <!-- Display the title of the menu item (can link to a page) -->
-                            {{ $item->title }}
-                        </a>
-                    <!--</li>-->
+                    <!-- ------------------------------------------------- -->
+                    <!-- Accordion Body -->
+                    <!-- ------------------------------------------------- -->
+                    <div class="accordion-body" style="padding: 0px;">
 
-                    <!--
-                        If the menu item has children and is expanded,
-                        display further sub-items by calling a recursive Blade component.
+                        <!-- ------------------------------------------------- -->
+                        <!-- Accordion item for the menu item. -->
+                        <!-- ------------------------------------------------- -->
+                        <div class="accordion" id="accordionChildMenu" style="margin: 0px; padding: 0px;">
 
-                        The expandedMenus array checks if any of the children need to
-                        be expanded based on user interaction or current active page.
-                    -->
-                    @if (isset($expandedMenus[$item->id]) && $expandedMenus[$item->id])
-                        <ul class="list-group list-group-item-dark">
-                            @foreach ($item->children as $child)
-                                <!-- Call the partial Blade view to render children -->
-                                @include('layouts.navigation.menu-item', ['item' => $child, 'level' => 1])
+                            <!-- ------------------------------------------------- -->
+                            <!-- For each child menu item, create an accordion item. -->
+                            <!-- ------------------------------------------------- -->
+                            @foreach ($menu->items as $item)
+
+                                <!-- ------------------------------------------------- -->
+                                <!-- If not a child, display the menu item. -->
+                                <!-- ------------------------------------------------- -->
+                                @if (!$item->children->isEmpty())
+
+                                    <!-- ------------------------------------------------- -->
+                                    <!-- Accordion item for the child menu item. -->
+                                    <!-- ------------------------------------------------- -->
+                                    <div class="accordion-item">
+
+                                        <!-- ------------------------------------------------- -->
+                                        <!-- Accordion header for the child menu item. -->
+                                        <!-- ------------------------------------------------- -->
+                                        <h3 class="accordion-header">
+                                            <button class="accordion-button {{ isset($expandedMenus[$item->id]) && $expandedMenus[$item->id] ? '' : 'collapsed' }}"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseChild{{ $item->id }}"
+                                                    aria-expanded="{{ isset($expandedMenus[$item->id]) && $expandedMenus[$item->id] ? 'true' : 'false' }}"
+                                                    aria-controls="collapseChild{{ $item->id }}">
+                                                {{ $item->title }}
+                                            </button>
+                                        </h3>
+
+                                        <!-- ------------------------------------------------- -->
+                                        <!-- Accordion Collapse Body for the child menu item. -->
+                                        <!-- ------------------------------------------------- -->
+                                        <div id="collapseChild{{ $item->id }}" 
+                                            class="accordion-collapse collapse text-bg-dark {{ isset($expandedMenus[$item->id]) && $expandedMenus[$item->id] ? 'show' : '' }}"
+                                            data-bs-parent="#accordionChildMenu">
+
+                                            <!-- ------------------------------------------------- -->
+                                            <!-- Accordion Body for the child menu item. -->
+                                            <!-- ------------------------------------------------- -->
+                                            <div class="accordion-body">
+
+
+                                                <!-- ------------------------------------------------- -->
+                                                <!-- ???? -->
+                                                <!-- ------------------------------------------------- -->
+                                                <div class="row {{ isset($expandedMenus[$item->id]) && $expandedMenus[$item->id] ? 'active' : '' }}">
+
+                                                    <!-- ------------------------------------------------- -->
+                                                    <!-- Item URL -->
+                                                    <!-- ------------------------------------------------- -->
+                                                    <a href="{{ $item->url }}" 
+                                                        class="p-2 {{ request()->is(trim($item->url, '/')) ? 'text-primary fw-bold' : '' }}">
+                                                        {{ $item->title }}
+                                                    </a>
+
+                                                    <!-- ------------------------------------------------- -->
+                                                    <!-- Repeat the same logic for the children of the current menu item. -->
+                                                    <!-- ------------------------------------------------- -->
+                                                    @if ($item->children->isNotEmpty())
+                                                        
+                                                        @foreach ($item->children as $child)
+
+                                                            <!-- ------------------------------------------------- -->
+                                                            <!-- Child Item URL -->
+                                                            <!-- ------------------------------------------------- -->
+                                                            <a href="{{ $child->url }}" 
+                                                                class="p-2 border-top {{ request()->is(trim($child->url, '/')) ? 'text-primary fw-bold' : '' }}">
+                                                                {{ $child->title }}
+                                                            </a>
+                                                        @endforeach
+
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             @endforeach
-                        </ul>
-                    @endif
-                @endif
-            @endforeach
-        @endif
-    @endforeach
-</ul>
-
-<!--
-    JavaScript-based event listener for Livewire.
-
-    This listens for the custom Livewire event 'menuToggled', which triggers
-    when a menu is expanded or collapsed. When this event is fired, it logs
-    the menuId in the browser's console.
--->
-<script>
-    document.addEventListener('livewire:load', () => {
-        Livewire.on('menuToggled', menuId => {
-            console.log('Menu toggled:', menuId);
-        });
-    });
-</script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>

@@ -1,24 +1,57 @@
 <?php
 
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+// COMPONENT - NAVIGATION
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+// This component is responsible for handling the navigation menu. It fetches the menus and their items from the database.
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+
 namespace App\Livewire\Layouts\Navigation;
 
 use Livewire\Component;
+
+// --------------------------------------------------------------------------------------------------
+// MODEL - Menu
+// --------------------------------------------------------------------------------------------------
+// This model is used to interact with the menu data in the database.
+// --------------------------------------------------------------------------------------------------
 use App\Models\Menu;  // Menu-modellen som kobler mot menydata
 
 class navigation extends Component
 {
-    public $menus = [];
 
-    // Metode som kjører ved lasting av komponenten
+    // -------------------------------------------------
+    // PROPERTIES
+    // -------------------------------------------------
+    public $menus = []; // Array to store the menus fetched from the database.
+
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTION - MOUNT
+    // --------------------------------------------------------------------------------------------------
+    // Initializes the component and fetches the menus with their items.
+    // --------------------------------------------------------------------------------------------------
     public function mount()
     {
-        // Henter menyer og deres tilknyttede "items"
+        // -------------------------------------------------
+        // Fetch menus with their items from the database.
+        // -------------------------------------------------
         $this->menus = Menu::with('items')->get();  // Henter menyene med elementer
     }
 
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTION - Render
+    // --------------------------------------------------------------------------------------------------
+    // Renders the navigation view with the fetched menus.
+    // --------------------------------------------------------------------------------------------------
     public function render()
     {
-        // Gjør menydataene tilgjengelige for 'layouts.navigation'
+        // -------------------------------------------------
+        // Return the view with the menus data.
+        // -------------------------------------------------
         return view('layouts.navigation.navigation', [
             'menus' => $this->menus  // Sender menyene til Blade-filen
         ]);

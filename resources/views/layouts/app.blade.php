@@ -14,7 +14,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+        <link rel="stylesheet" href="css/app.css">
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -36,9 +36,9 @@
             @endisset
 
             <div class="d-flex w-100" style="min-height: calc(100vh - 90px);">
-                <!-- <div class="bg-secondary-subtle d-none d-md-block p-3" style="width: 250px;"> -->
+                <div class="d-none d-md-block" style="width: 250px; background-color: #333;">
                     @livewire('layouts.navigation.sidebar-menu')
-                <!-- </div> -->
+                </div>
                 <!-- Page Content -->
                 <div class="flex-grow-1">
                     <div class="container-fluid">
