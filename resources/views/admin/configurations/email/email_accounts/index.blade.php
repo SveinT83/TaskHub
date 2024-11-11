@@ -38,12 +38,16 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Navn</th>
-                    <th scope="col">Beskrivelse</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
                     <th scope="col">SMTP Host</th>
                     <th scope="col">IMAP Host</th>
                     <th scope="col">Standard</th>
-                    <th scope="col">Handlinger</th>
+                    
+                    <!-- Only show the TH if user has permission -->
+                    @if(auth()->user()->can('superadmin.edit') || auth()->user()->can('superadmin.delete'))
+                        <th scope="col">Action</th>
+                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -58,26 +62,29 @@
                         <td>{{ $account->smtp_host }}</td>
                         <td>{{ $account->imap_host }}</td>
                         <td>{{ $account->is_default ? 'Ja' : 'Nei' }}</td>
-                        <td>
 
-                            <!-- ------------------------------------------------- -->
-                            <!-- Edit button if user has permission -->
-                            <!-- ------------------------------------------------- -->
-                            @can('superadmin.edit')
-                                <a href="{{ route('email_accounts.edit', $account->id) }}" class="btn btn-sm btn-warning">Rediger</a>
-                            @endcan
+                        <!-- Only show the TD if user has permission -->
+                        @if(auth()->user()->can('superadmin.edit') || auth()->user()->can('superadmin.delete'))
+                            <td>
 
-                            <!-- ------------------------------------------------- -->
-                            <!-- Delete Form and button button if user has permission -->
-                            <!-- ------------------------------------------------- -->
-                            @can('superadmin.delete')
-                                <form action="{{ route('email_accounts.destroy', $account->id) }}" method="POST" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Er du sikker på at du vil slette denne e-postkontoen?')">Slett</button>
-                                </form>
-                            @endcan
-                        </td>
+                                <!-- ------------------------------------------------- -->
+                                <!-- Edit button if user has permission -->
+                                <!-- ------------------------------------------------- -->
+                                @can('superadmin.edit')
+                                    <!-- view/compoments/new-url.blade.php -->
+                                    <x-edit-url href="{{ route('email_accounts.edit', $account->id) }}"></x-edit-url>
+                                @endcan
+
+                                <!-- ------------------------------------------------- -->
+                                <!-- Delete Form and button button if user has permission -->
+                                <!-- ------------------------------------------------- -->
+                                @can('superadmin.delete')
+                                    <!-- view/compoments/delete-form.blade.php -->
+                                    <x-delete-form route="{{ route('email_accounts.destroy', $account->id) }}" warning="Are you sure you want to delete this email account?"></x-delete-form>
+                                @endcan
+                            </td>
+                        @endif
+
                     </tr>
                 @endforeach
             </tbody>

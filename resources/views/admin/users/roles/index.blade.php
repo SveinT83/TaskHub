@@ -56,7 +56,7 @@
                                 <!-- ------------------------------------------------- -->
                                 @can('superadmin.delete')
                                     <!-- view/compoments/delete-form.blade.php -->
-                                    <x-delete-form route="{{ route('roles.destroy', $role->id) }}"></x-delete-form>
+                                    <x-delete-form route="{{ route('roles.destroy', $role->id) }}" warning="Are you sure you want to delete the role?"></x-delete-form>
                                 @endcan
                             </td>
                         </tr>
@@ -68,8 +68,10 @@
                 <!-- Add role button if user has permission -->
                 <!-- ------------------------------------------------- -->
                 @can('superadmin.create')
-                    <!-- view/compoments/new-url.blade.php -->
-                    <x-new-url href="{{ route('roles.create') }}">Add</x-new-url>
+                    <div class="row m-1">
+                        <!-- view/compoments/new-url.blade.php -->
+                        <x-new-url href="{{ route('roles.create') }}">Create Role</x-new-url>
+                    </div>
                 @endcan
             </x-card-secondary>
 
@@ -114,7 +116,7 @@
                                 <!-- ------------------------------------------------- -->
                                 @can('superadmin.delete')
                                     <!-- view/compoments/delete-form.blade.php -->
-                                    <x-delete-form route="{{ route('permissions.destroy', $permission->id) }}"></x-delete-form>
+                                    <x-delete-form route="{{ route('permissions.destroy', $permission->id) }}" warning="Are you sure you want to delete the permission?"></x-delete-form>
                                 @endcan
 
                             </td>
@@ -127,8 +129,10 @@
                 <!-- Add role button if user has permission -->
                 <!-- ------------------------------------------------- -->
                 @can('superadmin.create')
-                    <!-- view/compoments/new-url.blade.php -->
-                    <x-new-url href="{{ route('permissions.create') }}">Add</x-new-url>
+                    <div class="row m-1">
+                        <!-- view/compoments/new-url.blade.php -->
+                        <x-new-url href="{{ route('permissions.create') }}">Create Permission</x-new-url>
+                    </div>
                 @endcan
             </x-card-secondary>
 

@@ -16,7 +16,8 @@
         <!-- ------------------------------------------------- -->
         @can('superadmin.create')
             <div class="col-md-2 mt-1">
-                <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Add New User</a>
+                <!-- view/compoments/new-url.blade.php -->
+                <x-new-url href="{{ route('users.create') }}">Add</x-new-url>
             </div>
         @endcan
 
@@ -35,7 +36,11 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Roles</th>
-                <th>Actions</th>
+
+                <!-- Only show the TH if user has permission -->
+                @if(auth()->user()->can('superadmin.edit') || auth()->user()->can('superadmin.delete'))
+                    <th>Actions</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -48,26 +53,29 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ implode(', ', $user->roles->pluck('name')->toArray()) }}</td>
-                    <td>
 
-                        <!-- ------------------------------------------------- -->
-                        <!-- Edit button if user has permission -->
-                        <!-- ------------------------------------------------- -->
-                        @can('superadmin.edit')
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        @endcan
+                    <!-- Only show the TD if user has permission -->
+                    @if(auth()->user()->can('superadmin.edit') || auth()->user()->can('superadmin.delete'))
+                        <td>
 
-                        <!-- ------------------------------------------------- -->
-                        <!-- Delete button if user has permission -->
-                        <!-- ------------------------------------------------- -->
-                        @can('superadmin.edit')
-                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        @endcan
-                    </td>
+                            <!-- ------------------------------------------------- -->
+                            <!-- Edit button if user has permission -->
+                            <!-- ------------------------------------------------- -->
+                            @can('superadmin.edit')
+                                <!-- view/compoments/new-url.blade.php -->
+                                <x-edit-url href="{{ route('users.edit', $user->id) }}"></x-edit-url>
+                            @endcan
+
+                            <!-- ------------------------------------------------- -->
+                            <!-- Delete button if user has permission -->
+                            <!-- ------------------------------------------------- -->
+                            @can('superadmin.delete')
+                                <!-- view/compoments/delete-form.blade.php -->
+                                <x-delete-form route="{{ route('users.destroy', $user->id) }}" warning="Are you sure you want to delete the user?"></x-delete-form>
+                            @endcan
+                        </td>
+                    @endif
+
                 </tr>
             @endforeach
         </tbody>

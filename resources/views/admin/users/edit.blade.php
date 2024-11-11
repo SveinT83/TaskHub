@@ -59,7 +59,8 @@
             <!-- Update user button -->
             <!-- ------------------------------------------------- -->
             <div class="row m-1">
-                <button type="submit" class="btn btn-success">Update User</button>
+                <!-- view/compoments/save-update-button.blade.php -->
+                <x-save-update-button type="submit">Update</x-save-update-button>
             </div>
 
         </x-card-secondary>

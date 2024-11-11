@@ -76,7 +76,8 @@
             <!-- Create user button -->
             <!-- ------------------------------------------------- -->
             <div class="row m-1">
-                <button type="submit" class="btn btn-success">Create User</button>
+                <!-- view/compoments/save-update-button.blade.php -->
+                <x-save-update-button type="submit">Create User</x-save-update-button>
             </div>
 
         </x-card-secondary>
