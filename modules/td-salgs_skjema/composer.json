@@ -1,0 +1,19 @@
+{
+    "name": "tronderdata/td-salgs_skjema",
+    "description": "A module for managing sales forms",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Tronderdata\\TdSalgsSkjema\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "tronderdata\\TdSalgsSkjema\\Providers\\TdSalgsSkjemaServiceProvider"
+            ]
+        }
+    },
+    "require": {}
+}
