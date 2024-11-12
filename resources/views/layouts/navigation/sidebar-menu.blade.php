@@ -54,7 +54,7 @@
                                 <!-- ------------------------------------------------- -->
                                 <!-- If not a child, display the menu item. -->
                                 <!-- ------------------------------------------------- -->
-                                @if (!$item->children->isEmpty())
+                                <!--@if (!$item->children->isEmpty())-->
 
                                     <!-- ------------------------------------------------- -->
                                     <!-- Accordion item for the child menu item. -->
@@ -122,7 +122,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endif
+                                <!--@else-->
+                                    
+                                <!--@endif-->
                             @endforeach
                         </div>
                     </div>
