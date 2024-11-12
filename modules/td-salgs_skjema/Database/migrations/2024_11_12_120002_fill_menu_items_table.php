@@ -1,0 +1,76 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        // Sjekk om tabellen "menu_items" eksisterer
+        if (Schema::hasTable('menu_items') && Schema::hasTable('menus')) {
+            // Hent "menu_id" for raden i "menu"-tabellen med navn "TD Salgs Skjema"
+            $menuId = DB::table('menus')->where('name', 'TD Salgs Skjema')->value('id');
+
+            if ($menuId) {
+                // Definer meny-elementer
+                $menuItems = [
+                    [
+                        'menu_id' => $menuId,
+                        'parent_id' => null,
+                        'title' => 'Dashboard',
+                        'url' => '/tdsalgsskjema',
+                        'icon' => 'bi bi-file-text',
+                        'permission' => 'tdsalgsskjema.view',
+                        'order' => 1,
+                    ],
+                    [
+                        'menu_id' => $menuId,
+                        'parent_id' => null,
+                        'title' => 'Nytt skjema',
+                        'url' => '/tdsalgsskjema/create',
+                        'icon' => 'bi bi-file-earmark-plus',
+                        'permission' => 'tdsalgsskjema.create',
+                        'order' => 2,
+                    ],
+                    [
+                        'menu_id' => 1,
+                        'parent_id' => null,
+                        'title' => 'TD Salgs Skjema',
+                        'url' => '/admin/tdsalgsskjema/settings',
+                        'icon' => 'bi bi-file-text',
+                        'permission' => 'tdsalgsskjema.admin',
+                        'order' => 1,
+                    ],
+                ];
+
+                // Sett inn elementene hvis de ikke allerede eksisterer
+                foreach ($menuItems as $item) {
+                    $exists = DB::table('menu_items')
+                        ->where('menu_id', $item['menu_id'])
+                        ->where('title', $item['title'])
+                        ->exists();
+
+                    if (!$exists) {
+                        DB::table('menu_items')->insert($item);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        // Slett meny-elementer hvis nødvendig
+        if (Schema::hasTable('menu_items')) {
+            DB::table('menu_items')->where('url', 'LIKE', '/tdsalgsskjema%')->delete();
+        }
+    }
+};

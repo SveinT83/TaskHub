@@ -14,9 +14,7 @@ use App\Http\Controllers\Admin\Appearance\AppearanceController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () {return view('welcome');});
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 // AUTHENTICATED ROUTES
@@ -108,7 +106,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('configurations')->middleware('verified')->group(function () {
 
 
-            Route::get('/', [ConfigurationsController::class, 'index'])->name('dashboard');
+            Route::get('/', [ConfigurationsController::class, 'index'])->name('configurations');
 
             // --------------------------------------------------------------------------------------------------
             // PREFIX MENUS
@@ -212,6 +210,7 @@ Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcl
 // -------------------------------------------------
 Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('login.nextcloud');
 Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
+
 
 // -------------------------------------------------
 // Require the auth routes
