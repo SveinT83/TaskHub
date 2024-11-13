@@ -14,7 +14,6 @@ class TdsalgsskjemaController extends Controller
     public function index(Request $request)
     {
 
-        dd("Test");
         return view('TdSalgsSkjema::index');
     }
 

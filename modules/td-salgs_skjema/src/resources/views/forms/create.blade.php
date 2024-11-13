@@ -17,8 +17,8 @@
         <!-- ------------------------------------------------- -->
         <!-- Card -->
         <!-- ------------------------------------------------- -->
-        <x-card-secondary title="Register a new event">
-            
+        <x-card-secondary title="Ny kunde?">
+            <livewire:FindCustomerForm />
         </x-card-secondary>
 
 @endsection
