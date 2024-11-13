@@ -20,6 +20,7 @@ Route::middleware('web', 'auth')->group(function () {
     // -------------------------------------------------
     Route::prefix('tdsalgsskjema')->group(function () {
 
+        dd("Rute test");
         Route::get('/', [TdsalgsskjemaController::class, 'index'])->name('tdsalgsskjema.index');
         Route::get('/create', [TdsalgsskjemaController::class, 'create'])->name('tdsalgsskjema.create');
 

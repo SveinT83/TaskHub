@@ -11,26 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Sjekk om tabellen "menu_items" eksisterer
+        // Sjekk om tabellene "menu_items" og "menus" eksisterer
         if (Schema::hasTable('menu_items') && Schema::hasTable('menus')) {
-            // Hent "menu_id" for raden i "menu"-tabellen med navn "TD Salgs Skjema"
+            // Hent "menu_id" for raden i "menus"-tabellen med navn "TD Salgs Skjema"
             $menuId = DB::table('menus')->where('name', 'TD Salgs Skjema')->value('id');
 
             if ($menuId) {
-                // Definer meny-elementer
+                // Opprett "Dashboard"-elementet og hent dets ID
+                $dashboardItemId = DB::table('menu_items')->insertGetId([
+                    'menu_id' => $menuId,
+                    'parent_id' => null,
+                    'title' => 'Dashboard',
+                    'url' => '/tdsalgsskjema',
+                    'icon' => 'bi bi-file-text',
+                    'permission' => 'tdsalgsskjema.view',
+                    'order' => 1,
+                ]);
+
+                // Definer de andre meny-elementene
                 $menuItems = [
                     [
                         'menu_id' => $menuId,
-                        'parent_id' => null,
-                        'title' => 'Dashboard',
-                        'url' => '/tdsalgsskjema',
-                        'icon' => 'bi bi-file-text',
-                        'permission' => 'tdsalgsskjema.view',
-                        'order' => 1,
-                    ],
-                    [
-                        'menu_id' => $menuId,
-                        'parent_id' => null,
+                        'parent_id' => $dashboardItemId, // Bruk ID-en til "Dashboard"
                         'title' => 'Nytt skjema',
                         'url' => '/tdsalgsskjema/create',
                         'icon' => 'bi bi-file-earmark-plus',
@@ -48,7 +50,7 @@ return new class extends Migration
                     ],
                 ];
 
-                // Sett inn elementene hvis de ikke allerede eksisterer
+                // Sett inn de andre elementene hvis de ikke allerede eksisterer
                 foreach ($menuItems as $item) {
                     $exists = DB::table('menu_items')
                         ->where('menu_id', $item['menu_id'])
@@ -62,6 +64,7 @@ return new class extends Migration
             }
         }
     }
+
 
     /**
      * Reverse the migrations.
