@@ -122,8 +122,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                @elseif($item->children->isEmpty())
-                                    <p>{{ $item->title }}</p>
                                 @endif
                             @endforeach
                         </div>
