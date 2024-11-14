@@ -36,7 +36,7 @@
             @endisset
 
             <div class="d-flex w-100" style="min-height: calc(100vh - 90px);">
-                <div class="d-none d-md-block" style="width: 250px; background-color: #333;">
+                <div class="d-none d-md-block text-bg-dark" style="width: 250px;">
                     @livewire('layouts.navigation.sidebar-menu')
                 </div>
                 <!-- Page Content -->
