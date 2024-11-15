@@ -21,7 +21,9 @@ Route::middleware('web', 'auth')->group(function () {
 
         Route::get('/', [TdsalgsskjemaController::class, 'index'])->name('tdsalgsskjema.index');
         Route::get('/create', [TdsalgsskjemaController::class, 'create'])->name('tdsalgsskjema.create');
-
+        Route::get('/businessOrPrivate', [TdsalgsskjemaController::class, 'businessOrPrivate'])->name('tdsalgsskjema.businessOrPrivate');
+        Route::get('/aLaCarte', [TdsalgsskjemaController::class, 'aLaCarte'])->name('tdsalgsskjema.aLaCarte');
+        Route::get('/FindCustomerForm', [TdsalgsskjemaController::class, 'FindCustomerForm'])->name('tdsalgsskjema.FindCustomerForm');
     });
 
 

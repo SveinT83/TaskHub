@@ -25,4 +25,31 @@ class TdsalgsskjemaController extends Controller
 
         return view('TdSalgsSkjema::forms.create');
     }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - BUSINESS OR PRIVATE
+    // -------------------------------------------------------------------
+    public function businessOrPrivate(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.businessOrPrivate');
+    }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - A LA CARTE
+    // -------------------------------------------------------------------
+    public function aLaCarte(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.aLaCarte');
+    }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - FIND CUSTOMER FORM
+    // -------------------------------------------------------------------
+    public function FindCustomerForm(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.FindCustomerForm');
+    }
 }

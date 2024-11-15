@@ -4,6 +4,8 @@ namespace tronderdata\TdSalgsSkjema\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use tronderdata\TdSalgsSkjema\Livewire\FindCustomerForm;
+use tronderdata\TdSalgsSkjema\Livewire\BusinessOrPrivate;
+use tronderdata\TdSalgsSkjema\Livewire\AlaCarte;
 use Livewire\Livewire;
 
 class TdSalgsSkjemaServiceProvider extends ServiceProvider
@@ -19,6 +21,8 @@ class TdSalgsSkjemaServiceProvider extends ServiceProvider
         // Load the Livewire components
         // -------------------------------------------------
         Livewire::component('FindCustomerForm', FindCustomerForm::class);
+        Livewire::component('BusinessOrPrivate', BusinessOrPrivate::class);
+        Livewire::component('BusinessOrPrivate', AlaCarte::class);
 
         // -------------------------------------------------
         // Load the routes
@@ -34,6 +38,11 @@ class TdSalgsSkjemaServiceProvider extends ServiceProvider
         // Load the migrations
         // -------------------------------------------------
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
+        // -------------------------------------------------
+        // Load the images
+        // -------------------------------------------------
+        $this->publishes([__DIR__ . '/../resources/images' => public_path('modules/TdSalgsSkjema/images'),], 'public');
     }
 
     public function register()

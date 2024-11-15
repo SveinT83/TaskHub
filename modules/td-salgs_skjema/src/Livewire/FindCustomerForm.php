@@ -17,13 +17,15 @@ class FindCustomerForm extends Component
     public $contactData = [];
     public $customerInfo = [];
     public $serviceItemData = [];
-    public $contactDataNeedsUpdate = false;
+    public $contactForm = false;
 
     public $apiRequest;
     public $apiResponse;
 
     public function searchCustomer()
     {
+
+        $this->contactForm = true;
 
         session([
             'email' => $this->email,
