@@ -1,0 +1,7 @@
+{
+    "name": "tronderdata/td-task",
+    "description": "Test module for TaskHub",
+    "providers": [
+        "tronderdata\\TdTask\\Providers\\TdTaskServiceProvider"
+    ]
+}
