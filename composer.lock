@@ -6125,7 +6125,7 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/td-salgs_skjema",
-                "reference": "7ae4cabab74e7233f6bad1897c1e26896f3797ec"
+                "reference": "6b9ecc96e50362966664bcf583b094f487aeed40"
             },
             "type": "library",
             "extra": {
@@ -8575,5 +8575,5 @@
         "php": "^8.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

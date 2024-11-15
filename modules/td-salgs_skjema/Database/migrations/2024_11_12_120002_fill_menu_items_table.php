@@ -23,8 +23,6 @@ return new class extends Migration
                     'parent_id' => null,
                     'title' => 'Dashboard',
                     'url' => '/tdsalgsskjema',
-                    'icon' => 'bi bi-file-text',
-                    'permission' => 'tdsalgsskjema.view',
                     'order' => 1,
                 ]);
 
@@ -35,8 +33,6 @@ return new class extends Migration
                         'parent_id' => $dashboardItemId, // Bruk ID-en til "Dashboard"
                         'title' => 'Nytt skjema',
                         'url' => '/tdsalgsskjema/create',
-                        'icon' => 'bi bi-file-earmark-plus',
-                        'permission' => 'tdsalgsskjema.create',
                         'order' => 2,
                     ],
                     [
@@ -44,8 +40,6 @@ return new class extends Migration
                         'parent_id' => null,
                         'title' => 'TD Salgs Skjema',
                         'url' => '/admin/tdsalgsskjema/settings',
-                        'icon' => 'bi bi-file-text',
-                        'permission' => 'tdsalgsskjema.admin',
                         'order' => 1,
                     ],
                 ];

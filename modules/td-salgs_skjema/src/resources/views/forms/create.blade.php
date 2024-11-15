@@ -13,11 +13,11 @@
 @endsection
 
 @section('content')
-    
+
         <!-- ------------------------------------------------- -->
-        <!-- Card -->
+        <!-- Card - Search Form -->
         <!-- ------------------------------------------------- -->
-        <x-card-secondary title="Ny kunde?">
+        <x-card-secondary title="Kontaktinformasjon">
             <livewire:FindCustomerForm />
         </x-card-secondary>
 

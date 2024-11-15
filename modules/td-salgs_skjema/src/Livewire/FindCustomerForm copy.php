@@ -17,19 +17,14 @@ class FindCustomerForm extends Component
     public $contactData = [];
     public $customerInfo = [];
     public $serviceItemData = [];
-    public $contactDataNeedsUpdate = false;
 
     public $apiRequest;
     public $apiResponse;
 
     public function searchCustomer()
     {
-
-        session([
-            'email' => $this->email,
-            'tel' => $this->tel,
-            'name' => $this->name,
-        ]);
+        $this->isLoading = true; // Start spinneren
+        session()->flash('success', 'Søkeknappen ble klikket!');
 
         try {
             // Hent token for Basic Auth
@@ -51,7 +46,6 @@ class FindCustomerForm extends Component
                 });
 
                 if ($filteredContact) {
-
                     $this->contactData = [
                         'ContactId' => $filteredContact['ContactId'],
                         'FirstName' => $filteredContact['FirstName'],
@@ -59,18 +53,6 @@ class FindCustomerForm extends Component
                         'PhoneMobile' => $filteredContact['PhoneMobile'],
                         'CustomerId' => $filteredContact['CustomerId'],
                     ];
-
-                    session([
-                        'contactData' => $this->contactData,
-                        'customerId' => $this->customerId,
-                    ]);
-
-                    $this->customerId = $filteredContact['CustomerId'];
-
-                    // Hent kundeinformasjon og service levels
-                    $this->fetchCustomerInfo();
-                    $this->fetchServiceItems();
-
                 } else {
                     session()->flash('error', 'Ingen kunde funnet med oppgitte kriterier.');
                 }
@@ -78,10 +60,6 @@ class FindCustomerForm extends Component
                 session()->flash('error', 'Kunne ikke hente kontakter fra MSP Manager API.');
             }
         } finally {
-
-            if ($this->customerId) {
-                session()->flash('success', 'Kunde funnet.');
-            }
             $this->isLoading = false; // Stopp spinneren
         }
     }
@@ -101,25 +79,7 @@ class FindCustomerForm extends Component
         $response = Http::withBasicAuth($username, $password)->get($url);
 
         if ($response->successful()) {
-            $data = $response->json();
-            $fullName = $data['CustomerName'] ?? null;
-
-            if ($fullName) {
-                // Ekstraher kundenummer og navn
-                preg_match('/^(\d+)\s*-\s*(.+)$/', $fullName, $matches);
-
-                $this->customerInfo = [
-                    'fullName' => $fullName,
-                    'customerNumber' => $matches[1] ?? null, // Kundenummer
-                    'customerName' => $matches[2] ?? $fullName, // Navn uten kundenummer og "-"
-                ];
-
-                session([
-                    'customerInfo' => $this->customerInfo,
-                ]);
-            } else {
-                session()->flash('error', 'Kundenavn ikke tilgjengelig.');
-            }
+            $this->customerInfo = $response->json();
         } else {
             session()->flash('error', 'Kunne ikke hente kundeinformasjon.');
         }
@@ -142,34 +102,17 @@ class FindCustomerForm extends Component
         if ($response->successful()) {
             $serviceItems = collect($response->json('value'));
 
-            // Filtrer for 'IsDefault: true' først
+            // Filtrer service items basert på 'isDefault'
             $defaultServiceItem = $serviceItems->firstWhere('IsDefault', true);
 
-            // Hvis ingen default, ta første aktive service item
-            if (!$defaultServiceItem) {
-                $defaultServiceItem = $serviceItems->firstWhere('IsActive', true);
-            }
-
-            // Hvis vi finner et gyldig service item
             if ($defaultServiceItem) {
                 $this->serviceItemData = [
                     'ServiceItemId' => $defaultServiceItem['ServiceItemId'],
                     'ServiceItemName' => $defaultServiceItem['ServiceItemName'],
-                    'StartDate' => $defaultServiceItem['StartDate'],
-                    'EndDate' => $defaultServiceItem['EndDate'],
-                    'InvoiceDescription' => $defaultServiceItem['InvoiceDescription'] ?? 'Ingen beskrivelse',
                 ];
-
-                session([
-                    'serviceItemData' => $this->serviceItemData,
-                ]);
-
-            } else {
-                // Ingen service items funnet
-                session()->flash('error', 'Ingen relevante service items funnet.');
             }
         } else {
-            session()->flash('error', 'Kunne ikke hente service items fra MSP Manager API.');
+            session()->flash('error', 'Kunne ikke hente service items.');
         }
     }
 
