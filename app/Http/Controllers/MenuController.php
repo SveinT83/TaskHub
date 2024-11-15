@@ -9,7 +9,7 @@
 namespace App\Http\Controllers;
 
 // -------------------------------------------------
-// CONTROLLER - MENU
+// MODELL - MENU
 // -------------------------------------------------
 // This controller handles the operations related to the Menu model.
 // It provides functionalities to manage menu items within the application.

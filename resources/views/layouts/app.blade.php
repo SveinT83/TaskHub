@@ -22,8 +22,8 @@
 
         @livewireStyles
     </head>
-    <body>
-        <div class="min-h-screen">
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
             @livewire('layouts.navigation.navigation')
 
             <!-- Page Heading -->
@@ -36,13 +36,13 @@
             @endisset
 
             <div class="d-flex w-100" style="min-height: calc(100vh - 90px);">
-                <div class="d-none d-md-block text-bg-dark" style="width: 250px;">
+                <div class="d-none d-md-block" style="width: 250px; background-color: #333;">
                     @livewire('layouts.navigation.sidebar-menu')
                 </div>
                 <!-- Page Content -->
                 <div class="flex-grow-1">
                     <div class="container-fluid">
-                        <div class="row text-bg-light p-3 border-bottom justify-content-start">
+                        <div class="row bg-primary-subtle p-3 border-bottom justify-content-start">
                             @yield('pageHeader')
                         </div>
 
