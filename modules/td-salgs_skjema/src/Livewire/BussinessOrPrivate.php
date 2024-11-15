@@ -5,7 +5,7 @@ namespace tronderdata\TdSalgsSkjema\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
-class BusinessOrPrivate extends Component
+class BussinessOrPrivate extends Component
 {
 
     // -------------------------------------------------
@@ -49,6 +49,6 @@ class BusinessOrPrivate extends Component
 
     public function render()
     {
-        return view('TdSalgsSkjema::livewire.BusinessOrPrivate');
+        return view('TdSalgsSkjema::livewire.BussinessOrPrivate');
     }
 }

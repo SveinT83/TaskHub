@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('products')) {
-            Schema::create('products', function (Blueprint $table) {
+        if (!Schema::hasTable('alacarte')) {
+            Schema::create('alacarte', function (Blueprint $table) {
                 $table->id(); // Primary Key
                 $table->string('product_number')->nullable(); // Product Number
                 $table->string('name'); // Product Name
@@ -330,7 +330,7 @@ return new class extends Migration
         ];
 
         foreach ($products as $product) {
-            DB::table('products')->updateOrInsert(
+            DB::table('alacarte')->updateOrInsert(
                 ['name' => $product['name']], // Match by name
                 $product // Insert or update
             );
@@ -342,6 +342,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('alacarte');
     }
 };

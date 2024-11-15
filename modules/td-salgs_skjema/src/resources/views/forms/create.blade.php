@@ -17,7 +17,7 @@
         <!-- ------------------------------------------------- -->
         <!-- Card - Form -->
         <!-- ------------------------------------------------- -->
-        <livewire:BusinessOrPrivate />
+        <livewire:BussinessOrPrivate />
 
 
 @endsection
