@@ -1,10 +1,5 @@
 <?php
 
-// ---------------------------------------------------------------------------------------------------------------------------------------------------
-// MODEL - EMAIL ACCOUNT
-// ---------------------------------------------------------------------------------------------------------------------------------------------------
-// This model handles the email account configurations and credentials.
-// ---------------------------------------------------------------------------------------------------------------------------------------------------
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -28,69 +23,33 @@ class EmailAccount extends Model
         'is_default',
     ];
 
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - Hidden attributes
-    // --------------------------------------------------------------------------------------------------
-    // These attributes should be hidden from arrays.
-    // --------------------------------------------------------------------------------------------------
+    // Hvis du ønsker å kryptere passordene automatisk
     protected $hidden = [
         'smtp_password',
         'imap_password',
     ];
 
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - Set SMTP password
-    // --------------------------------------------------------------------------------------------------
-    // Mutator for encrypting the SMTP password before saving it to the database.
-    // --------------------------------------------------------------------------------------------------
+    // Mutator for å kryptere SMTP-passord
     public function setSmtpPasswordAttribute($value)
     {
-
-        // -------------------------------------------------
-        // Encrypt the SMTP password
-        // -------------------------------------------------
         $this->attributes['smtp_password'] = Crypt::encryptString($value);
     }
 
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - Get SMTP password
-    // --------------------------------------------------------------------------------------------------
-    // Accessor for decrypting the SMTP password when retrieving it from the database.
-    // --------------------------------------------------------------------------------------------------
+    // Accessor for å dekryptere SMTP-passord
     public function getSmtpPasswordAttribute($value)
     {
-
-        // -------------------------------------------------
-        // Decrypt the SMTP password
-        // -------------------------------------------------
         return Crypt::decryptString($value);
     }
 
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - Set IMAP password
-    // --------------------------------------------------------------------------------------------------
-    // Mutator for encrypting the IMAP password before saving it to the database.
-    // --------------------------------------------------------------------------------------------------
+    // Mutator for å kryptere IMAP-passord
     public function setImapPasswordAttribute($value)
     {
-
-        // -------------------------------------------------
-        // Encrypt the IMAP password
-        // -------------------------------------------------
         $this->attributes['imap_password'] = Crypt::encryptString($value);
     }
 
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - Get IMAP password
-    // --------------------------------------------------------------------------------------------------
-    // Accessor for decrypting the IMAP password when retrieving it from the database.
-    // --------------------------------------------------------------------------------------------------
+    // Accessor for å dekryptere IMAP-passord
     public function getImapPasswordAttribute($value)
     {
-
-        // -------------------------------------------------
-        // Decrypt the IMAP password
-        // -------------------------------------------------
         return Crypt::decryptString($value);
     }
 }

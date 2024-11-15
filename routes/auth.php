@@ -9,8 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Admin\Integrations\Nextcloud\NextcloudController;
-
+use App\Http\Controllers\Integrations\Nextcloud\NextcloudController;
 use Illuminate\Support\Facades\Route;
 
 // Legg til en middleware for å sjekke Nextcloud-innstillinger innenfor rutene
@@ -19,6 +18,10 @@ Route::middleware('guest')->group(function () {
                 ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    //Register routes
+    //Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    //Route::post('register', [RegisteredUserController::class, 'store']);
 
     // Hvis Nextcloud er aktivert, legg til påloggingsruter for Nextcloud
     Route::get('login/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('login.nextcloud');
