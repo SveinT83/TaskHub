@@ -1,33 +1,29 @@
 <?php
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
-// CONTROLLER - DASHBOARDCONTROLLER
-//
-// This controller is responsible for handling the dashboard related actions such as displaying the dashboard.
+// CONTROLLER - ADMINCONTROLLER
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+// This controller is responsible for handling admin related actions such as displaying the admin dashboard.
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class AdminController extends Controller
 {
-
+    
     // --------------------------------------------------------------------------------------------------
     // FUNCTION - INDEX
     // --------------------------------------------------------------------------------------------------
-    // This function returns the dashboard view.
+    // This function returns the view for the admin dashboard.
     // --------------------------------------------------------------------------------------------------
     public function index()
     {
         // -------------------------------------------------
-        // Retrieve the authenticated user.
+        // Return the view for the admin dashboard.
         // -------------------------------------------------
-        $user = auth()->user();
-
-        // -------------------------------------------------
-        // Return the view with the user's information.
-        // -------------------------------------------------
-        return view('dashboard');
+        return view('admin.index');
     }
 }
