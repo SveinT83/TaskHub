@@ -43,7 +43,7 @@
                         <!-- Standalone menu item -->
                         @if (!$item->is_parent && is_null($item->parent_id))
                             <a href="{{ $item->url }}" 
-                               class="d-block px-3 py-2 {{ request()->is(trim($item->url, '/')) ? 'text-primary fw-bold' : '' }}">
+                               class="d-block px-3 py-2 single-item {{ request()->is(trim($item->url, '/')) ? 'fw-bold' : '' }}">
                                 <i class="{{ $item->icon }}"> </i> {{ $item->title }}
                             </a>
                         @endif
@@ -67,18 +67,18 @@
                                         </button>
                                     </h3>
 
-                                    <div id="collapseChild{{ $item->id }}" class="accordion-collapse collapse text-bg-dark {{ isset($expandedMenus[$item->id]) && $expandedMenus[$item->id] ? 'show' : '' }}"data-bs-parent="#accordionChildMenu{{ $item->id }}">
+                                    <div id="collapseChild{{ $item->id }}" class="accordion-collapse collapse {{ isset($expandedMenus[$item->id]) && $expandedMenus[$item->id] ? 'show' : '' }}"data-bs-parent="#accordionChildMenu{{ $item->id }}">
 
                                         <div class="accordion-body">
                                             <!-- Parent menu item -->
                                             <a href="{{ $item->url }}" 
-                                                class="d-block px-3 py-2 {{ request()->is(trim($item->url, '/')) ? 'text-primary fw-bold' : '' }}">
+                                                class="d-block px-3 py-2 {{ request()->is(trim($item->url, '/')) ? 'fw-bold' : '' }}">
                                                  <i class="{{ $item->icon }}"> </i> {{ $item->title }}
                                              </a>
                                             <!-- Iterate through all children of the parent menu item -->
                                             @foreach ($item->children as $child)
                                                 <a href="{{ $child->url }}" 
-                                                   class="d-block px-3 py-2 {{ request()->is(trim($child->url, '/')) ? 'text-primary fw-bold' : '' }}">
+                                                   class="d-block px-3 py-2 {{ request()->is(trim($child->url, '/')) ? 'fw-bold' : '' }}">
                                                     <i class="{{ $child->icon }}"> </i> {{ $child->title }}
                                                 </a>
                                             @endforeach

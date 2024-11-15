@@ -22,8 +22,8 @@
 
         @livewireStyles
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+    <body>
+        <div class="min-h-screen">
             @livewire('layouts.navigation.navigation')
 
             <!-- Page Heading -->
@@ -42,7 +42,7 @@
                 <!-- Page Content -->
                 <div class="flex-grow-1">
                     <div class="container-fluid">
-                        <div class="row bg-primary-subtle p-3 border-bottom justify-content-start">
+                        <div class="row text-bg-light p-3 border-bottom justify-content-start">
                             @yield('pageHeader')
                         </div>
 
