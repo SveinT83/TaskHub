@@ -24,6 +24,7 @@ Route::middleware('web', 'auth')->group(function () {
         Route::get('/businessOrPrivate', [TdsalgsskjemaController::class, 'businessOrPrivate'])->name('tdsalgsskjema.businessOrPrivate');
         Route::get('/aLaCarte', [TdsalgsskjemaController::class, 'aLaCarte'])->name('tdsalgsskjema.aLaCarte');
         Route::get('/FindCustomerForm', [TdsalgsskjemaController::class, 'FindCustomerForm'])->name('tdsalgsskjema.FindCustomerForm');
+        Route::get('/antallBrukere', [TdsalgsskjemaController::class, 'antallBrukere'])->name('tdsalgsskjema.antallBrukere');
     });
 
 

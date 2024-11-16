@@ -5,7 +5,9 @@ namespace tronderdata\TdSalgsSkjema\Providers;
 use Illuminate\Support\ServiceProvider;
 use tronderdata\TdSalgsSkjema\Livewire\FindCustomerForm;
 use tronderdata\TdSalgsSkjema\Livewire\BussinessOrPrivate;
-use tronderdata\TdSalgsSkjema\Livewire\AlaCarte;
+use tronderdata\TdSalgsSkjema\Livewire\aLaCarte;
+use tronderdata\TdSalgsSkjema\Livewire\Price_card;
+use tronderdata\TdSalgsSkjema\Livewire\antallBrukere;
 use Livewire\Livewire;
 
 class TdSalgsSkjemaServiceProvider extends ServiceProvider
@@ -22,7 +24,9 @@ class TdSalgsSkjemaServiceProvider extends ServiceProvider
         // -------------------------------------------------
         Livewire::component('FindCustomerForm', FindCustomerForm::class);
         Livewire::component('BussinessOrPrivate', BussinessOrPrivate::class);
-        Livewire::component('AlaCarte', AlaCarte::class);
+        Livewire::component('aLaCarte', aLaCarte::class);
+        Livewire::component('Price_card', Price_card::class);
+        Livewire::component('antallBrukere', antallBrukere::class);
 
         // -------------------------------------------------
         // Load the routes

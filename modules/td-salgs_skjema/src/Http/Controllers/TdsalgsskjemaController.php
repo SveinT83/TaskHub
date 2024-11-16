@@ -52,4 +52,13 @@ class TdsalgsskjemaController extends Controller
 
         return view('TdSalgsSkjema::forms.FindCustomerForm');
     }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - ANTALL BRUKERE
+    // -------------------------------------------------------------------
+    public function antallBrukere(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.antallBrukere');
+    }
 }

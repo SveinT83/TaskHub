@@ -9,7 +9,7 @@
 <!-- Page header -->
 <!-- ------------------------------------------------- -->
 @section('pageHeader')
-    <x-page-header pageHeaderTitle="TD Salgs Skjema - A-la-carte">
+    <x-page-header pageHeaderTitle="TD Salgs Skjema - Brukere">
         <livewire:Price_card />
     </x-page-header>
 @endsection
@@ -19,8 +19,8 @@
         <!-- ------------------------------------------------- -->
         <!-- Card - Form -->
         <!-- ------------------------------------------------- -->
-        <x-card-secondary title="Alacarte Items">
-            <livewire:aLaCarte />
+        <x-card-secondary title="Antall brukere">
+            <livewire:antallBrukere />
         </x-card>
 
 

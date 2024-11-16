@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace tronderdata\TdSalgsSkjema\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Alacarte extends Model
+class AlacarteItems extends Model
 {
     use HasFactory;
 
