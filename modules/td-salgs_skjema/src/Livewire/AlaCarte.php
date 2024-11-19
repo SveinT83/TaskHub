@@ -1,34 +1,40 @@
 <?php
 
+//Funker
+
 namespace tronderdata\TdSalgsSkjema\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Session;
 use tronderdata\TdSalgsSkjema\Models\AlacarteItems;
 
-class Alacarte extends Component
+class aLaCarte extends Component
 {
-    public $alacarteItems = [];
-    public $quantities = [];
+    public $quantities = []; // Holder antall per item
 
     public function mount()
     {
-        // Hent alle Alacarte-elementer fra databasen
-        $this->alacarteItems = AlacarteItems::all();
-        $this->quantities = Session::get('quantities', []); // Hent tidligere lagrede mengder fra session
+        // Hent session-data ved initiering
+        $this->quantities = session('quantities', []);
     }
 
-    public function updateQuantity($itemId, $value)
+    public function updateQuantity($alacarteId, $quantity)
     {
-        // Oppdater antall i session
-        $this->quantities[$itemId] = max(0, (int) $value); // Sørg for at verdien er minst 0
-        Session::put('quantities', $this->quantities); // Lagre oppdatert session
+        // Oppdater antallet for et gitt alacarte-item
+        if ($quantity <= 0) {
+            unset($this->quantities[$alacarteId]); // Fjern hvis mengden er null eller negativ
+        } else {
+            $this->quantities[$alacarteId] = $quantity; // Oppdater med ny mengde
+        }
+
+        // Oppdater sessionen
+        session(['quantities' => $this->quantities]);
     }
 
     public function render()
     {
-        return view('TdSalgsSkjema::livewire.alacarte', [
-            'alacarteItems' => $this->alacarteItems,
+        return view('TdSalgsSkjema::livewire.aLaCarte', [
+            'alacarteItems' => AlacarteItems::all(),
         ]);
     }
 }

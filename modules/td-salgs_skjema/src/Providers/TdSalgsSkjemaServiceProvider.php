@@ -3,11 +3,14 @@
 namespace tronderdata\TdSalgsSkjema\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use tronderdata\TdSalgsSkjema\Livewire\FindCustomerForm;
 use tronderdata\TdSalgsSkjema\Livewire\BussinessOrPrivate;
 use tronderdata\TdSalgsSkjema\Livewire\aLaCarte;
 use tronderdata\TdSalgsSkjema\Livewire\Price_card;
 use tronderdata\TdSalgsSkjema\Livewire\antallBrukere;
+use tronderdata\TdSalgsSkjema\Livewire\antallDatamaskiner;
+use tronderdata\TdSalgsSkjema\Livewire\ServiceavtaleForm;
+use tronderdata\TdSalgsSkjema\Livewire\serviceavtaleConfigForm;
+use tronderdata\TdSalgsSkjema\Livewire\FindCustomerForm;
 use Livewire\Livewire;
 
 class TdSalgsSkjemaServiceProvider extends ServiceProvider
@@ -22,11 +25,14 @@ class TdSalgsSkjemaServiceProvider extends ServiceProvider
         // -------------------------------------------------
         // Load the Livewire components
         // -------------------------------------------------
-        Livewire::component('FindCustomerForm', FindCustomerForm::class);
         Livewire::component('BussinessOrPrivate', BussinessOrPrivate::class);
-        Livewire::component('aLaCarte', aLaCarte::class);
-        Livewire::component('Price_card', Price_card::class);
         Livewire::component('antallBrukere', antallBrukere::class);
+        Livewire::component('antallDatamaskiner', antallDatamaskiner::class);
+        Livewire::component('ServiceavtaleForm', ServiceavtaleForm::class);
+        Livewire::component('serviceavtaleConfigForm', serviceavtaleConfigForm::class);
+        Livewire::component('aLaCarte', aLaCarte::class);
+        Livewire::component('FindCustomerForm', FindCustomerForm::class);
+        Livewire::component('Price_card', Price_card::class);
 
         // -------------------------------------------------
         // Load the routes

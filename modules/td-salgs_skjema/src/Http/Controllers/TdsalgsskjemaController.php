@@ -27,12 +27,39 @@ class TdsalgsskjemaController extends Controller
     }
 
     // -------------------------------------------------------------------
-    // FUNCTION - BUSINESS OR PRIVATE
+    // FUNCTION - ANTALL BRUKERE
     // -------------------------------------------------------------------
-    public function businessOrPrivate(Request $request)
+    public function antallBrukere(Request $request)
     {
 
-        return view('TdSalgsSkjema::forms.businessOrPrivate');
+        return view('TdSalgsSkjema::forms.antallBrukere');
+    }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - ANTALL DATAMASKINER
+    // -------------------------------------------------------------------
+    public function antallDatamaskiner(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.antallDatamaskiner');
+    }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - SERVICEAVTALE
+    // -------------------------------------------------------------------
+    public function serviceavtale(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.serviceavtale');
+    }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - SERVICEAVTALE CONFIG
+    // -------------------------------------------------------------------
+    public function serviceavtaleConfig(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.serviceavtaleConfig');
     }
 
     // -------------------------------------------------------------------
@@ -51,14 +78,5 @@ class TdsalgsskjemaController extends Controller
     {
 
         return view('TdSalgsSkjema::forms.FindCustomerForm');
-    }
-
-    // -------------------------------------------------------------------
-    // FUNCTION - ANTALL BRUKERE
-    // -------------------------------------------------------------------
-    public function antallBrukere(Request $request)
-    {
-
-        return view('TdSalgsSkjema::forms.antallBrukere');
     }
 }

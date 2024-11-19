@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\Session;
 use function session;
 use tronderdata\TdSalgsSkjema\Models\AlacarteItems;
 
-class antallBrukere extends Component
+class antallDatamaskiner extends Component
 {
+
     // -------------------------------------------------
     // VAR
     // -------------------------------------------------
@@ -24,69 +25,32 @@ class antallBrukere extends Component
     public function mount()
     {
         // -------------------------------------------------
-        // pb = private or business
+        // Set number of computers based on the number of users
         // -------------------------------------------------
         $this->amount = $this->pb();
     }
 
 
 
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - UPDATE AMOUNT USERS
-    // --------------------------------------------------------------------------------------------------
-    // Save the volume of users to the session and redirect to the next form
-    // --------------------------------------------------------------------------------------------------
-    public function updateAmountUsers()
-    {
-        // -------------------------------------------------
-        // Save the value to the session
-        // -------------------------------------------------
-        session(['amountUsers' => $this->amount]);
-
-        // -------------------------------------------------
-        // If session is Bussiness then redirect to the
-        // Office 365 of Nextcloud form
-        // -------------------------------------------------
-        if (session('business')) {
-
-            // -------------------------------------------------
-            // Redirect to the next form
-            // -------------------------------------------------
-            return redirect()->route('tdsalgsskjema.antallDatamaskiner');
-
-        }
-
-        // -------------------------------------------------
-        // Redirect to the service agreement form
-        // -------------------------------------------------
-        return redirect()->route('tdsalgsskjema.aLaCarte');
-    }
-
-
 
     // --------------------------------------------------------------------------------------------------
     // FUNCTION - PB
     // --------------------------------------------------------------------------------------------------
-    // If private or business is set, return the amount of users to prefill the form
+    // This functions checks if the session that holds the amount of users exists
+    // If it does, it returns the amount of users, if not, it returns 1 user
+    // The value is used to set the amount of computers
     // --------------------------------------------------------------------------------------------------
     public function pb() {
 
         // -------------------------------------------------
-        // If private or business is set
+        // If session that holds the amount of users exists
         // -------------------------------------------------
-        if (session('private')) {
+        if (session('amountUsers')) {
 
             // -------------------------------------------------
-            // Private has one default user
+            // Return the amount of users
             // -------------------------------------------------
-            return "1";
-
-        } else if (session('business')) {
-
-            // -------------------------------------------------
-            // Business has 5 default users
-            // -------------------------------------------------
-            return "5";
+            return session('amountUsers');
 
         } else {
 
@@ -100,13 +64,46 @@ class antallBrukere extends Component
 
 
     // --------------------------------------------------------------------------------------------------
+    // FUNCTION - UPDATE AMOUNT USERS
+    // --------------------------------------------------------------------------------------------------
+    // Save the volume of users to the session and redirect to the next form
+    // --------------------------------------------------------------------------------------------------
+    public function updateAmountDatamaskiner()
+    {
+        // -------------------------------------------------
+        // Save the value to the session
+        // -------------------------------------------------
+        session(['amountDatamaskiner' => $this->amount]);
+
+        // -------------------------------------------------
+        // If session is Bussiness then redirect to the
+        // Office 365 of Nextcloud form
+        // -------------------------------------------------
+        if (session('business')) {
+
+            // -------------------------------------------------
+            // Redirect to the next form - Nextcloud or Office 365
+            // -------------------------------------------------
+            return redirect()->route('tdsalgsskjema.serviceavtaleConfig');
+
+        }
+
+        // -------------------------------------------------
+        // Redirect to the service agreement form
+        // -------------------------------------------------
+        return redirect()->route('tdsalgsskjema.serviceavtaleConfig');
+    }
+
+
+
+    // --------------------------------------------------------------------------------------------------
     // FUNCTION - RENDER
     // --------------------------------------------------------------------------------------------------
     // Render the view whih the amount of users
     // --------------------------------------------------------------------------------------------------
     public function render()
     {
-        return view('TdSalgsSkjema::livewire.antallBrukere', [
+        return view('TdSalgsSkjema::livewire.antallDatamaskiner', [
             'pb' => $this->pb()
         ]);
     }
