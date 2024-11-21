@@ -3,82 +3,77 @@
 namespace tronderdata\TdSalgsSkjema\Livewire;
 
 use Livewire\Component;
-use tronderdata\TdSalgsSkjema\Models\ServicePakke;
+use Illuminate\Support\Facades\Session;
+use function session;
+use tronderdata\TdSalgsSkjema\Models\AlacarteItems;
 
-class ServiceavtaleForm extends Component
+class antallTimerForm extends Component
 {
-    public $servicePakker;
+
+    // -------------------------------------------------
+    // VAR
+    // -------------------------------------------------
+    public $estimatedHours;
+    public $amountUsers;
 
 
 
     // --------------------------------------------------------------------------------------------------
     // FUNCTION - MOUNT
     // --------------------------------------------------------------------------------------------------
-    // Mount the component and get the service packages
+    // When the component is mounted, set the amount of hours
     // --------------------------------------------------------------------------------------------------
     public function mount()
     {
-
         // -------------------------------------------------
-        // Get the service packages based on the session
+        // Set number of hours based on the number of users
         // -------------------------------------------------
-        if (session('private')) {
-            $this->servicePakker = ServicePakke::where('private', true)->where('is_enabled', true)->get();
-        } else {
-            $this->servicePakker = ServicePakke::where('private', null)->where('is_enabled', true)->get();
-        }
+        $this->calculateEstimatedHours();
     }
 
 
 
-
     // --------------------------------------------------------------------------------------------------
-    // FUNCTION - SET SERVICE
+    // FUNCTION - MOUNT
     // --------------------------------------------------------------------------------------------------
-    public function setService($serviceId)
+    // When the component is mounted, set the amount of hours
+    // --------------------------------------------------------------------------------------------------
+    public function calculateEstimatedHours()
     {
+        // -------------------------------------------------
+        // If session that holds the amount of users exists
+        // -------------------------------------------------
+        if (session('amountUsers')) {
 
-        // -------------------------------------------------
-        // Get the service basedf on the service id fore validating
-        // -------------------------------------------------
-        $selectedService = \tronderdata\TdSalgsSkjema\Models\ServicePakke::find($serviceId);
-
-        // -------------------------------------------------
-        // If the service is a valid ID
-        // -------------------------------------------------
-        if ($selectedService) {
+            $amountUsers = session('amountUsers');
+            $this->amountUsers = $amountUsers;
 
             // -------------------------------------------------
-            // Set the selected service in the session
+            // Calculate and set the estimated hours. Max 40 hours, min 5 hours
             // -------------------------------------------------
-            session(['selectedService' => $serviceId]);
+            $this->estimatedHours = min(40, max(5, ceil($amountUsers / 5) * 5));
 
-            // -------------------------------------------------
-            // Redirect to the next step
-            // -------------------------------------------------
-            return redirect()->route('tdsalgsskjema.serviceavtaleConfig');
-
+        // -------------------------------------------------
+        // If session does not exist
+        // -------------------------------------------------
         } else {
 
             // -------------------------------------------------
-            // Flash an error message
+            // If unknown, return 5 hours
             // -------------------------------------------------
-            session()->flash('error', 'Servicepakke ikke funnet.');
+            $this->estimatedHours = 5;
         }
     }
-
 
 
 
     // --------------------------------------------------------------------------------------------------
     // FUNCTION - RENDER
     // --------------------------------------------------------------------------------------------------
-    // Render the view whit the service packages
+    // Render the view whih the amount of users
     // --------------------------------------------------------------------------------------------------
     public function render()
     {
-        return view('TdSalgsSkjema::livewire.ServiceavtaleForm', [
-            'servicePakker' => $this->servicePakker,
-        ]);
+        return view('TdSalgsSkjema::livewire.antallTimerForm');
     }
 }

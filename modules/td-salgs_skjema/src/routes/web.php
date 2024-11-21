@@ -24,6 +24,7 @@ Route::middleware('web', 'auth')->group(function () {
         Route::get('/businessOrPrivate', [TdsalgsskjemaController::class, 'businessOrPrivate'])->name('tdsalgsskjema.businessOrPrivate');
         Route::get('/antallBrukere', [TdsalgsskjemaController::class, 'antallBrukere'])->name('tdsalgsskjema.antallBrukere');
         Route::get('/antallDatamaskiner', [TdsalgsskjemaController::class, 'antallDatamaskiner'])->name('tdsalgsskjema.antallDatamaskiner');
+        Route::get('/antallTimer', [TdsalgsskjemaController::class, 'antallTimer'])->name('tdsalgsskjema.antallTimer');
         Route::get('/serviceavtale', [TdsalgsskjemaController::class, 'serviceavtale'])->name('tdsalgsskjema.serviceavtale');
         Route::get('/serviceavtaleConfig', [TdsalgsskjemaController::class, 'serviceavtaleConfig'])->name('tdsalgsskjema.serviceavtaleConfig');
         Route::get('/aLaCarte', [TdsalgsskjemaController::class, 'aLaCarte'])->name('tdsalgsskjema.aLaCarte');

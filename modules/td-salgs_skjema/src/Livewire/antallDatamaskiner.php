@@ -84,14 +84,14 @@ class antallDatamaskiner extends Component
             // -------------------------------------------------
             // Redirect to the next form - Nextcloud or Office 365
             // -------------------------------------------------
-            return redirect()->route('tdsalgsskjema.serviceavtaleConfig');
+            return redirect()->route('tdsalgsskjema.antallTimer');
 
         }
 
         // -------------------------------------------------
         // Redirect to the service agreement form
         // -------------------------------------------------
-        return redirect()->route('tdsalgsskjema.serviceavtaleConfig');
+        return redirect()->route('tdsalgsskjema.antallTimer');
     }
 
 

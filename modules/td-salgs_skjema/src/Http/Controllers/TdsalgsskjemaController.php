@@ -45,6 +45,15 @@ class TdsalgsskjemaController extends Controller
     }
 
     // -------------------------------------------------------------------
+    // FUNCTION - ANTALL TIMER
+    // -------------------------------------------------------------------
+    public function antallTimer(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.antallTimer');
+    }
+
+    // -------------------------------------------------------------------
     // FUNCTION - SERVICEAVTALE
     // -------------------------------------------------------------------
     public function serviceavtale(Request $request)
