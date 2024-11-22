@@ -5,7 +5,6 @@
 
 <div>
 
-    @if(!$contactForm)
         <!-- ------------------------------------------------- -->
         <!-- Search form -->
         <!-- ------------------------------------------------- -->
@@ -37,7 +36,6 @@
         <div wire:loading class="spinner-border text-primary ms-3" role="status">
             <span class="visually-hidden">Laster...</span>
         </div>
-    @endif
 
     <!-- -------------------------------------------------------------------------------------------------- -->
     <!-- Contact form -->

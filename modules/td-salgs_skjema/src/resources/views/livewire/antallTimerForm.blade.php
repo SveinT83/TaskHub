@@ -2,10 +2,10 @@
     <div class="col-md-5">
         <label for="antallTimer" class="form-label fw-bold">Hvor mange timer pr. år?</label>
 
-        <select class="form-select" aria-label="Default select example" name="antallTimer" id="antallTimer" wire:model="setHours" >
+        <select class="form-select" id="antallTimer" wire:model="antallTimer">
             
             @if ($estimatedHours)
-                <option value="{{$estimatedHours}}" selected>Timebank: {{$estimatedHours}} /år <i>- Anbefalt</i></option>
+                <option value="{{ $estimatedHours }}" selected>Timebank: {{$estimatedHours}} /år <i>- Anbefalt</i></option>
             @endif
 
             @if ($estimatedHours != 5)
@@ -30,6 +30,6 @@
 
         </select>
 
-        <button class="btn btn-primary mt-3 bi bi-forward-fill" wire:click="updateHours"> Neste</button>
+        <button class="btn btn-primary mt-3 bi bi-forward-fill" wire:click="updateHours">Neste</button>
     </div>
 </div>

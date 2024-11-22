@@ -29,6 +29,19 @@ class BussinessOrPrivate extends Component
     public $business = false;
 
     // --------------------------------------------------------------------------------------------------
+    // FUNCTION - MOUNT
+    // --------------------------------------------------------------------------------------------------
+    // Kjør denne funksjonen når komponenten mountes
+    // --------------------------------------------------------------------------------------------------
+    public function mount() {
+
+        // -------------------------------------------------
+        // Restart session
+        // -------------------------------------------------
+        session()->forget(['private', 'business', 'amountUsers', 'amountDatamaskiner', 'timebank', 'selectedService']);
+    }
+
+    // --------------------------------------------------------------------------------------------------
     // FUNCTION - SET PRIVATE
     // --------------------------------------------------------------------------------------------------
     // If private is chosen, set the session var to private
@@ -44,6 +57,7 @@ class BussinessOrPrivate extends Component
         // Sett session var
         // -------------------------------------------------
         session(['private' => $this->private]);
+        session(['timebank' => '12']);
         session()->forget('business');
 
         // -------------------------------------------------

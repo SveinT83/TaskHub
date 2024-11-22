@@ -42,6 +42,15 @@ class ServiceavtaleConfigForm extends Component
     public $servicePakke = false;              // Den valgte servicepakken
     public $serviceData = false;               // Data om servicepakken
 
+    // Timebank
+    public $timebank = 0;                      // Antall timer i timebanken 
+    public $timebankPrice = 0;                 // Pris for timebanken
+
+    // NextCloud VM
+    public $cpu = false;
+    public $ram = 2;
+    public $storage = 20;
+
 
 
     // --------------------------------------------------------------------------------------------------
@@ -85,7 +94,7 @@ class ServiceavtaleConfigForm extends Component
         $this->amountUsers = session('amountUsers');
 
         if (!session('amountDatamaskiner')) {
-            return redirect()->route('tdsalgsskjema.amountDatamaskiner');
+            //return redirect()->route('tdsalgsskjema.amountDatamaskiner');
         }
         $this->amountDatamaskiner = session('amountDatamaskiner');
 
@@ -95,9 +104,90 @@ class ServiceavtaleConfigForm extends Component
         $this->acResult = $this->usersVsComputers();
 
         // -------------------------------------------------
+        // Timebank - Hent eller beregn
+        // -------------------------------------------------
+        $this->timebank();
+
+        // -------------------------------------------------
         // Beregn pris for brukere og datamaskiner
         // -------------------------------------------------
         $this->prices = $this->userAndComputersPrice();
+
+        // -------------------------------------------------
+        // Beregn NextCloud VM cpu, ram og lagringsplass
+        // -------------------------------------------------
+        $this->vmResources();
+    }
+
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTION - VMRESOURCES
+    // --------------------------------------------------------------------------------------------------
+    // Calculate the resources needed for the NextCloud VM
+    // --------------------------------------------------------------------------------------------------
+    public function vmResources() {
+
+        // -------------------------------------------------
+        // If NextCloud is selected
+        // -------------------------------------------------
+        if (session('selectedService') == 1) {
+
+            // -------------------------------------------------
+            // Update CPU based on amount of users
+            // -------------------------------------------------
+            $this->cpu += 2; //Base CPU
+            $this->cpu += 0.2 * $this->amountUsers;
+
+            // -------------------------------------------------
+            // Update RAM based on amount of users
+            // -------------------------------------------------
+            $this->ram += 0.5 * $this->amountUsers;
+
+            // -------------------------------------------------
+            // Update Diskspace based on amount of users
+            // -------------------------------------------------
+            $this->storage += 100 * $this->normalUsers; //Normal users
+            $this->storage += 10 * $this->basicUsers; //Basic users
+
+        }
+    }
+
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTION - GETORCALCTIMEBANK
+    // --------------------------------------------------------------------------------------------------
+    // Get timebank from session or calculate if missing
+    // --------------------------------------------------------------------------------------------------
+    public function timebank() {
+
+        // -------------------------------------------------
+        // Check if timebank is set in session
+        // -------------------------------------------------
+        $this->timebank = session('timebank', 5);
+        
+        // -------------------------------------------------
+        // Timebank Price
+        // -------------------------------------------------
+        if ($this->timebankPrice = 12 AND session('private')) {
+            $this->timebankPrice = 0;
+            session(['timebank' => '12']);
+        }
+        elseif ($this->timebankPrice = 5){
+            $this->timebankPrice = 399;
+        } elseif ($this->timebank == 10) {
+            $this->timebankPrice = 680;
+        } elseif ($this->timebank == 20) {
+            $this->timebankPrice = 1160;
+        } elseif ($this->timebank == 30) {
+            $this->timebankPrice = 1900;
+        } elseif ($this->timebank == 40) {
+            $this->timebankPrice = 2532;
+        } else {
+            $this->timebankPrice = 0;
+        }
+
     }
 
 
@@ -162,8 +252,45 @@ class ServiceavtaleConfigForm extends Component
         // Totalsummer
         $this->sumTottDatamaskiner = $this->normalComputersPrice + $this->extraComputersPrice;
         $this->sumTottUsers = $this->normalUsersPrice + $this->basicUsersPrice;
-        $this->sumTott = $this->sumTottDatamaskiner + $this->sumTottUsers;
+        $this->sumTott = $this->sumTottDatamaskiner + $this->sumTottUsers + $this->timebankPrice;
     }
+
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTION - RENDER
+    // --------------------------------------------------------------------------------------------------
+    // Gjør data tilgjengelig for visningen
+    // --------------------------------------------------------------------------------------------------
+    public function processOrder()
+    {
+        // Hent nødvendig data for e-posten
+        $orderData = [
+            'serviceName' => $this->serviceData->name,
+            'amountUsers' => $this->amountUsers,
+            'sumTottUsers' => $this->sumTottUsers,
+            'amountDatamaskiner' => $this->amountDatamaskiner,
+            'sumTottComputers' => $this->sumTottComputers,
+            'timebank' => $this->timebank,
+            'timebankPrice' => $this->timebankPrice,
+            'sumTott' => $this->sumTott,
+            'cpu' => $this->cpu ?? 'N/A',
+            'ram' => $this->ram ?? 'N/A',
+            'storage' => $this->storage ?? 'N/A',
+        ];
+
+        // Send e-posten
+        \Mail::send('TdSalgsSkjema::emails.order', ['orderData' => $orderData], function ($message) {
+            $message->to('post@tronderdata.no')
+                    ->subject('Ny ordre: ' . $this->serviceData->name);
+        });
+
+        // Bekreft at e-posten er sendt og naviger videre
+        session()->flash('success', 'Ordren er prosessert og sendt til post@tronderdata.no.');
+
+        return redirect()->route('tdsalgsskjema.FindCustomerForm'); // Erstatt med riktig rute
+    }
+
 
 
     // --------------------------------------------------------------------------------------------------

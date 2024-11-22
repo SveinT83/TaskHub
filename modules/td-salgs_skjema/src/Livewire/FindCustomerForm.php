@@ -35,8 +35,8 @@ class FindCustomerForm extends Component
 
         try {
             // Hent token for Basic Auth
-            $username = env('MSP_MANAGER_EMAIL');
-            $password = env('MSP_MANAGER_PASSWORD');
+            $username = 'sveintore@tronderdata.no';
+            $password = 'JEstayeq9J';
 
             // Send GET-forespørsel for alle kontakter
             $response = Http::withBasicAuth($username, $password)
@@ -95,8 +95,8 @@ class FindCustomerForm extends Component
             return;
         }
 
-        $username = env('MSP_MANAGER_EMAIL');
-        $password = env('MSP_MANAGER_PASSWORD');
+        $username = 'sveintore@tronderdata.no';
+            $password = 'JEstayeq9J';
 
         $url = "https://api.mspmanager.com/odata/customers({$this->customerId})";
 
@@ -134,8 +134,8 @@ class FindCustomerForm extends Component
             return;
         }
 
-        $username = env('MSP_MANAGER_EMAIL');
-        $password = env('MSP_MANAGER_PASSWORD');
+        $username = 'sveintore@tronderdata.no';
+        $password = 'JEstayeq9J';
 
         $url = "https://api.mspmanager.com/odata/customers({$this->customerId})/serviceitems";
 

@@ -9,7 +9,9 @@
 <!-- Page header -->
 <!-- ------------------------------------------------- -->
 @section('pageHeader')
-    <x-page-header pageHeaderTitle="TD Salgs Skjema - Serviceavtale"></x-page-header>
+    <x-page-header pageHeaderTitle="TD Salgs Skjema - Serviceavtale">
+        <livewire:Price_card />
+    </x-page-header>
 @endsection
 
 @section('content')

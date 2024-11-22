@@ -13,6 +13,7 @@ class antallTimerForm extends Component
     // -------------------------------------------------
     // VAR
     // -------------------------------------------------
+    public $antallTimer;
     public $estimatedHours;
     public $amountUsers;
 
@@ -29,6 +30,42 @@ class antallTimerForm extends Component
         // Set number of hours based on the number of users
         // -------------------------------------------------
         $this->calculateEstimatedHours();
+    }
+
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTION - Update hours
+    // --------------------------------------------------------------------------------------------------
+    // 
+    // --------------------------------------------------------------------------------------------------
+    public function updateHours()
+    {
+
+        // -------------------------------------------------
+        // If "antallTimer" is set and is a number Or "estimatedHours" is set
+        // Then we can proceed to set the session and navigate to the next step
+        // -------------------------------------------------
+        if (($this->antallTimer && is_numeric($this->antallTimer)) || $this->estimatedHours) {
+
+            // -------------------------------------------------
+            // Prioritize "antallTimer" if set and valid
+            // -------------------------------------------------
+            $timebank = $this->antallTimer && is_numeric($this->antallTimer)
+                ? $this->antallTimer
+                : $this->estimatedHours;
+        
+            // -------------------------------------------------
+            // Set the session
+            // -------------------------------------------------
+            session(['timebank' => $timebank]);
+        
+            // -------------------------------------------------
+            // Navigate to the next step
+            // -------------------------------------------------
+            return redirect()->route('tdsalgsskjema.serviceavtale');
+        }
+        
     }
 
 

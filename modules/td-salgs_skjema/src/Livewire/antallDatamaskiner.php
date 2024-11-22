@@ -91,7 +91,7 @@ class antallDatamaskiner extends Component
         // -------------------------------------------------
         // Redirect to the service agreement form
         // -------------------------------------------------
-        return redirect()->route('tdsalgsskjema.antallTimer');
+        return redirect()->route('tdsalgsskjema.serviceavtale');
     }
 
 

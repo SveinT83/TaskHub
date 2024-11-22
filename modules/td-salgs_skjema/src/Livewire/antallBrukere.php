@@ -59,7 +59,7 @@ class antallBrukere extends Component
         // -------------------------------------------------
         // Redirect to the service agreement form
         // -------------------------------------------------
-        return redirect()->route('tdsalgsskjema.aLaCarte');
+        return redirect()->route('tdsalgsskjema.antallDatamaskiner');
     }
 
 

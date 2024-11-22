@@ -9,7 +9,9 @@
 <!-- Page header -->
 <!-- ------------------------------------------------- -->
 @section('pageHeader')
-    <x-page-header pageHeaderTitle="TD Salgs Skjema - Nytt salg"></x-page-header>
+    <x-page-header pageHeaderTitle="TD Salgs Skjema - Nytt salg">
+        <livewire:Price_card />
+    </x-page-header>
 @endsection
 
 @section('content')
