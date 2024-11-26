@@ -18,14 +18,13 @@ class ServiceavtaleForm extends Component
     // --------------------------------------------------------------------------------------------------
     public function mount()
     {
-
         // -------------------------------------------------
         // Get the service packages based on the session
         // -------------------------------------------------
         if (session('private')) {
             $this->servicePakker = ServicePakke::where('private', true)->where('is_enabled', true)->get();
         } else {
-            $this->servicePakker = ServicePakke::where('private', null)->where('is_enabled', true)->get();
+            $this->servicePakker = ServicePakke::where('private', 0)->where('is_enabled', true)->get();
         }
     }
 
