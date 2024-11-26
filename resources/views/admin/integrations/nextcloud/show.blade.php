@@ -1,9 +1,17 @@
+<!-- -------------------------------------------------------------------------------------------------- -->
+<!-- CONTROLLER -->
+<!-- app/Http/Controllers/Admin/Integrations/Nextcloud/NextcloudController.php -->
+<!-- -------------------------------------------------------------------------------------------------- -->
+
 @extends('layouts.app')
 
 @section('title', 'Home')
 
+<!-- ------------------------------------------------- -->
+<!-- Page header -->
+<!-- ------------------------------------------------- -->
 @section('pageHeader')
-    <h1>Nextcloud Integrasjon</h1>
+    <x-page-header pageHeaderTitle="Nextcloud Integrasjon"></x-page-header>
 @endsection
 
 @section('content')
@@ -14,38 +22,34 @@
 <div class="container mt-3">
 
     <!-- ------------------------------------------------- -->
-    <!-- Alerts -->
+    <!-- Card -->
     <!-- ------------------------------------------------- -->
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <x-card-secondary title="Connect / Dissconnect">
 
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
+        <!-- ------------------------------------------------- -->
+        <!-- Nextcloud connect -->
+        <!-- ------------------------------------------------- -->
+        <div class="row">
+            @if($user && $user->nextcloud_token)
+                <p>Nextcloud is connected.</p>
+            @else
+                <p>Nextcloud is not connected.</p>
+                <a href="{{ route('nextcloud.connect') }}" class="btn btn-primary">Connect Nextcloud</a>
+            @endif
+        </div>
 
-    <!-- ------------------------------------------------- -->
-    <!-- Nextcloud connect -->
-    <!-- ------------------------------------------------- -->
-    <div class="row">
-        @if($user && $user->nextcloud_token)
-            <p>Nextcloud er tilkoblet.</p>
-        @else
-            <p>Nextcloud er ikke tilkoblet.</p>
-            <a href="{{ route('nextcloud.connect') }}" class="btn btn-primary">Koble til Nextcloud</a>
-        @endif
-    </div>
+        <!-- ------------------------------------------------- -->
+        <!-- Kontroll for å aktivere eller deaktivere Nextcloud-integrasjon -->
+        <!-- ------------------------------------------------- -->
+        <form action="{{ route('nextcloud.toggle') }}" method="POST">
+            @csrf
+            @if($isNextcloudActive)
+                <button type="submit" class="btn btn-danger">Deconnect Nextcloud</button>
+            @else
+                <button type="submit" class="btn btn-success">Connect Nextcloud</button>
+            @endif
+        </form>
 
-    <!-- ------------------------------------------------- -->
-    <!-- Kontroll for å aktivere eller deaktivere Nextcloud-integrasjon -->
-    <!-- ------------------------------------------------- -->
-    <form action="{{ route('nextcloud.toggle') }}" method="POST">
-        @csrf
-        @if($isNextcloudActive)
-            <button type="submit" class="btn btn-danger">Deaktiver Nextcloud</button>
-        @else
-            <button type="submit" class="btn btn-success">Aktiver Nextcloud</button>
-        @endif
-    </form>
+    </x-card-secondary>
 </div>
 @endsection
