@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edf880c144aa7c69f471a0bad6d9f366",
+    "content-hash": "2d56ee1699533a8cc5c9e51f9835e756",
     "packages": [
         {
             "name": "brick/math",
@@ -6120,6 +6120,143 @@
             "time": "2023-12-08T13:03:43+00:00"
         },
         {
+            "name": "tronderdata/categories",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./modules/categories",
+                "reference": "ce7a1c94ae4cbf5889c3ad67f661969bd4f40a20"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "tronderdata\\categories\\Providers\\CategoriesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\": "app/",
+                    "tronderdata\\categories\\": "categories/"
+                }
+            },
+            "description": "A module fore managing categories",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "tronderdata/kbartickles",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./modules/kbartickles",
+                "reference": "781bce85971061ea41d0afc1fb23e419d3ab2452"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "tronderdata\\kbartickles\\Providers\\kbarticklesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\": "app/",
+                    "tronderdata\\kbartickles\\": "kbartickles/"
+                }
+            },
+            "description": "A module fore holding KB Artickles",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "tronderdata/td-clients",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./modules/td-clients",
+                "reference": "100738be6772cb1e1e66d398379fbbf1743a2365"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "tronderdata\\TdClients\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A module to manage clients, addresses, and users",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "tronderdata/td-task",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./modules/td-task",
+                "reference": "900d0eeb18f20d8da52d04821cefddcbb0e52355"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "tronderdata\\TdTask\\Providers\\TdTaskServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\": "app/",
+                    "tronderdata\\TdTask\\": "src/"
+                }
+            },
+            "description": "Test module for TaskHub",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "tronderdata/td-tickets",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./modules/td-tickets",
+                "reference": "51bab3e8627c767875ceb84b3b2728f30b9cab1b"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "App\\": "app/",
+                    "tronderdata\\TdTickets\\": "modules/td-tickets/src/"
+                }
+            },
+            "description": "Tickets modul for systemet",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v5.6.1",
             "source": {
@@ -8539,7 +8676,13 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "tronderdata/categories": 20,
+        "tronderdata/kbartickles": 20,
+        "tronderdata/td-clients": 20,
+        "tronderdata/td-task": 20,
+        "tronderdata/td-tickets": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
