@@ -1,33 +1,29 @@
 <?php
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
-// CONTROLLER - DASHBOARDCONTROLLER
-//
-// This controller is responsible for handling the dashboard related actions such as displaying the dashboard.
+// CONTROLLER - INTEGRATIONS CONTROLLER
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+// This controller is responsible for handling integrations related actions such as displaying the integrations view.
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin\Integrations;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
-{
+class IntegrationsController extends Controller {
 
     // --------------------------------------------------------------------------------------------------
     // FUNCTION - INDEX
     // --------------------------------------------------------------------------------------------------
-    // This function returns the dashboard view.
+    // This function returns the integrations view.
     // --------------------------------------------------------------------------------------------------
     public function index()
     {
         // -------------------------------------------------
-        // Retrieve the authenticated user.
+        // Return the integrations view
         // -------------------------------------------------
-        $user = auth()->user();
-
-        // -------------------------------------------------
-        // Return the view with the user's information.
-        // -------------------------------------------------
-        return view('dashboard');
+        return view('admin.integrations.index');
     }
 }
