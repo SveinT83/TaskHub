@@ -88,4 +88,13 @@ class TdsalgsskjemaController extends Controller
 
         return view('TdSalgsSkjema::forms.FindCustomerForm');
     }
+
+    // -------------------------------------------------------------------
+    // FUNCTION - REGISTER NEW CUSTOMER
+    // -------------------------------------------------------------------
+    public function RegisterNewCustomer(Request $request)
+    {
+
+        return view('TdSalgsSkjema::forms.RegisterNewCustomer');
+    }
 }

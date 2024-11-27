@@ -12,6 +12,7 @@ use tronderdata\TdSalgsSkjema\Livewire\antallTimerForm;
 use tronderdata\TdSalgsSkjema\Livewire\ServiceavtaleForm;
 use tronderdata\TdSalgsSkjema\Livewire\serviceavtaleConfigForm;
 use tronderdata\TdSalgsSkjema\Livewire\FindCustomerForm;
+use tronderdata\TdSalgsSkjema\Livewire\RegisterNewCustomerForm;
 use Livewire\Livewire;
 
 class TdSalgsSkjemaServiceProvider extends ServiceProvider
@@ -34,6 +35,7 @@ class TdSalgsSkjemaServiceProvider extends ServiceProvider
         Livewire::component('serviceavtaleConfigForm', serviceavtaleConfigForm::class);
         Livewire::component('aLaCarte', aLaCarte::class);
         Livewire::component('FindCustomerForm', FindCustomerForm::class);
+        Livewire::component('RegisterNewCustomerForm', RegisterNewCustomerForm::class);
         Livewire::component('Price_card', Price_card::class);
 
         // -------------------------------------------------

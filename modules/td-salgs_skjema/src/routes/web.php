@@ -29,6 +29,7 @@ Route::middleware('web', 'auth')->group(function () {
         Route::get('/serviceavtaleConfig', [TdsalgsskjemaController::class, 'serviceavtaleConfig'])->name('tdsalgsskjema.serviceavtaleConfig');
         Route::get('/aLaCarte', [TdsalgsskjemaController::class, 'aLaCarte'])->name('tdsalgsskjema.aLaCarte');
         Route::get('/FindCustomerForm', [TdsalgsskjemaController::class, 'FindCustomerForm'])->name('tdsalgsskjema.FindCustomerForm');
+        Route::get('/RegisterNewCustomer', [TdsalgsskjemaController::class, 'RegisterNewCustomer'])->name('tdsalgsskjema.RegisterNewCustomer');
     });
 
 

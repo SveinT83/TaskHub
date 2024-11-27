@@ -5,37 +5,47 @@
 
 <div>
 
+    <div class="row align-items-end justify-content-between">
         <!-- ------------------------------------------------- -->
         <!-- Search form -->
         <!-- ------------------------------------------------- -->
-        <form class="row">
-            <div class="col-md">
-                <label for="email" class="form-label fw-bold">E-post:</label>
-                <input type="text" wire:model="email" class="form-control" id="email" placeholder="ola@nordmann.no" required>
-            </div>
-            <div class="col-md">
-                <label for="tel" class="form-label fw-bold">Telefon:</label>
-                <input type="tel" wire:model="tel" class="form-control" id="tel" placeholder="12345678" required>
-            </div>
-            <div class="col-md">
-                <label for="name" class="form-label fw-bold">Navn:</label>
-                <input type="text" wire:model="name" class="form-control" id="name" placeholder="Ola Nordmann" required>
-            </div>
-        </form>
-
-        <!-- ------------------------------------------------- -->
-        <!-- Button to search for customer -->
-        <!-- ------------------------------------------------- -->
-        <div class="row mt-3">
-            <button wire:click="searchCustomer" wire:loading.remove class="btn btn-primary">Søk</button>
+        <div class="col-md-10">
+            <form class="row">
+                <div class="col-md">
+                    <label for="email" class="form-label fw-bold">E-post:</label>
+                    <input type="text" wire:model="email" class="form-control" id="email" placeholder="ola@nordmann.no">
+                </div>
+                <div class="col-md">
+                    <label for="tel" class="form-label fw-bold">Telefon:</label>
+                    <input type="tel" wire:model="tel" class="form-control" id="tel" placeholder="12345678">
+                </div>
+                <div class="col-md">
+                    <label for="name" class="form-label fw-bold">Navn:</label>
+                    <input type="text" wire:model="name" class="form-control" id="name" placeholder="Ola Nordmann">
+                </div>
+            </form>
         </div>
 
-        <!-- ------------------------------------------------- -->
-        <!-- Spinner while loading -->
-        <!-- ------------------------------------------------- -->
-        <div wire:loading class="spinner-border text-primary ms-3" role="status">
-            <span class="visually-hidden">Laster...</span>
+        <div class="col-md-2">
+            <!-- ------------------------------------------------- -->
+            <!-- Button to search for customer -->
+            <!-- ------------------------------------------------- -->
+            <div class="row mt-3">
+                <div class="col-md">
+                    <div class="row">
+                        <button wire:click="searchCustomer" wire:loading.remove class="btn btn-primary bi bi-search"> Søk</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------- -->
+            <!-- Spinner while loading -->
+            <!-- ------------------------------------------------- -->
+            <div wire:loading class="spinner-border text-primary ms-3" role="status">
+                <span class="visually-hidden">Laster...</span>
+            </div>
         </div>
+    </div>
 
     <!-- -------------------------------------------------------------------------------------------------- -->
     <!-- Contact form -->
@@ -83,16 +93,16 @@
                 @endif
 
                 <!-- ------------------------------------------------- -->
-                <!-- If service item data -->
+                <!-- If service item data and proseed button-->
                 <!-- ------------------------------------------------- -->
-                @if($serviceItemData)
                     <div class="col-lg mt-3">
-                        <h4>Service Level:</h4>
-                        <ul class="list-group list-group-flush mt-3">
-                            <li class="list-group-item text-bg-light"><p><b>Service Item: </b>{{ $serviceItemData['ServiceItemName'] }}</p></li>
-                        </ul>
+                        @if($serviceItemData)
+                            <h4>Service Level:</h4>
+                            <ul class="list-group list-group-flush mt-3">
+                                <li class="list-group-item text-bg-light"><p><b>Service Item: </b>{{ $serviceItemData['ServiceItemName'] }}</p></li>
+                            </ul>
+                        @endif
                     </div>
-                @endif
 
             </div>
         </div>

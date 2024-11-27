@@ -285,9 +285,6 @@ class ServiceavtaleConfigForm extends Component
                     ->subject('Ny ordre: ' . $this->serviceData->name);
         });
 
-        // Bekreft at e-posten er sendt og naviger videre
-        session()->flash('success', 'Ordren er prosessert og sendt til post@tronderdata.no.');
-
         return redirect()->route('tdsalgsskjema.FindCustomerForm'); // Erstatt med riktig rute
     }
 
