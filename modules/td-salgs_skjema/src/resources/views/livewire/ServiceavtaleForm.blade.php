@@ -6,7 +6,7 @@
                 <x-card-secondary title="{{ $pakke->name }}" footer="{{ $pakke->private ? 'Privat' : 'Bedrift' }}">
                     <p>{{ $pakke->description }}</p>
                 </x-card-secondary>
-            </a>           
+            </a>
         @endforeach
 
     </div>
