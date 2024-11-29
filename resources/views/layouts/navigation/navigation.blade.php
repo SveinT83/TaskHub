@@ -1,7 +1,7 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <!-- Logo -->
-        <a class="navbar-brand" href="{{ route('dashboard') }}">
+        <a class="navbar-brand" href="/dashboard">
             <x-application-logo class="d-inline-block align-text-top" />
         </a>
 

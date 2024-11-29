@@ -1,15 +1,142 @@
-/*
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-*/
+/* -------------------------------------------------
+# BODY
+------------------------------------------------- */ 
+body {
+  background-color: #F0F0F0 !important;
+  font-family: 'Nunito', sans-serif;
+}
 
+/* -------------------------------------------------
+# COLORS AND BACKGROUND
+------------------------------------------------- */ 
+.text-bg-dark {
+  background-color: #333333 !important;
+  color: white !important;
+}
 
-.custom-accordion {
-    --bs-accordion-btn-color: pink !important; /* Farge på knappetekst */
-    --bs-accordion-btn-bg: pink !important; /* Bakgrunnsfarge på knappen */
-    --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e"); /* Ikonfarge */
-    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2300ff00' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e"); /* Aktiv ikonfarge */
-    --bs-accordion-btn-active-bg: #495057; /* Aktiv bakgrunn */
-    --bs-accordion-active-color: #00ff00; /* Aktiv tekstfarge */
-  }
+.text-bg-primary {
+  background-color: #333333 !important;
+  color: white !important;
+}
+
+.text-bg-black {
+  background-color: none !important;
+  color: #333333 !important;
+}
+
+/* -------------------------------------------------
+# NAVBAR
+------------------------------------------------- */
+.navbar {
+  background-color: black !important;
+}
+
+.dropdown-menu {
+  background-color: black !important;
+}
+
+.nav-item a {
+  background-color: black !important;
+  color: white !important;
+}
+
+.nav-item a:hover {
+  text-decoration: underline;
+  background-color: #423548 !important;;
+} 
+
+/* -------------------------------------------------
+# ACCORDION'S
+------------------------------------------------- */ 
+
+/* -------------------------------------------------
+# ACCORDION MAIN MENU
+------------------------------------------------- */ 
+.accordion-main-menu {
+  --bs-accordion-bg:  !important;
+  --bs-accordion-active-bg: #333 !important; 
+}
+
+/* --------------------------------------------------------------------------------------------------
+# ACCORDION
+-------------------------------------------------------------------------------------------------- */ 
+.accordion {
+  color: white;
+  --bs-accordion-bg: #333 !important;
+  --bs-accordion-active-color: #423548 !important;
+  --bs-accordion-active-bg: #423548 !important;
+  --bs-accordion-border-color: none !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  --bs-accordion-border-radius: 0 !important;
+}
+
+/* -------------------------------------------------
+# ACCORDION COLLAPSE
+------------------------------------------------- */ 
+.accordion-collapse {
+  background-color: black !important;
+}
+
+/* -------------------------------------------------
+# A SINGLE ITEM
+------------------------------------------------- */ 
+a.single-item {
+  background-color: #333 !important;
+  color: white;
+  text-decoration: none;
+}
+
+/* -------------------------------------------------
+# ACCORDION BODY
+------------------------------------------------- */ 
+.accordion-body a:hover {
+  background-color: #423548 !important;
+}
+
+.accordion-body a:active {
+  background-color: #423548 !important;
+}
+
+.accordion-body a {
+  color: white;
+  text-decoration: none;
+}
+
+.accordion-body a:hover {
+  background-color: #423548 !important;
+}
+
+.accordion-body a:active {
+  background-color: #423548 !important;
+}
+
+/* -------------------------------------------------
+# ACCORDION BUTTON
+------------------------------------------------- */ 
+.accordion-button {
+  color: white !important;
+}
+
+.accordion-button:hover {
+  background-color: #423548 !important;
+  color: black !important;
+}
+
+.accordion-button:active {
+  background-color: #423548 !important;
+  color: black !important;
+}
+
+/* -------------------------------------------------
+# CARDS
+------------------------------------------------- */ 
+.text-bg-primary.card {
+  border-radius: 5px !important;
+  border-color: white !important;
+}
+
+.text-bg-primary .card-body {
+  background-color: white !important;
+  color: #423548 !important;
+}

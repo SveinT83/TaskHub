@@ -43,7 +43,7 @@
                     <th scope="col">SMTP Host</th>
                     <th scope="col">IMAP Host</th>
                     <th scope="col">Standard</th>
-
+                    
                     <!-- Only show the TH if user has permission -->
                     @if(auth()->user()->can('superadmin.edit') || auth()->user()->can('superadmin.delete'))
                         <th scope="col">Action</th>
