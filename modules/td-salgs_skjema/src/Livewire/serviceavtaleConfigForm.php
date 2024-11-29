@@ -279,12 +279,6 @@ class ServiceavtaleConfigForm extends Component
             'storage' => $this->storage ?? 'N/A',
         ];
 
-        // Send e-posten
-        \Mail::send('TdSalgsSkjema::emails.order', ['orderData' => $orderData], function ($message) {
-            $message->to('post@tronderdata.no')
-                    ->subject('Ny ordre: ' . $this->serviceData->name);
-        });
-
         return redirect()->route('tdsalgsskjema.FindCustomerForm'); // Erstatt med riktig rute
     }
 
