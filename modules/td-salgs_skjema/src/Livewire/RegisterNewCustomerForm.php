@@ -5,6 +5,7 @@ namespace tronderdata\TdSalgsSkjema\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use App\Services\TripletexService;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterNewCustomerForm extends Component
 {
@@ -21,9 +22,22 @@ class RegisterNewCustomerForm extends Component
     public $private = false;
 
     // -------------------------------------------------
+    // Org nr and Tripletex
+    // -------------------------------------------------
+    public $orgNr;
+    public $orgName = '';
+    public $customerData = [];
+
+    // -------------------------------------------------
+    // Contact information
+    // -------------------------------------------------
+    public $kontaktNavn = '';
+    public $kontaktEpost = '';
+    public $kontaktTlf = '';
+
+    // -------------------------------------------------
     // Delivery address
     // -------------------------------------------------
-    public $sameAs = false; // If the delivery address is the same as the billing address
     public $adrAdresse = '';
     public $adrPostnr = '';
     public $adrSted = '';
@@ -32,15 +46,10 @@ class RegisterNewCustomerForm extends Component
     // Billing address
     // -------------------------------------------------
     public $showFaktAdresse = true;
+
     public $faktAdresse = '';
     public $faktPostnr = '';
     public $faktSted = '';
-
-    // -------------------------------------------------
-    // Org nr and Tripletex
-    // -------------------------------------------------
-    public $orgNr;
-    public $customerData = [];
 
     // -------------------------------------------------
     // Validation rules
@@ -49,8 +58,82 @@ class RegisterNewCustomerForm extends Component
         'adrAdresse' => 'required|string|max:255',
         'adrPostnr' => 'required|numeric|digits:4',
         'adrSted' => 'required|string|max:255',
-        'orgNr' => 'nullable|digits:9', // Validerer at det er 11 sifre
+        'orgNr' => 'nullable|digits:9',
+        'orgName' => 'nullable|string|max:50',
+        'kontaktNavn' => 'string|max:50',
+        'kontaktEpost' => 'string|max:50',
+        'kontaktTlf' => 'string|digits:8',
     ];
+
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTIONS - VALIDATE FORM
+    // --------------------------------------------------------------------------------------------------
+    // This function validates the form data and sends it via mail
+    // --------------------------------------------------------------------------------------------------
+    public function validateForm()
+    {
+        // Valider alle feltene
+        $validatedData = $this->validate([
+            'kontaktNavn' => 'required|string|max:50',
+            'kontaktEpost' => 'required|email|max:50',
+            'kontaktTlf' => 'required|digits:8',
+
+            'adrAdresse' => 'required|string|max:255',
+            'adrPostnr' => 'required|numeric|digits:4',
+            'adrSted' => 'required|string|max:255',
+
+            'faktAdresse' => 'string|max:255',
+            'faktPostnr' => 'numeric|digits:4',
+            'faktSted' => 'string|max:255',
+
+            'orgNr' => 'nullable|digits:9',
+            'orgName' => 'nullable|string|max:50',
+        ]);
+
+        // Hvis vi kommer hit, er skjemaet gyldig
+        session()->flash('success', 'Skjemaet er gyldig og klart for innsending!');
+
+        // Kall en funksjon for å behandle data
+        $this->sendFormData($validatedData);
+        
+    }
+
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTIONS - SEND FORM DATA
+    // --------------------------------------------------------------------------------------------------
+    // This function sends the form data via mail
+    // --------------------------------------------------------------------------------------------------
+    public function sendFormData($data = null)
+    {
+        try {
+            // Bruk testdata hvis ingen data er sendt
+            $data = $data ?? [
+                'kontaktNavn' => 'Test Person',
+                'kontaktEpost' => 'test@example.com',
+                'kontaktTlf' => '12345678',
+                'adrAdresse' => 'Testgate 1',
+                'adrPostnr' => '1234',
+                'adrSted' => 'Testbyen',
+                'faktAdresse' => 'Testgate 1',
+                'faktPostnr' => '1234',
+                'faktSted' => 'Testbyen',
+                'orgNr' => '123456789',
+                'orgName' => 'Testfirma AS',
+            ];
+
+            // Send e-posten
+            \Mail::to('post@tronderdata.no')->send(new \App\Mail\FormSubmissionMail($data));
+
+            // Flash-melding for suksess
+            session()->flash('success', 'Test-e-post sendt!');
+        } catch (\Exception $e) {
+            // Håndter feil
+            session()->flash('error', 'Noe gikk galt: ' . $e->getMessage());
+        }
+    }
 
 
 
@@ -65,15 +148,6 @@ class RegisterNewCustomerForm extends Component
             try {
                 $tripletexService = new TripletexService();
                 $customer = $tripletexService->searchCustomerByOrgNr($this->orgNr);
-
-                /*
-                    if ($customer) {
-                        session()->flash('success', "Kunde funnet: {$customer[0]['name']}");
-                        $this->customerData = $customer[0]; // Fyll ut skjema
-                    } else {
-                        session()->flash('error', 'Ingen kunde funnet med dette organisasjonsnummeret.');
-                    }
-                */
 
             } catch (\Exception $e) {
                 session()->flash('error', 'Feil under oppslag: ' . $e->getMessage());
@@ -124,11 +198,6 @@ class RegisterNewCustomerForm extends Component
         // Business or private?
         // -------------------------------------------------
         $this->businessOrPrivate();
-
-        // -------------------------------------------------
-        // Check Same As?
-        // -------------------------------------------------
-        $this->checkSameAs();
         
     }
 
@@ -154,51 +223,6 @@ class RegisterNewCustomerForm extends Component
         // -------------------------------------------------
         $this->showFaktAdresse = false;
 
-    }
-
-
-
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - CHECK SAME AS
-    // --------------------------------------------------------------------------------------------------
-    // This function checks if adress form is filled in and sets the var true or false
-    // --------------------------------------------------------------------------------------------------
-    public function checkSameAs()
-    {
-
-        // -------------------------------------------------
-        // Set sameAs to true if all fields are filled out
-        // -------------------------------------------------
-
-        if (!empty($this->adrAdresse) && !empty($this->adrPostnr) && !empty($this->adrSted)) {
-            $this->sameAs = true;
-        } else {
-            $this->sameAs = false;
-        }
-    }
-
-
-
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - UPDATED
-    // --------------------------------------------------------------------------------------------------
-    // This function is called when a field is updated
-    // --------------------------------------------------------------------------------------------------
-    public function updated($propertyName)
-    {
-
-        // -------------------------------------------------
-        // Validate the field
-        // -------------------------------------------------
-        $this->validateOnly($propertyName);
-
-        // -------------------------------------------------
-        // If the fields are filled out, set sameAs to true
-        // -------------------------------------------------
-        if (in_array($propertyName, ['adrAdresse', 'adrPostnr', 'adrSted'])) {
-            
-            $this->checkSameAs();
-        }
     }
 
 
