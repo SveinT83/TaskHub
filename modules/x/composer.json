@@ -1,0 +1,18 @@
+{
+    "name": "tronderdata/skeleton",
+    "description": "A skeleton module for Task Hub",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Tronderdata\\Skeleton\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tronderdata\\Skeleton\\Providers\\SkeletonProvider"
+            ]
+        }
+    },
+    "require": {}
+}
