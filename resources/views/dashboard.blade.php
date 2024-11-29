@@ -12,7 +12,13 @@
     <!-- ------------------------------------------------- -->
     <div class="container mt-3">
         <div class="row">
-            <p>Main section</p>
+            <div class="col-12">
+                <x-card-primary title="Welcome to the Dashboard">
+                    <p>
+                        This is the dashboard page. You can manage your posts, categories, and tags here.
+                    </p>
+                </x-card-primary>
+            </div>
         </div>
     </div>
 @endsection

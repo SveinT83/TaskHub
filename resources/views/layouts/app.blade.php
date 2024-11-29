@@ -42,7 +42,7 @@
                 <!-- Page Content -->
                 <div class="flex-grow-1">
                     <div class="container-fluid">
-                        <div class="row text-bg-light p-3 border-bottom justify-content-start">
+                        <div class="row text-bg-black p-3 border-bottom justify-content-start">
                             @yield('pageHeader')
                         </div>
 
