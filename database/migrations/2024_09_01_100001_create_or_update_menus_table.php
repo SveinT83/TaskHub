@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateOrUpdateMenusTable extends Migration
@@ -42,10 +43,24 @@ class CreateOrUpdateMenusTable extends Migration
                 }
             });
         }
+
+        // Sjekk om linjen "Admin settings" allerede finnes, opprett den hvis ikke
+        $existingMenu = DB::table('menus')->where('slug', 'adminsettings')->exists();
+        if (!$existingMenu) {
+            DB::table('menus')->insert([
+                'name' => 'Admin settings',
+                'slug' => 'adminsettings',
+                'url' => null, // Sett til null eller en passende verdi
+                'description' => 'Settings for admin users', // Valgfri beskrivelse
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     public function down()
     {
+        // Slett tabellen og dataen
         Schema::dropIfExists('menus');
     }
 }
