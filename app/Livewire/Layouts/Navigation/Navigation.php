@@ -17,7 +17,7 @@ use Livewire\Component;
 // --------------------------------------------------------------------------------------------------
 use App\Models\Menu;  // Menu-modellen som kobler mot menydata
 
-class navigation extends Component
+class Navigation extends Component
 {
 
     // -------------------------------------------------
@@ -49,6 +49,7 @@ class navigation extends Component
     // --------------------------------------------------------------------------------------------------
     public function render()
     {
+
         // -------------------------------------------------
         // Return the view with the menus data.
         // -------------------------------------------------
