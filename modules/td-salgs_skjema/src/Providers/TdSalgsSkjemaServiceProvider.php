@@ -51,7 +51,7 @@ class TdSalgsSkjemaServiceProvider extends ServiceProvider
         // -------------------------------------------------
         // Load the migrations
         // -------------------------------------------------
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../../Database/migrations');
 
         // -------------------------------------------------
         // Load the images

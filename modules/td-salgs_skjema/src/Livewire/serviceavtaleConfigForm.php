@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use tronderdata\TdSalgsSkjema\Models\AlacarteItems;
 use tronderdata\TdSalgsSkjema\Models\ServicePakke;
 
-class ServiceavtaleConfigForm extends Component
+class serviceavtaleConfigForm extends Component
 {
 
     // -------------------------------------------------

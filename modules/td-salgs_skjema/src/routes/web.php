@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use tronderdata\TdSalgsSkjema\Http\Controllers\TdsalgsSkjemaController;
+use tronderdata\TdSalgsSkjema\Http\Controllers\TdsalgsskjemaController;
 
 //Route::get('/tdsalgsskjema', [TdsalgsskjemaController::class, 'index'])->name('tdsalgsskjema.index');
 //Route::get('/tdsalgsskjema/create', [TdsalgsskjemaController::class, 'create'])->name('tdsalgsskjema.create');
@@ -12,7 +12,6 @@ use tronderdata\TdSalgsSkjema\Http\Controllers\TdsalgsSkjemaController;
 // Routes for all authenticated users
 // ----------------------------------------------------------------------------------------------------------------------------------------------------
 Route::middleware('web', 'auth')->group(function () {
-
 
     // -------------------------------------------------
     // Module Routes

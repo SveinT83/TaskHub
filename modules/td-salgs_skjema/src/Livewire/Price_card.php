@@ -177,6 +177,6 @@ class Price_card extends Component
     // --------------------------------------------------------------------------------------------------
     public function render()
     {
-        return view('TdSalgsSkjema::livewire.price_card');
+        return view('TdSalgsSkjema::livewire.Price_card');
     }
 }
