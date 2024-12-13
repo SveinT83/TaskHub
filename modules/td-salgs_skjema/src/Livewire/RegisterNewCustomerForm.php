@@ -109,7 +109,14 @@ class RegisterNewCustomerForm extends Component
     public function sendFormData($data = null)
     {
         try {
-            // Bruk testdata hvis ingen data er sendt
+
+            // --------------------------------------------------------------------------------------------------
+            // Create an data array with the form data and session data, and add test data if no data is sent
+            // --------------------------------------------------------------------------------------------------
+
+            // -------------------------------------------------
+            // Use test data if no data is sent
+            // -------------------------------------------------
             $data = $data ?? [
                 'kontaktNavn' => 'Test Person',
                 'kontaktEpost' => 'test@example.com',
@@ -124,13 +131,76 @@ class RegisterNewCustomerForm extends Component
                 'orgName' => 'Testfirma AS',
             ];
 
-            // Send e-posten
+            // --------------------------------------------------------------------------------------------------
+            // Add session data to the data array if available
+            // --------------------------------------------------------------------------------------------------
+
+            // -------------------------------------------------
+            // Session keys
+            // -------------------------------------------------
+            $sessionKeys = [
+                'private',             // Session key for private customer
+                'business',            // Session key for business customer
+                'timebank',            // Session key for timebank
+                'amountUsers',         // Session key for number of users
+                'amountDatamaskiner',  // Session key for number of computers
+                'serviceName',         // Session key for service name
+
+                'sumTottComputers',    // Session key for total number of computers
+                'timebankPrice',       // Session key for timebank price
+                'sumTott',             // Session key for total price
+                'cpu',                 // Session key for cpu
+                'ram',                 // Session key for ram
+                'storage',             // Session key for storage
+            ];
+
+            // -------------------------------------------------
+            // Add session data to the dsessionKey array
+            // -------------------------------------------------
+            foreach ($sessionKeys as $key) {
+                if (session()->has($key)) {
+                    $data[$key] = session($key);
+                }
+            }
+
+            // -------------------------------------------------
+            // Set default values for missing keys
+            // -------------------------------------------------
+            $data['timebank'] = $data['timebank'] ?? '0';
+            $data['amountUsers'] = $data['amountUsers'] ?? '1';
+            $data['amountDatamaskiner'] = $data['amountDatamaskiner'] ?? '1';
+            $data['selectedService'] = $data['selectedService'] ?? 'Standard Service';
+            $data['serviceName'] = $data['serviceName'] ?? 'N/A';
+            $data['sumTottComputers'] = $data['sumTottComputers'] ?? 'N/A';
+            $data['timebankPrice'] = $data['timebankPrice'] ?? 'N/A';
+            $data['sumTott'] = $data['sumTott'] ?? 'N/A';
+            $data['cpu'] = $data['cpu'] ?? 'N/A';
+            $data['ram'] = $data['ram'] ?? 'N/A';
+            $data['storage'] = $data['storage'] ?? 'N/A';
+
+            // --------------------------------------------------------------------------------------------------
+            // Send the email
+            // --------------------------------------------------------------------------------------------------
+
+            // -------------------------------------------------
+            // Send the email
+            // -------------------------------------------------
             \Mail::to('post@tronderdata.no')->send(new \App\Mail\FormSubmissionMail($data));
 
-            // Flash-melding for suksess
+            // -------------------------------------------------
+            // Flash message for success
+            // -------------------------------------------------
             session()->flash('success', 'Test-e-post sendt!');
+
+        // --------------------------------------------------------------------------------------------------
+        // Catch any exceptions
+        // --------------------------------------------------------------------------------------------------
+
         } catch (\Exception $e) {
-            // Håndter feil
+
+            // -------------------------------------------------
+            // Flash message for error
+            // -------------------------------------------------
             session()->flash('error', 'Noe gikk galt: ' . $e->getMessage());
         }
     }

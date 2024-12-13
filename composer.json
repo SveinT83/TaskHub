@@ -37,7 +37,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "tronderdata\\TdSalgsSkjema\\": "src/"
+            "tronderdata\\TdSalgsSkjema\\": "modules/td-salgs_skjema/src"
         }
     },
     "autoload-dev": {

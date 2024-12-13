@@ -264,22 +264,22 @@ class serviceavtaleConfigForm extends Component
     // --------------------------------------------------------------------------------------------------
     public function processOrder()
     {
-        // Hent nødvendig data for e-posten
-        $orderData = [
-            'serviceName' => $this->serviceData->name,
-            'amountUsers' => $this->amountUsers,
-            'sumTottUsers' => $this->sumTottUsers,
-            'amountDatamaskiner' => $this->amountDatamaskiner,
-            'sumTottComputers' => $this->sumTottComputers,
-            'timebank' => $this->timebank,
-            'timebankPrice' => $this->timebankPrice,
-            'sumTott' => $this->sumTott,
-            'cpu' => $this->cpu ?? 'N/A',
-            'ram' => $this->ram ?? 'N/A',
-            'storage' => $this->storage ?? 'N/A',
-        ];
 
-        return redirect()->route('tdsalgsskjema.FindCustomerForm'); // Erstatt med riktig rute
+        // -------------------------------------------------
+        // Lagre data i session
+        // -------------------------------------------------
+        session(['serviceName' => $this->serviceData->name]);
+        session(['sumTottComputers' => $this->sumTottUsers]);
+        session(['timebankPrice' => $this->timebankPrice]);
+        session(['sumTott' => $this->sumTott]);
+        session(['cpu' => $this->cpu ?? 'N/A']);
+        session(['ram' => $this->ram ?? 'N/A']);
+        session(['storage' => $this->storage ?? 'N/A']);
+
+        // -------------------------------------------------
+        // Redirect til neste steg: Find Kundeskjema
+        // -------------------------------------------------
+        return redirect()->route('tdsalgsskjema.FindCustomerForm');
     }
 
 

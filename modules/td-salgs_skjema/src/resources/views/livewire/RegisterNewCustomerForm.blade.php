@@ -259,5 +259,4 @@
     </form>
 
     <button wire:click="validateForm"> Send inn </button>
-    <button wire:click="sendFormData"> Test Email </button>
 </div>

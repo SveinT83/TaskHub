@@ -2,6 +2,6 @@
     "name": "tronderdata/td-salgs_skjema",
     "description": "A module for managing sales forms",
     "providers": [
-        "tronderdata\\\\TdSalgsSkjema\\\\Providers\\\\TdSalgsSkjemaServiceProvider"
+        "tronderdata\\TdSalgsSkjema\\Providers\\TdSalgsSkjemaServiceProvider"
     ]
 }

@@ -11,7 +11,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "tronderdata\\TdSalgsSkjema\\Providers\\TdSalgsSkjemaServiceProvider"
+                "Tronderdata\\TdSalgsSkjema\\Providers\\TdSalgsSkjemaServiceProvider"
             ]
         }
     },

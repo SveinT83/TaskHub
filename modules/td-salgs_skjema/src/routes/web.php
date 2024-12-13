@@ -3,9 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use tronderdata\TdSalgsSkjema\Http\Controllers\TdsalgsskjemaController;
 
-//Route::get('/tdsalgsskjema', [TdsalgsskjemaController::class, 'index'])->name('tdsalgsskjema.index');
-//Route::get('/tdsalgsskjema/create', [TdsalgsskjemaController::class, 'create'])->name('tdsalgsskjema.create');
-
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 // AUTHENTICATED ROUTES
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
