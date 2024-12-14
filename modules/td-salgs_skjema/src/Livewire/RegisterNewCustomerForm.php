@@ -58,7 +58,7 @@ class RegisterNewCustomerForm extends Component
         'adrAdresse' => 'required|string|max:255',
         'adrPostnr' => 'required|numeric|digits:4',
         'adrSted' => 'required|string|max:255',
-        'orgNr' => 'nullable|digits:9',
+        'orgNr' => 'nullable|digits:11',
         'orgName' => 'nullable|string|max:50',
         'kontaktNavn' => 'string|max:50',
         'kontaktEpost' => 'string|max:50',
