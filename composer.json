@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "ezyang/htmlpurifier": "^4.17",
+        "facebook/graph-sdk": "*",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "*",
