@@ -34,14 +34,15 @@
                 <p>Nextcloud is connected.</p>
             @else
                 <p>Nextcloud is not connected.</p>
-                <a href="{{ route('nextcloud.connect') }}" class="btn btn-primary">Connect Nextcloud</a>
+
+                <i class="mt-2">Put your Nextcloud details in the .env file.</i>
             @endif
         </div>
 
         <!-- ------------------------------------------------- -->
         <!-- Kontroll for å aktivere eller deaktivere Nextcloud-integrasjon -->
         <!-- ------------------------------------------------- -->
-        <form action="{{ route('nextcloud.toggle') }}" method="POST">
+        <form class="row mt-3" action="{{ route('nextcloud.toggle') }}" method="POST">
             @csrf
             @if($isNextcloudActive)
                 <button type="submit" class="btn btn-danger">Deconnect Nextcloud</button>
