@@ -1,17 +1,16 @@
 {
-    "name": "facebook-posting-module",
+    "name": "taskhub/facebook-posting-module",
     "description": "A module built using the facebook php sdk that allows for posting to facebook using taskhub",
-    "type": "library",
+    "type": "module",
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "": "src/"
+            "Modules\\FacebookPostingModule\\": "Modules/FacebookPostingModule/src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                ""Tronderdata\\facebook-posting-module\\Providers\\facebookprovider""
+                "Modules\\FacebookPostingModule\\src\\Providers\\FacebookPosterServiceProvider"
             ]
         }
     },

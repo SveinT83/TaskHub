@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\FacebookPostingModule\src\Models;
+namespace modules\FacebookPostingModule\src\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

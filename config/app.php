@@ -122,16 +122,4 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Facebook posting provider
-    */
-
-
-    'providers' => [
-        Modules\FacebookPostingModule\src\Providers\FacebookPosterServiceProvider::class,
-    ],
-
-
 ];

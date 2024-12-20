@@ -1,8 +1,8 @@
 <?php
-namespace Modules\FacebookPostingModule\src\Http\Controllers;
+namespace modules\FacebookPostingModule\src\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Modules\FacebookPostingModule\Services\FacebookApiService;
+use Modules\FacebookPostingModule\src\Services\FacebookApiService;
 
 class FacebookController extends Controller
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Modules\FacebookPostingModule\src\Services;
+namespace modules\FacebookPostingModule\src\Services;
 
 use Facebook\Facebook;
 

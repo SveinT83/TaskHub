@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\FacebookPostingModule\src\Providers;
+namespace modules\FacebookPostingModule\src\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;

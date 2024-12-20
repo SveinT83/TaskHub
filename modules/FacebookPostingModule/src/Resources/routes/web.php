@@ -1,5 +1,6 @@
 <?php
-use Modules\FacebookPostingModule\src\Http\Controllers\FacebookController;
+use modules\FacebookPostingModule\src\Http\Controllers\FacebookController;
+use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'web', 'prefix' => 'facebook-poster'], function () {
     Route::get('/groups', [FacebookController::class, 'listGroups'])->name('facebook.groups');
