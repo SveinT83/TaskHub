@@ -21,6 +21,6 @@ class AppearanceController extends Controller
         // -------------------------------------------------
         // Return the Configurations view
         // -------------------------------------------------
-        return view('admin.Appearance.index');
+        return view('admin.appearance.index');
     }
 }

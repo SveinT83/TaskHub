@@ -204,7 +204,7 @@ Route::middleware('auth')->group(function () {
 // -------------------------------------------------
 // NextCloud Connect and callback routes
 // -------------------------------------------------
-Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('nextcloud.connect');
+Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('nextcloud.connect'); // Not sure if this is nessesary route?
 Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
 
 // -------------------------------------------------

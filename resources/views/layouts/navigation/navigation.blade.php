@@ -15,9 +15,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <!-- Dashboard link -->
                 <li class="nav-item">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
                 </li>
 
                 <!-- Dynamic Dropdown Menu (Admin Menu Dropdown) -->

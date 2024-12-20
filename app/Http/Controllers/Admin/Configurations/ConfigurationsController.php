@@ -22,6 +22,6 @@ class ConfigurationsController extends Controller
         // -------------------------------------------------
         // Return the Configurations view
         // -------------------------------------------------
-        return view('admin.Configurations.index');
+        return view('admin.configurations.index');
     }
 }

@@ -20,5 +20,6 @@
     <!-- ------------------------------------------------- -->
     <!-- LIVEWIRE COMPONENT -->
     <!-- ------------------------------------------------- -->
-    @livewire('admin.configurations.email.email-form')
+    <livewire:Admin.Configurations.Email.emailform />
+
 @endsection

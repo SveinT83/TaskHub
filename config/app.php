@@ -123,12 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Facebook posting provider
+    */
+
+
     'providers' => [
-    Laravel\Socialite\SocialiteServiceProvider::class,
-    Laravel\Sanctum\SanctumServiceProvider::class,
+        Modules\FacebookPostingModule\src\Providers\FacebookPosterServiceProvider::class,
     ],
 
-    'aliases' => [
-    'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-    ],
+
 ];
