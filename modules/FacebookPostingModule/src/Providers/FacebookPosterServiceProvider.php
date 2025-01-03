@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\FacebookPostingModule\src\Providers;
+namespace Modules\FacebookPostingModule\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
@@ -12,6 +12,7 @@ class FacebookPosterServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \Log::info('FacebookPosterServiceProvider booted');
         $this->registerConfig();
         $this->registerViews();
         $this->registerRoutes();
@@ -52,7 +53,7 @@ class FacebookPosterServiceProvider extends ServiceProvider
     protected function registerRoutes()
     {
         if (!$this->app->routesAreCached()) {
-            $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
+            $this->loadRoutesFrom(__DIR__ . '/Routes/web.php');
         }
     }
 

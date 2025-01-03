@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Modules\\FacebookPostingModule\\' => array($baseDir . '/Modules/FacebookPostingModule/src'),
+    'Modules\\FacebookPostingModule\\' => array($baseDir . '/src'),
 );

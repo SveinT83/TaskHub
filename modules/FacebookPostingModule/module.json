@@ -1,5 +1,6 @@
 {
     "name": "FacebookPostingModule",
-    "version": "0.5",
-    "dependencies": []
+    "alias": "FacebookPostingModule",
+    "description": "A Laravel module for Facebook posting",
+    "active": true
 }
