@@ -1,24 +1,42 @@
 {
-    "name": "modules/facebookposter",
-    "description": "A module built using the facebook sdk that allows for posting to facebook using taskhub",
-    "type": "module",
+    "name": "facebook/facebook-posting",
+    "description": "A module for posting to Facebook groups",
+    "type": "library",
     "autoload": {
-        "psr-4": {
-            "Modules\\FacebookPostingModule\\": "src/"
-        }
+      "psr-4": {
+        "Modules\\FacebookPostingModule\\": "src/"
+      },
+      "files": [
+        "src/Helpers/helpers.php"
+      ],
+      "exclude-from-classmap": [
+        "vendor/"
+      ]
     },
-    "require": {
-        "facebook/graph-sdk": "^5.1",
-        "laravel/framework": "^11.9"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^11.0.1"
+    "autoload-dev": {
+      "psr-4": {
+        "Modules\\FacebookPostingModule\\Tests\\": "tests/"
+      }
     },
     "extra": {
-        "laravel": {
-            "providers": [
-                "Modules\\FacebookPostingModule\\src\\Providers\\FacebookPosterServiceProvider"
-            ]
+      "laravel": {
+        "providers": [
+          "Modules\\FacebookPostingModule\\Providers\\FacebookPosterServiceProvider"
+        ],
+        "aliases": {
+          "FacebookApi": "Modules\\FacebookPostingModule\\Services\\FacebookApiService"
         }
+      }
+    },
+    "require": {
+      "php": "^7.3",
+      "facebook/graph-sdk": "^5.7",
+      "illuminate/support": "^8.0",
+      "illuminate/database": "^8.0"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^9.3",
+      "fakerphp/faker": "^1.9",
+      "mockery/mockery": "^1.4"
     }
-}
+  }

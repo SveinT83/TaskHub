@@ -7,14 +7,12 @@
     "require": {
         "php": "^8.2",
         "ezyang/htmlpurifier": "^4.17",
-        "facebook/graph-sdk": "^5.1",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
-        "nwidart/laravel-modules": "^11.1",
         "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
@@ -31,11 +29,11 @@
 
     ],
     "autoload": {
-    "psr-4": {
-        "App\\": "app/",
-        "Database\\Factories\\": "database/factories/",
-        "Database\\Seeders\\": "database/seeders/",
-        "Modules\\": "modules/"
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/",
+            "Modules\\": "modules/"
         }
     },
     "autoload-dev": {
@@ -43,6 +41,10 @@
             "Tests\\": "tests/"
         }
     },
+    "exclude-from-classmap": [
+        "modules/FacebookPostingModule/vendor"
+    ],
+
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -72,8 +74,7 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true,
-            "wikimedia/composer-merge-plugin": true
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",

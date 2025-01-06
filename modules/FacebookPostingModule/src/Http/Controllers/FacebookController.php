@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\FacebookPostingModule\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -44,4 +45,3 @@ class FacebookController extends Controller
         return response()->json(['success' => true, 'group_id' => $groupId, 'message' => $message]);
     }
 }
-

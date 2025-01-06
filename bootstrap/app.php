@@ -16,3 +16,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
+
+    $app = require_once __DIR__ . '/../vendor/autoload.php';
+
+    $app = new Illuminate\Foundation\Application(
+        $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
+    );
+
+    // Load environment configurations
+    Dotenv\Dotenv::createImmutable($app->environmentPath(), $app->environmentFile())->safeLoad();
+
+    // Dynamically register module service providers
+    \App\Services\ModuleServiceLoader::register($app, base_path('modules'));
+
+    // Return the application instance
+    return $app;
