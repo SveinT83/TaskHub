@@ -1,0 +1,19 @@
+{
+    "name": "tronderdata/td-tickets",
+    "description": "Tickets modul for systemet",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "tronderdata\\TdTickets\\": "modules/td-tickets/src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider"
+            ]
+        }
+    },
+    "require": {}
+}

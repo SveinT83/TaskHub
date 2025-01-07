@@ -1,0 +1,7 @@
+{
+    "name": "tronderdata/kbartickles",
+    "description": "A module fore holding KB Artickles",
+    "providers": [
+        "tronderdata\\kbartickles\\Providers\\kbarticklesServiceProvider"
+    ]
+}
