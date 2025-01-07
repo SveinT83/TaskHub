@@ -18,7 +18,8 @@
         "tronderdata/kbartickles": "dev-main",
         "tronderdata/td-clients": "dev-main",
         "tronderdata/td-task": "dev-main",
-        "tronderdata/td-tickets": "dev-main"
+        "tronderdata/td-tickets": "dev-main",
+        "tronderdata/skeleton": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -50,6 +51,10 @@
         {
             "type": "path",
             "url": "./modules/categories"
+        },
+        {
+            "type": "path",
+            "url": "modules/Skeleton"
         }
     ],
     "autoload": {
@@ -63,7 +68,8 @@
             "Database\\Seeders\\": "database/seeders/",
             "tronderdata\\tdTask\\": "modules/td-task/src/",
             "tronderdata\\kbartickles\\": "modules/kbartickles/src/",
-            "tronderdata\\categories\\": "modules/categories/src/"
+            "tronderdata\\categories\\": "modules/categories/src/",
+            "Tronderdata\\Skeleton\\": "modules/Skeleton/src/"
         }
     },
     "autoload-dev": {
@@ -95,7 +101,8 @@
                 "Tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider",
                 "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider",
                 "tronderdata\\kbartickles\\Providers\\KbarticklesServiceProvider",
-                "tronderdata\\categories\\Providers\\CategoriesServiceProvider"
+                "tronderdata\\categories\\Providers\\CategoriesServiceProvider",
+                "Tronderdata\\Skeleton\\Providers\\SkeletonProvider"
             ]
         }
     },
