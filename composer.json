@@ -17,9 +17,7 @@
         "tronderdata/categories": "dev-main",
         "tronderdata/kbartickles": "dev-main",
         "tronderdata/td-clients": "dev-main",
-        "tronderdata/td-task": "dev-main",
-        "tronderdata/td-tickets": "dev-main",
-        "tronderdata/skeleton": "dev-main"
+        "tronderdata/td-task": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -38,10 +36,6 @@
         },
         {
             "type": "path",
-            "url": "./modules/td-tickets"
-        },
-        {
-            "type": "path",
             "url": "./modules/td-task"
         },
         {
@@ -51,10 +45,6 @@
         {
             "type": "path",
             "url": "./modules/categories"
-        },
-        {
-            "type": "path",
-            "url": "modules/Skeleton"
         }
     ],
     "autoload": {
@@ -63,13 +53,11 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Modules\\TdClients\\": "app/Modules/TdClients/",
-            "tronderdata\\TdTickets\\": "modules/td-tickets/src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "tronderdata\\tdTask\\": "modules/td-task/src/",
             "tronderdata\\kbartickles\\": "modules/kbartickles/src/",
-            "tronderdata\\categories\\": "modules/categories/src/",
-            "Tronderdata\\Skeleton\\": "modules/Skeleton/src/"
+            "tronderdata\\categories\\": "modules/categories/src/"
         }
     },
     "autoload-dev": {
@@ -98,11 +86,9 @@
         "laravel": {
             "providers": [
                 "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider",
-                "Tronderdata\\TdTickets\\Providers\\TdTicketsServiceProvider",
                 "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider",
                 "tronderdata\\kbartickles\\Providers\\KbarticklesServiceProvider",
-                "tronderdata\\categories\\Providers\\CategoriesServiceProvider",
-                "Tronderdata\\Skeleton\\Providers\\SkeletonProvider"
+                "tronderdata\\categories\\Providers\\CategoriesServiceProvider"
             ]
         }
     },
