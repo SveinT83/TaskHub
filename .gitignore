@@ -21,3 +21,4 @@ yarn-error.log
 server.php
 .htaccess
 /modules/FacebookPostingModule/vendor
+.env

@@ -10,34 +10,38 @@ class FacebookPosterServiceProvider extends ServiceProvider
     /**
      * Boot the module services.
      *
-     * This method is called after all other service providers have been registered,
-     * allowing you to perform any actions needed for your module.
+     * This method is used to register any services, routes, views, or configs
+     * necessary for the module. It ensures everything is set up when the
+     * application boots.
      */
     public function boot()
     {
-        // Log when the provider is booted
         \Log::info('FacebookPosterServiceProvider booted');
 
-        // Register configuration, views, and routes
+        // Register and publish config files for the module
         $this->registerConfig();
+
+        // Register and publish views
         $this->registerViews();
+
+        // Register routes for the module
         $this->registerRoutes();
     }
 
     /**
      * Register the module configuration.
      *
-     * This method will publish the module's config file to the application's config
-     * directory and merge any settings from the module config with the app config.
+     * This method publishes the module's configuration file to the application's
+     * config directory so that the app can be customized by the user.
      */
     protected function registerConfig()
     {
-        // Publish the module's configuration file
+        // Publish the configuration file from the module to the config directory
         $this->publishes([
             base_path('modules/FacebookPostingModule/src/Config/config.php') => config_path('facebookposter.php'),
         ], 'config');
 
-        // Merge the module's config with the app's configuration
+        // Merge the module's configuration with the app's config, allowing overrides
         $this->mergeConfigFrom(
             base_path('modules/FacebookPostingModule/src/Config/config.php'),
             'facebookposter'
@@ -47,56 +51,60 @@ class FacebookPosterServiceProvider extends ServiceProvider
     /**
      * Register the module views.
      *
-     * This method will load the module's views and allow them to be published.
+     * This method is responsible for loading the views from the module and
+     * making them available to the application.
      */
     public function registerViews()
     {
-        // Define paths for the views
+        // Define paths to the source and destination view directories
         $viewPath = resource_path('views/modules/facebookposter');
         $sourcePath = base_path('modules/FacebookPostingModule/src/Resources/views');
 
-        // Publish the views to the application
+        // Publish the views to the application's resources/views directory
         $this->publishes([
             $sourcePath => $viewPath,
         ], 'views');
 
-        // Load the views from the module's directory
+        // Load views from the source path, naming them 'facebookposter'
         $this->loadViewsFrom($sourcePath, 'facebookposter');
     }
 
     /**
-     * Register module routes.
+     * Register the module routes.
      *
-     * This method registers the module's routes with the application.
+     * This method registers the routes for the module. If the routes are not
+     * cached, they are loaded from the defined route file.
      */
     protected function registerRoutes()
     {
-        // Check if routes are already cached
+        // Only load routes if they are not already cached
         if (!$this->app->routesAreCached()) {
-            // Define the routes for the module
             Route::middleware('web')
-                ->namespace('Modules\FacebookPostingModule\Http\Controllers')  // Define the namespace for the controllers
-                ->group(base_path('modules/FacebookPostingModule/src/Routes/web.php'));  // Load the module's routes
+                ->namespace('Modules\FacebookPostingModule\Http\Controllers')
+                ->group(base_path('modules/FacebookPostingModule/src/Routes/web.php'));
         }
     }
 
     /**
-     * Register any additional bindings or services.
+     * Register bindings and services.
      *
-     * This method is used to bind services or classes into the service container.
+     * This method is used to register any custom services or bindings into the
+     * application's service container. This could include things like custom
+     * services, repositories, or other dependencies.
      */
     public function register()
     {
-        // Register additional bindings or services if necessary
+        // Register any services the module may require here (currently no bindings needed)
     }
 
     /**
      * Get the services provided by the provider.
      *
-     * This method returns an array of services that are provided by the service provider.
+     * This method defines what services this provider is providing to the application.
      */
     public function provides()
     {
+        // Since no services are explicitly registered, we return an empty array.
         return [];
     }
 }

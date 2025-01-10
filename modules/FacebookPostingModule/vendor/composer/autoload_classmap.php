@@ -7,4 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Modules\\FacebookPostingModule\\Http\\Controllers\\FacebookController' => $baseDir . '/src/Http/Controllers/FacebookController.php',
+    'Modules\\FacebookPostingModule\\Models\\FacebookPost' => $baseDir . '/src/Models/FacebookPost.php',
+    'Modules\\FacebookPostingModule\\Providers\\FacebookPosterServiceProvider' => $baseDir . '/src/Providers/FacebookPosterServiceProvider.php',
+    'Modules\\FacebookPostingModule\\Services\\FacebookApiService' => $baseDir . '/src/Services/FacebookApiService.php',
 );

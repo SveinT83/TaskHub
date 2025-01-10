@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\Integrations\Nextcloud\NextcloudController;
 use App\Http\Controllers\Admin\Appearance\AppearanceController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
+use App\Http\Controllers\Auth\FacebookAuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -217,3 +218,10 @@ Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcl
 // Require the auth routes
 // -------------------------------------------------
 require __DIR__.'/auth.php';
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+// ROUTES FACEBOOK REDIRECT
+// ROUTES FACEBOOK CALLBACK
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+Route::get('login/facebook', [FacebookAuthController::class, 'redirectToFacebook'])->name('facebook.login');
+Route::get('login/facebook/callback', [FacebookAuthController::class, 'handleCallback']);

@@ -1,22 +1,33 @@
 {
-    "name": "facebook/facebook-posting",
-    "description": "A module for posting to Facebook groups",
+    "name": "taskhub/facebook-posting-module",
+    "description": "Module for posting to Facebook Groups and Pages using Meta SDK",
     "type": "library",
+    "require": {
+      "php": "^8.0"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^9.5"
+    },
     "autoload": {
       "psr-4": {
         "Modules\\FacebookPostingModule\\": "src/"
-      },
-      "files": [
-        "src/Helpers/helpers.php"
-      ],
-      "exclude-from-classmap": [
-        "vendor/"
-      ]
+      }
     },
     "autoload-dev": {
       "psr-4": {
         "Modules\\FacebookPostingModule\\Tests\\": "tests/"
       }
+    },
+    "scripts": {
+      "post-autoload-dump": [
+        "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+        "php artisan package:discover --ansi"
+      ]
+    },
+    "config": {
+      "optimize-autoloader": true,
+      "preferred-install": "dist",
+      "sort-packages": true
     },
     "extra": {
       "laravel": {
@@ -24,19 +35,8 @@
           "Modules\\FacebookPostingModule\\Providers\\FacebookPosterServiceProvider"
         ],
         "aliases": {
-          "FacebookApi": "Modules\\FacebookPostingModule\\Services\\FacebookApiService"
+          "FacebookApiService": "Modules\\FacebookPostingModule\\Services\\FacebookApiService"
         }
       }
-    },
-    "require": {
-      "php": "^7.3",
-      "facebook/graph-sdk": "^5.7",
-      "illuminate/support": "^8.0",
-      "illuminate/database": "^8.0"
-    },
-    "require-dev": {
-      "phpunit/phpunit": "^9.3",
-      "fakerphp/faker": "^1.9",
-      "mockery/mockery": "^1.4"
     }
   }
