@@ -37,7 +37,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Modules\\FacebookPostingModule\\": "modules/FacebookPostingModule/"
+            "Modules\\FacebookPostingModule\\": "modules/FacebookPostingModule/src/"
         }
     },
     "autoload-dev": {

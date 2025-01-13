@@ -11,7 +11,7 @@ namespace App\Livewire\Admin\Configurations\Email;
 use Livewire\Component;
 use App\Models\EmailAccount;
 
-class emailform extends Component
+class Emailform extends Component
 {
 
     // -------------------------------------------------

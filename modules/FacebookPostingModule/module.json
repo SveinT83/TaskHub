@@ -1,5 +1,5 @@
 {
-    "name": "FacebookPostingModule",
+    "name": "taskhub/facebook-posting-module",
     "alias": "FacebookPostingModule",
     "description": "A Laravel module for Facebook posting",
     "active": true

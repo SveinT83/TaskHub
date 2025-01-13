@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 
-class SocialController extends Controller
+class SocialiteLoginController extends Controller
 {
     // Redirect to Facebook's OAuth page
     public function redirectToFacebook()
