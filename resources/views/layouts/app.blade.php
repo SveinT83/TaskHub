@@ -35,10 +35,13 @@
                 </header>
             @endisset
 
-            <div class="d-flex w-100" style="min-height: calc(100vh - 90px);">
+            <div class="d-flex w-100" style="min-height: calc(100vh - 60px);">
+
+                <!-- Sidebar -->
                 <div class="d-none d-md-block text-bg-dark" style="width: 250px;">
                     @livewire('layouts.navigation.sidebar-menu')
                 </div>
+
                 <!-- Page Content -->
                 <div class="flex-grow-1">
                     <div class="container-fluid">

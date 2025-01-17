@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    protected $middleware = ['role:superadmin']; //Ser ikke ut til å virke
+
     // --------------------------------------------------------------------------------------------------
     // FUNCTION - INDEX
     // Index function returns the view with all users.

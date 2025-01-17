@@ -14,12 +14,15 @@
         <!-- ------------------------------------------------- -->
         <!-- Add user button if user has permission -->
         <!-- ------------------------------------------------- -->
-        @can('superadmin.create')
-            <div class="col-md-2 mt-1">
+        <div class="col-md-2 mt-1">
+
+            @if(auth()->user()->can('superadmin.create') || auth()->user()->can('admin.create'))
                 <!-- view/compoments/new-url.blade.php -->
                 <x-new-url href="{{ route('users.create') }}">Add</x-new-url>
-            </div>
-        @endcan
+            @else
+                <i>You do not hawe permission to add a user.</i>
+            @endif
+        </div> 
 
     </x-page-header>
 @endsection
@@ -54,7 +57,9 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ implode(', ', $user->roles->pluck('name')->toArray()) }}</td>
 
+                    <!-- ------------------------------------------------- -->
                     <!-- Only show the TD if user has permission -->
+                    <!-- ------------------------------------------------- -->
                     @if(auth()->user()->can('superadmin.edit') || auth()->user()->can('superadmin.delete'))
                         <td>
 

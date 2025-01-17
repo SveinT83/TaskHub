@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    <h1>Appearance</h1>
+    <p>Here you can see all the appearance settings</p>
 @endsection
