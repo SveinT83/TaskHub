@@ -3,44 +3,38 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;  // Assuming you are storing Facebook data in the User model
 
 class FacebookAuthController extends Controller
 {
-    // Redirect to Facebook for authentication
     public function redirectToFacebook()
     {
         return Socialite::driver('facebook')->redirect();
     }
 
-    // Handle Facebook callback and store user info
     public function handleCallback()
     {
         try {
-            $facebookUser = Socialite::driver('facebook')->user();
+            $user = Socialite::driver('facebook')->user();
+            $existingUser = User::where('facebook_id', $user->getId())->first();
 
-            // Find or create user based on Facebook ID
-            $user = User::where('facebook_id', $facebookUser->getId())->first();
-
-            if (!$user) {
-                $user = User::create([
-                    'facebook_id' => $facebookUser->getId(),
-                    'name' => $facebookUser->getName(),
-                    'email' => $facebookUser->getEmail(),
-                    'avatar' => $facebookUser->getAvatar(),
-                    // Store additional fields as needed
+            if ($existingUser) {
+                auth()->login($existingUser);
+            } else {
+                $newUser = User::create([
+                    'facebook_id' => $user->getId(),
+                    'name' => $user->getName(),
+                    'email' => $user->getEmail(),
+                    'facebook_token' => $user->token, // Save the token for future requests
                 ]);
+                auth()->login($newUser);
             }
 
-            // Log the user in
-            Auth::login($user);
-
-            return redirect()->route('home'); // Redirect to home or dashboard after login
+            return redirect()->route('facebook.post-form');  // Redirect to the post form after login
         } catch (\Exception $e) {
-            return redirect()->route('login')->with('error', 'Could not authenticate with Facebook.');
+            return redirect()->route('facebook.login')->with('error', 'Failed to login with Facebook.');
         }
     }
 }

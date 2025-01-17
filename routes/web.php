@@ -224,4 +224,9 @@ require __DIR__.'/auth.php';
 // ROUTES FACEBOOK CALLBACK
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 Route::get('login/facebook', [FacebookAuthController::class, 'redirectToFacebook'])->name('facebook.login');
-Route::get('login/facebook/callback', [FacebookAuthController::class, 'handleCallback']);
+Route::get('login/facebook/callback', [FacebookAuthController::class, 'handleCallback'])->name('facebook.callback');
+
+// Post form page after successful login
+Route::get('facebook/post-form', function () {
+    return view('facebook.post_form'); // Return the view with post form
+})->name('facebook.post-form');

@@ -3,14 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Modules\FacebookPostingModule\Http\Controllers\FacebookController;
 
-// Define routes for the Facebook Posting Module
 Route::group(['middleware' => 'web', 'prefix' => 'facebook-poster'], function () {
-    // Route to list user groups
+    Route::get('/post-form', [FacebookController::class, 'showPostForm'])->name('facebook.post-form');
     Route::get('/groups', [FacebookController::class, 'listGroups'])->name('facebook.groups');
-
-    // Route to post a message to a Facebook group
     Route::post('/post-group', [FacebookController::class, 'postToGroup'])->name('facebook.post-group');
-
-    // Route to post a message to a Facebook page
-    Route::post('/post-page', [FacebookController::class, 'postToPage'])->name('facebook.post-page');
+    Route::post('/post-page', [FacebookController::class, 'postToPage'])->name('facebook.post');
+    Route::post('/facebook/post-to-wall', [FacebookController::class, 'postToWall']);
 });

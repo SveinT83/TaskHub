@@ -66,7 +66,7 @@ class FacebookPosterServiceProvider extends ServiceProvider
         ], 'views');
 
         // Load views from the source path, naming them 'facebookposter'
-        $this->loadViewsFrom($sourcePath, 'facebookposter');
+        $this->loadViewsFrom($sourcePath, 'FacebookPostingModule');
     }
 
     /**
