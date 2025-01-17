@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "2d56ee1699533a8cc5c9e51f9835e756",
+=======
+    "content-hash": "a97a719cae690308c5b3c8ae790fb653",
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
     "packages": [
         {
             "name": "brick/math",
@@ -2525,12 +2529,20 @@
             "version": "3.8.4",
             "source": {
                 "type": "git",
+<<<<<<< HEAD
                 "url": "https://github.com/briannesbitt/Carbon.git",
+=======
+                "url": "https://github.com/CarbonPHP/carbon.git",
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
                 "reference": "129700ed449b1f02d70272d2ac802357c8c30c58"
             },
             "dist": {
                 "type": "zip",
+<<<<<<< HEAD
                 "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/129700ed449b1f02d70272d2ac802357c8c30c58",
+=======
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/129700ed449b1f02d70272d2ac802357c8c30c58",
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
                 "reference": "129700ed449b1f02d70272d2ac802357c8c30c58",
                 "shasum": ""
             },
@@ -6309,7 +6321,11 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/categories",
+<<<<<<< HEAD
                 "reference": "e2d97d3d719f7009e394e11ef61d071f842fc65a"
+=======
+                "reference": "ce7a1c94ae4cbf5889c3ad67f661969bd4f40a20"
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
             },
             "type": "library",
             "extra": {
@@ -6336,7 +6352,11 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/kbartickles",
+<<<<<<< HEAD
                 "reference": "87577faed1685f1367ff24cd030cb584abfa75e5"
+=======
+                "reference": "781bce85971061ea41d0afc1fb23e419d3ab2452"
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
             },
             "type": "library",
             "extra": {
@@ -6363,7 +6383,11 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/td-clients",
+<<<<<<< HEAD
                 "reference": "e36919e84c85d5e74899b55616acf44f4e6b7c14"
+=======
+                "reference": "100738be6772cb1e1e66d398379fbbf1743a2365"
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
             },
             "type": "library",
             "extra": {
@@ -6392,7 +6416,11 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/td-task",
+<<<<<<< HEAD
                 "reference": "924c58ba8ba335068ed791061fc1aef64c2c0322"
+=======
+                "reference": "900d0eeb18f20d8da52d04821cefddcbb0e52355"
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
             },
             "type": "library",
             "extra": {
@@ -6419,7 +6447,11 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/td-tickets",
+<<<<<<< HEAD
                 "reference": "d93b9dbfec2ad81ca4fa51a0d8fdbb99affb3b22"
+=======
+                "reference": "51bab3e8627c767875ceb84b3b2728f30b9cab1b"
+>>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
             },
             "type": "library",
             "extra": {
@@ -8930,6 +8962,6 @@
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
