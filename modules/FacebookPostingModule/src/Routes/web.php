@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\FacebookPostingModule\Http\Controllers\FacebookController;
+use App\Http\Controllers\Auth\FacebookAuthController;
 
 Route::group(['middleware' => 'web', 'prefix' => 'facebook-poster'], function () {
     Route::get('/post-form', [FacebookController::class, 'showPostForm'])->name('facebook.post-form');
@@ -9,4 +10,5 @@ Route::group(['middleware' => 'web', 'prefix' => 'facebook-poster'], function ()
     Route::post('/post-group', [FacebookController::class, 'postToGroup'])->name('facebook.post-group');
     Route::post('/post-page', [FacebookController::class, 'postToPage'])->name('facebook.post');
     Route::post('/facebook/post-to-wall', [FacebookController::class, 'postToWall']);
+    Route::post('/facebook/exchange-token', [FacebookAuthController::class, 'exchangeToken'])->name('facebook.exchange-token');
 });

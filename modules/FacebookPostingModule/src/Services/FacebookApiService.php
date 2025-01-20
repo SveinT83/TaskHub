@@ -2,27 +2,24 @@
 
 namespace Modules\FacebookPostingModule\Services;
 
-use FacebookAds\Api; // Import the Meta Business SDK
+use FacebookAds\Api;
+use Illuminate\Support\Facades\Log;
 
 class FacebookApiService
 {
     protected $api;
 
-    /**
-     * Initialize the Meta Business SDK with app credentials.
-     */
-    public function __construct()
+    public function __construct($accessToken)
     {
         $appId = config('facebookposter.facebook_api.app_id');
         $appSecret = config('facebookposter.facebook_api.app_secret');
-        $accessToken = config('facebookposter.facebook_api.default_access_token');
 
         Api::init($appId, $appSecret, $accessToken);
         $this->api = Api::instance();
     }
 
     /**
-     * Fetch a list of Facebook groups the user is a member of.
+     * Fetch the user's Facebook groups.
      */
     public function getUserGroups()
     {
@@ -30,12 +27,13 @@ class FacebookApiService
             $response = $this->api->call('/me/groups', 'GET');
             return $response->getContent();
         } catch (\Exception $e) {
+            Log::error('Failed to fetch user groups: ' . $e->getMessage());
             return ['error' => $e->getMessage()];
         }
     }
 
     /**
-     * Post a message to a specific Facebook group.
+     * Post to a Facebook group.
      */
     public function postToGroup($groupId, $message)
     {
@@ -44,20 +42,22 @@ class FacebookApiService
             $response = $this->api->call("/{$groupId}/feed", 'POST', $params);
             return $response->getContent();
         } catch (\Exception $e) {
+            Log::error('Failed to post to group: ' . $e->getMessage());
             return ['error' => $e->getMessage()];
         }
     }
 
     /**
-     * Post a message to a specific Facebook page.
+     * Post to a Facebook wall.
      */
-    public function postToPage($pageId, $message)
+    public function postToWall($message)
     {
         try {
             $params = ['message' => $message];
-            $response = $this->api->call("/{$pageId}/feed", 'POST', $params);
+            $response = $this->api->call('/me/feed', 'POST', $params);
             return $response->getContent();
         } catch (\Exception $e) {
+            Log::error('Failed to post to wall: ' . $e->getMessage());
             return ['error' => $e->getMessage()];
         }
     }

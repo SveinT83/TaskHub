@@ -3,70 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post to Facebook</title>
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <title>Facebook Login</title>
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/en_US/sdk.js"></script>
     <style>
-        /* Add styles for layout */
+        /* General styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Top bar styles */
+        .top-bar {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #e0e0e0;
+            padding: 15px;
+            position: absolute;
+            top: 50px;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Centered content styles */
+        .content {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        /* Button styles */
+        .btn {
+            background-color: #4267B2;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #365899;
+        }
     </style>
-</head>
-<body>
-    <div class="top-bar">
-        <h2>TaskHub - Facebook Posting</h2>
-    </div>
-
-    <div class="sidebar">
-        <h3>Sidebar</h3>
-        <a href="{{ route('facebook.post-form') }}">Home</a>
-    </div>
-
-    <div class="content">
-        <div class="container">
-            <h1>Login to Facebook</h1>
-
-            <!-- Facebook Login Button using the route for Facebook authentication -->
-            <a href="{{ route('facebook.login') }}" class="btn">Login with Facebook</a>
-
-            <div id="status"></div>
-
-            <div id="facebookPostForm" style="display: none;">
-                <h2>Post to Facebook</h2>
-                <form id="postForm">
-                    <textarea id="message" required placeholder="Write your message here..."></textarea>
-                    <button type="button" onclick="postToFacebook()">Post</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Facebook login function
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: '{{ env('FACEBOOK_APP_ID') }}', // Facebook App ID
+                cookie: true,
+                xfbml: true,
+                version: 'v21.0' // Latest Graph API version
+            });
+        };
+
         function facebookLogin() {
             FB.login(function(response) {
                 if (response.authResponse) {
-                    document.getElementById('status').innerHTML = 'Logged in!';
-                    localStorage.setItem('facebook_token', response.authResponse.accessToken);
-                    document.getElementById('facebookPostForm').style.display = 'block';
+                    // Send the token to the backend
+                    fetch('/facebook/exchange-token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            accessToken: response.authResponse.accessToken
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Login successful!');
+                        } else {
+                            alert('Login failed.');
+                        }
+                    });
                 } else {
-                    document.getElementById('status').innerHTML = 'Login failed.';
+                    alert('User cancelled login or did not fully authorize.');
                 }
-            }, { scope: 'public_profile,email,manage_pages,publish_to_groups' });
-        }
-
-        // Function to handle posting to Facebook
-        function postToFacebook() {
-            const token = localStorage.getItem('facebook_token');
-            const message = document.getElementById('message').value;
-            fetch('/facebook/post-to-wall', {
-                method: 'POST',
-                body: JSON.stringify({ message, accessToken: token }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => alert(data.success ? 'Post successful!' : 'Post failed.'));
+            }, { scope: 'public_profile,email,pages_manage_posts,publish_to_groups' });
         }
     </script>
+</head>
+<body>
+    <div class="top-bar">
+        TaskHub - Facebook Login
+    </div>
+
+    <div class="sidebar">
+        <h3>Menu</h3>
+        <a href="{{ route('dashboard') }}">Dashboard</a><br>
+        <a href="{{ route('facebook.login') }}">Facebook Login</a>
+    </div>
+
+    <div class="content">
+        <h1>Login to Facebook</h1>
+        <button class="btn" onclick="facebookLogin()">Login with Facebook</button>
+    </div>
 </body>
 </html>
