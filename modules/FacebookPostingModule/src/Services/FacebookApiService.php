@@ -9,19 +9,25 @@ class FacebookApiService
 {
     protected $api;
 
-    public function __construct($accessToken)
+    /**
+     * FacebookApiService constructor.
+     * @param string $accessToken The Facebook user access token.
+     */
+    public function __construct(string $accessToken)
     {
         $appId = config('facebookposter.facebook_api.app_id');
         $appSecret = config('facebookposter.facebook_api.app_secret');
 
+        // Initialize the Facebook API with App credentials and user's access token
         Api::init($appId, $appSecret, $accessToken);
         $this->api = Api::instance();
     }
 
     /**
      * Fetch the user's Facebook groups.
+     * @return array The list of user groups or an error response.
      */
-    public function getUserGroups()
+    public function getUserGroups(): array
     {
         try {
             $response = $this->api->call('/me/groups', 'GET');
@@ -34,8 +40,11 @@ class FacebookApiService
 
     /**
      * Post to a Facebook group.
+     * @param string $groupId The ID of the Facebook group.
+     * @param string $message The message to post.
+     * @return array The API response or an error response.
      */
-    public function postToGroup($groupId, $message)
+    public function postToGroup(string $groupId, string $message): array
     {
         try {
             $params = ['message' => $message];
@@ -49,8 +58,10 @@ class FacebookApiService
 
     /**
      * Post to a Facebook wall.
+     * @param string $message The message to post.
+     * @return array The API response or an error response.
      */
-    public function postToWall($message)
+    public function postToWall(string $message): array
     {
         try {
             $params = ['message' => $message];

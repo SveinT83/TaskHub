@@ -3,48 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Login</title>
+    <title>Facebook Posting Module</title>
     <script async defer crossorigin="anonymous"
         src="https://connect.facebook.net/en_US/sdk.js"></script>
     <style>
         /* General styles */
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f0f0f0; /* Adjusted to match the original */
             color: #333;
+            height: 100%;
+            overflow: hidden; /* Remove scrollbars */
+        }
+
+        /* Top bar styles */
+        .top-bar {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            height: 50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .top-bar span {
+            margin-left: 5px;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            background: #333; /* Dark grey */
+            color: #fff;
+            width: 250px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 50px; /* To align with the top bar */
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 20px;
+            margin-top: 20px; /* Lower placement for "Dashboard" */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar a:hover {
+            background-color: #444; /* Slightly darker grey on hover */
+        }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Top bar styles */
-        .top-bar {
-            background-color: #333;
-            color: #fff;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 1.5rem;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-        }
-
-        /* Sidebar styles */
-        .sidebar {
-            background-color: #e0e0e0;
-            padding: 15px;
-            position: absolute;
-            top: 50px;
-            bottom: 0;
-            left: 0;
-            width: 200px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Centered content styles */
+        /* Content box styles */
         .content {
             background: #fff;
             padding: 20px;
@@ -111,18 +143,18 @@
 </head>
 <body>
     <div class="top-bar">
-        TaskHub - Facebook Login
+        <span>Facebook Posting Module</span>
     </div>
 
     <div class="sidebar">
-        <h3>Menu</h3>
-        <a href="{{ route('dashboard') }}">Dashboard</a><br>
-        <a href="{{ route('facebook.login') }}">Facebook Login</a>
+        <a href="http://taskhub.local">Dashboard</a>
     </div>
 
-    <div class="content">
-        <h1>Login to Facebook</h1>
-        <button class="btn" onclick="facebookLogin()">Login with Facebook</button>
+    <div class="main-content">
+        <div class="content">
+            <h1>Login to Facebook</h1>
+            <button class="btn" onclick="facebookLogin()">Login with Facebook</button>
+        </div>
     </div>
 </body>
 </html>
