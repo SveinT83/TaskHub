@@ -153,7 +153,7 @@
     <div class="main-content">
         <div class="content">
             <h1>Login to Facebook</h1>
-            <button class="btn" onclick="facebookLogin()">Login with Facebook</button>
+            <button class="btn" onclick="facebookLogin()">Login</button>
         </div>
     </div>
 </body>
