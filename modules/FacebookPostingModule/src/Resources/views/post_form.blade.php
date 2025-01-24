@@ -147,7 +147,7 @@
     </div>
 
     <div class="sidebar">
-        <a href="http://taskhub.local">Dashboard</a>
+        <a href="http://taskhub.local/dashboard">Dashboard</a>
     </div>
 
     <div class="main-content">
