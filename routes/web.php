@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\Appearance\AppearanceController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use App\Http\Controllers\Auth\FacebookAuthController;
+use Modules\CredentialsBank\Http\Controllers\CredentialsBankController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -230,3 +231,7 @@ Route::get('login/facebook/callback', [FacebookAuthController::class, 'handleCal
 Route::get('facebook/post-form', function () {
     return view('facebook.post_form'); // Return the view with post form
 })->name('facebook.post-form');
+
+// This is for routing to the CredentialBank Module
+
+require_once base_path('modules/CredentialsBank/src/routes/web.php');

@@ -41,4 +41,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /** This allows CredentialsBank to access users so they can directly access their encrypted data */
+    public function credentialsBank()
+    {
+        return $this->hasMany(\Modules\CredentialsBank\Models\CredentialsBank::class);
+    }
 }

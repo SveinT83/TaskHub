@@ -15,7 +15,8 @@
         "livewire/livewire": "^3.5",
         "spatie/laravel-permission": "^6.9",
         "facebook/php-business-sdk": "^21.0",
-        "taskhub/facebook-posting-module": "dev-Plov94-branch"
+        "taskhub/facebook-posting-module": "dev-Plov94-branch",
+        "taskhub/credentialsbank": "dev-Plov94-branch"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -31,6 +32,10 @@
         {
             "type": "path",
             "url": "./modules/FacebookPostingModule"
+        },
+        {
+            "type": "path",
+            "url": "./modules/CredentialsBank"
         }
     ],
     "autoload": {

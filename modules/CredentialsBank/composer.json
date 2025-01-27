@@ -1,0 +1,19 @@
+{
+    "name": "taskhub/credentials-bank",
+    "description": "A module to securely store encrypted usernames and passwords linked to TaskHub users.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\CredentialsBank\\": "modules/CredentialsBank/src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\CredentialsBank\\Providers\\CredentialsBankServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
