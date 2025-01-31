@@ -1,18 +1,26 @@
 <?php
 
-// Include Composer's autoloader
-require 'vendor/autoload.php';
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\DB;
+use Modules\CredentialsBank\Http\Controllers\CredentialsBankController;
 
-// Make sure the module's namespace is registered and autoloaded
-use Modules\FacebookPostingModule\Http\Controllers\FacebookController;
+// Load Composer autoload
+require __DIR__ . '/vendor/autoload.php';
 
+// Load Laravel bootstrap
+$app = require __DIR__ . '/bootstrap/app.php';
+
+// Run the kernel to fully boot the framework
+$app->make(Kernel::class)->bootstrap();
+
+// Check database connection
 try {
-    // Try to instantiate the controller
-    $controller = new FacebookController();
-    echo "FacebookController loaded successfully!";
-} catch (Exception $e) {
-    // Handle any errors that may occur
-    echo "Error: " . $e->getMessage();
+    DB::connection()->getPdo();
+    echo "✅ Database connection is successful!\n";
+} catch (\Exception $e) {
+    die("❌ Database connection failed: " . $e->getMessage() . "\n");
 }
 
-?>
+// Now try loading the controller
+$controller = new CredentialsBankController();
+var_dump($controller);

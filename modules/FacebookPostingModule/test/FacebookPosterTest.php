@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\FacebookPostingModule\Tests;
+namespace Modules\FacebookPostingModule\test;
 
 use Tests\TestCase;
 use Modules\FacebookPostingModule\Models\FacebookPost;

@@ -16,7 +16,7 @@
         "spatie/laravel-permission": "^6.9",
         "facebook/php-business-sdk": "^21.0",
         "taskhub/facebook-posting-module": "dev-Plov94-branch",
-        "taskhub/credentialsbank": "dev-Plov94-branch"
+        "taskhub/credentials-bank": "dev-Plov94-branch"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -42,7 +42,8 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Modules\\CredentialsBank\\": "modules/CredentialsBank/src/"
         }
     },
     "autoload-dev": {

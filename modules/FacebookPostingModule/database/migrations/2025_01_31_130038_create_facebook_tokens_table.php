@@ -10,11 +10,10 @@ class CreateFacebookTokensTable extends Migration
     {
         Schema::create('facebook_tokens', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('access_token');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->text('access_token');
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
