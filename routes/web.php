@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\Appearance\AppearanceController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use App\Http\Controllers\Auth\FacebookAuthController;
-use Modules\CredentialsBank\Http\Controllers\CredentialsBankController;
+use Modules\CredentialsBank\src\Http\Controllers\CredentialsBankController;
 
 Route::get('/', function () {
     return view('welcome');
