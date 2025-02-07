@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
             $user = Auth::user();
             $token = $user->createToken('API Token')->plainTextToken;
 
-            return redirect()->to(session('url.intended', route('dashboard')));
+            return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([

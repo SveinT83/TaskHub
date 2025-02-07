@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Migrations\Migrator;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Compilers\BladeCompiler;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+    //
     }
 
     /**
@@ -30,4 +32,5 @@ class AppServiceProvider extends ServiceProvider
             base_path('modules/CredentialsBank/database/migrations'),
         ]);
     }
+
 }
