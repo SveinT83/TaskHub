@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
+use Modules\CredentialsBank\Providers\CredentialsBankServiceProvider;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +18,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-    //
+        if (App::runningInConsole() || request()->is('credentials-bank/*')) {
+            $this->app->register(CredentialsBankServiceProvider::class);
+        }
     }
 
     /**
