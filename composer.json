@@ -17,12 +17,8 @@
         "tronderdata/categories": "dev-main",
         "tronderdata/kbartickles": "dev-main",
         "tronderdata/td-clients": "dev-main",
-<<<<<<< HEAD
         "tronderdata/td-task": "dev-main",
         "tronderdata/td-tickets": "dev-main"
-=======
-        "tronderdata/td-task": "dev-main"
->>>>>>> 407185f8766a291d32f23a3f59153acbb0c79d33
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -42,6 +38,10 @@
         {
             "type": "path",
             "url": "./modules/td-task"
+        },
+        {
+            "type": "path",
+            "url": "./modules/td-tickets"
         },
         {
             "type": "path",
