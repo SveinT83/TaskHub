@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61ed84237deb601140abf3333f3b8b63",
+    "content-hash": "0e7d0ee161d176565790a8fbecfbeea2",
     "packages": [
         {
             "name": "brick/math",
@@ -6388,6 +6388,32 @@
             }
         },
         {
+            "name": "tronderdata/td-documentation",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./modules/td-documentation",
+                "reference": "8a916db7325264a3d7a74b7e4d8359de73f4ccc6"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "tronderdata\\TdDocumentation\\Providers\\TdDocumentationServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "tronderdata\\TdDocumentation\\": "src/"
+                }
+            },
+            "description": "Documentation module for the system",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "tronderdata/td-task",
             "version": "dev-main",
             "dist": {
@@ -8924,6 +8950,7 @@
         "tronderdata/categories": 20,
         "tronderdata/kbartickles": 20,
         "tronderdata/td-clients": 20,
+        "tronderdata/td-documentation": 20,
         "tronderdata/td-task": 20,
         "tronderdata/td-tickets": 20
     },
