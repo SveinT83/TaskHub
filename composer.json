@@ -15,10 +15,8 @@
         "livewire/livewire": "^3.5",
         "spatie/laravel-permission": "^6.9",
         "tronderdata/categories": "dev-main",
-        "tronderdata/kbartickles": "dev-main",
-        "tronderdata/td-clients": "dev-main",
         "tronderdata/td-task": "dev-main",
-        "tronderdata/td-tickets": "dev-main"
+        "tronderdata/td-equipment": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -33,23 +31,15 @@
     "repositories": [
         {
             "type": "path",
-            "url": "./modules/td-clients"
-        },
-        {
-            "type": "path",
             "url": "./modules/td-task"
         },
         {
             "type": "path",
-            "url": "./modules/td-tickets"
-        },
-        {
-            "type": "path",
-            "url": "./modules/kbartickles"
-        },
-        {
-            "type": "path",
             "url": "./modules/categories"
+        },
+        {
+            "type": "path",
+            "url": "./modules/td-equipment"
         }
     ],
     "autoload": {
@@ -61,8 +51,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "tronderdata\\tdTask\\": "modules/td-task/src/",
-            "tronderdata\\kbartickles\\": "modules/kbartickles/src/",
-            "tronderdata\\categories\\": "modules/categories/src/"
+            "tronderdata\\categories\\": "modules/categories/src/",
+            "TronderData\\Equipment\\": "modules/td-equipment/src/"
         }
     },
     "autoload-dev": {
@@ -88,12 +78,11 @@
         ]
     },
     "extra": {
-        "laravel": {
-            "providers": [
-                "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider",
-                "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider",
-                "tronderdata\\kbartickles\\Providers\\KbarticklesServiceProvider",
-                "tronderdata\\categories\\Providers\\CategoriesServiceProvider"
+    "laravel": {
+        "providers": [
+            "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider",
+            "tronderdata\\categories\\Providers\\CategoriesServiceProvider",
+            "TronderData\\Equipment\\Providers\\EquipmentServiceProvider"
             ]
         }
     },
