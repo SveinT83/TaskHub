@@ -14,39 +14,51 @@ class CredentialsBankController extends Controller
     private const AES_METHOD = 'aes-256-cbc';
 
     public function index()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You must be logged in to view credentials.');
-        }
-
-        try {
-            $credentials = Auth::user()->credentialsBank()->paginate(10);
-
-            foreach ($credentials as $credential) {
-                if ($credential->uses_individual_key && !$credential->is_decrypted) {
-                    $credential->decrypted_username = '*****';
-                    $credential->decrypted_password = '*****';
-                } else {
-                    $decrypted = $this->decryptWithAES(
-                        $credential->encrypted_username,
-                        $credential->encrypted_aes_key,
-                        $credential->iv,
-                        $credential->encrypted_password
-                    );
-                    $credential->decrypted_username = $decrypted['username'];
-                    $credential->decrypted_password = $decrypted['password'];
-                }
-            }
-        } catch (\Exception $e) {
-            Log::error('Error fetching credentials: ' . $e->getMessage(), [
-                'user_id' => Auth::id(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-
-        return view('credentialsbank::credentials-bank', compact('credentials'));
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'You must be logged in to view credentials.');
     }
+
+    try {
+        $credentials = Auth::user()->credentialsBank()->paginate(10);
+
+        foreach ($credentials as $credential) {
+            if ($credential->uses_individual_key && !$credential->is_decrypted) {
+                $credential->decrypted_username = '*****';
+                $credential->decrypted_password = '*****';
+            } else {
+                $decrypted = $this->decryptWithAES(
+                    $credential->encrypted_username,
+                    $credential->encrypted_aes_key,
+                    $credential->iv,
+                    $credential->encrypted_password
+                );
+                $credential->decrypted_username = $decrypted['username'];
+                $credential->decrypted_password = $decrypted['password'];
+            }
+        }
+
+        // ✅ Log successfully fetched credentials (Masking decrypted values for security)
+        Log::info('Fetched credentials:', [
+            'user_id' => Auth::id(),
+            'credentials_count' => $credentials->count(),
+            'masked_credentials' => $credentials->map(fn($cred) => [
+                'id' => $cred->id,
+                'masked_username' => str_repeat('*', strlen($cred->decrypted_username ?? '*****')),
+                'masked_password' => str_repeat('*', strlen($cred->decrypted_password ?? '*****')),
+            ]),
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Error fetching credentials: ' . $e->getMessage(), [
+            'user_id' => Auth::id(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+
+    return view('credentialsbank::credentials-bank', compact('credentials'));
+}
 
     public function store(Request $request)
     {
