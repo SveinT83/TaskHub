@@ -9,7 +9,10 @@ class CredentialsBank extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'encrypted_username', 'encrypted_password'];
+    // Explicitly set the table name to match the migration
+    protected $table = 'credentials_bank';
+
+    protected $fillable = ['user_id', 'encrypted_username', 'encrypted_password', 'encrypted_aes_key', 'iv'];
 
     public function user()
     {

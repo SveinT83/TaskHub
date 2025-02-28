@@ -16,7 +16,7 @@ return new class extends Migration {
             // Add a new menu item for the Credentials Bank module
             DB::table('menu_items')->insert([
                 'title' => 'Credentials Bank',
-                'url' => '/credentials-bank', // Path for the Facebook module
+                'url' => '/credentials-bank/credentials', // Path for the Facebook module
                 'menu_id' => $menuId,
                 'parent_id' => null, // Directly under Admin settings
                 'icon' => '', // Icon for the menu item (optional)
@@ -35,7 +35,7 @@ return new class extends Migration {
     {
         // Remove the Credentials Bank menu item
         DB::table('menu_items')
-            ->where('url', '/credentials-bank')
+            ->where('url', '/credentials-bank/credentials')
             ->delete();
     }
 };

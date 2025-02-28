@@ -14,6 +14,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->text('encrypted_username');
             $table->text('encrypted_password');
+            $table->text('encrypted_aes_key'); // Missing field added
+            $table->string('iv'); // Missing field added
             $table->timestamps();
         });
     }

@@ -5,165 +5,182 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credentials Bank</title>
     <style>
-        /* General styles */
-        html, body {
-            margin: 0;
-            padding: 0;
+        body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
-            color: #333;
-            height: 100%;
-            overflow: hidden;
-        }
-        /* Top bar styles */
-        .top-bar {
-            background-color: #000;
-            color: #fff;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-            height: 50px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-        }
-        .top-bar span {
-            margin-left: 5px;
-        }
-        /* Sidebar styles */
-        .sidebar {
-            background: #333;
-            color: #fff;
-            width: 250px;
-            height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 50px;
-            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
-        }
-        .sidebar a {
-            display: block;
-            color: #fff;
-            text-decoration: none;
-            padding: 15px 20px;
-            margin-top: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .sidebar a:hover {
-            background-color: #444;
-        }
-        /* Main content area */
-        .main-content {
-            margin-left: 250px;
             padding: 20px;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
-        /* Content box styles */
-        .content {
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            text-align: center;
-            max-width: 400px;
+
+        table {
             width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        /* Button styles */
-        .btn {
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        th {
             background-color: #4267B2;
-            color: #fff;
-            padding: 10px 20px;
+            color: white;
+        }
+
+        .btn {
+            padding: 8px 12px;
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
             cursor: pointer;
+            color: white;
         }
-        .btn:hover {
-            background-color: #365899;
+
+        .btn-primary { background-color: #4267B2; }
+        .btn-danger { background-color: #d9534f; }
+        .btn-warning { background-color: #f0ad4e; }
+        .btn-secondary { background-color: #5bc0de; }
+
+        .masked {
+            font-weight: bold;
+            letter-spacing: 3px;
         }
-        /* Modal styles (optional – not used for encryption now) */
-        .modal {
+
+        #individualKeyNotice {
+            color: #d9534f;
+            font-weight: bold;
+            margin-top: 5px;
             display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding-top: 60px;
-            text-align: center;
         }
-        .modal-content {
-            background-color: #fff;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-        }
-        .modal-button {
-            padding: 10px 20px;
-            background-color: #4267B2;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-        .modal-button:hover {
-            background-color: #365899;
+
+        #downloadKeyButton {
+            display: none;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <span>CredentialsBank</span>
-    </div>
-    <div class="sidebar">
-        <a href="{{ route('dashboard') }}">Dashboard</a>
-    </div>
-    <div class="main-content">
-        <div class="content">
-            <h2>Your Encrypted Credentials</h2>
-            @if(session('message'))
-                <p>{{ session('message') }}</p>
-            @endif
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Password</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($credentials as $credential)
-                        <tr>
-                            <td>{{ $credential->decrypted_username }}</td>
-                            <td>{{ $credential->decrypted_password }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <hr>
-            <!-- The form now sends plain text data; encryption is handled server side -->
-            <form id="credentials-form" method="POST" action="{{ route('credentials-bank.store') }}">
-                @csrf
-                <input type="text" id="username" name="username" placeholder="Enter Username" required />
-                <input type="password" id="password" name="password" placeholder="Enter Password" required />
-                <button type="submit" class="btn">Save</button>
-            </form>
-            <br>
-            <!-- Public key download (if needed) -->
-            <a href="{{ route('credentials-bank.public-key') }}" class="btn">Download Public Key</a>
-        </div>
-    </div>
+
+    <h2>Your Encrypted Credentials</h2>
+
+    @if(session('message'))
+        <div style="color: green;">{{ session('message') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div style="color: red;">{{ session('error') }}</div>
+    @endif
+
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="credentials-table">
+            @foreach($credentials as $credential)
+                <tr>
+                    <td>
+                        @if($credential->uses_individual_key && !$credential->is_decrypted)
+                            <span class="masked">*****</span>
+                        @else
+                            {{ $credential->decrypted_username }}
+                        @endif
+                    </td>
+                    <td>
+                        @if($credential->uses_individual_key && !$credential->is_decrypted)
+                            <span class="masked">*****</span>
+                            <button onclick="promptForKey('{{ $credential->id }}')">🔑 Decrypt</button>
+                        @else
+                            <input type="password" value="{{ $credential->decrypted_password }}" readonly id="pass-{{ $credential->id }}">
+                            <button onclick="togglePassword({{ $credential->id }})">👁️</button>
+                        @endif
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" onclick="openEditModal('{{ $credential->id }}', '{{ $credential->decrypted_username }}', '{{ $credential->decrypted_password }}')">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="openDeleteModal('{{ $credential->id }}')">🗑️ Delete</button>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <h3>Add New Credential</h3>
+    <form action="{{ route('credentials-bank.store') }}" method="POST" id="addForm" onsubmit="return handleFormSubmit(event)">
+        @csrf
+        <input type="text" name="username" placeholder="Enter Username" required><br><br>
+        <input type="password" name="password" placeholder="Enter Password" required><br><br>
+        <input type="checkbox" name="use_individual_key" id="use_individual_key" onchange="toggleIndividualKey()">
+        <label for="use_individual_key">Use Individual Decryption Key</label><br>
+        <small id="individualKeyNotice">⚠️ This will download a private key, keep it safe!</small><br><br>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" id="downloadKeyButton" class="btn btn-secondary" onclick="downloadIndividualKey()">Download Key Again</button>
+    </form>
+
+    <script>
+        let individualKey = '';
+        let currentCredentialId = '';
+
+        function togglePassword(id) {
+            const input = document.getElementById('pass-' + id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function handleFormSubmit(event) {
+            if (document.getElementById('use_individual_key').checked) {
+                event.preventDefault();
+                downloadIndividualKey(() => {
+                    setTimeout(() => {
+                        document.getElementById('addForm').submit();
+                    }, 500);
+                });
+            }
+        }
+
+        function toggleIndividualKey() {
+            const notice = document.getElementById('individualKeyNotice');
+            const downloadBtn = document.getElementById('downloadKeyButton');
+
+            if (document.getElementById('use_individual_key').checked) {
+                notice.style.display = 'block';
+                downloadBtn.style.display = 'none';
+                individualKey = btoa(window.crypto.getRandomValues(new Uint8Array(32)).join(''));
+            } else {
+                notice.style.display = 'none';
+                downloadBtn.style.display = 'none';
+                individualKey = '';
+            }
+        }
+
+        function downloadIndividualKey(callback) {
+            if (!individualKey) {
+                alert("No individual key available to download.");
+                return;
+            }
+
+            const blob = new Blob([individualKey], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'individual_key.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            document.getElementById('downloadKeyButton').style.display = 'block';
+
+            if (callback) callback();
+        }
+
+        function promptForKey(credentialId) {
+            const userKey = prompt("Enter your individual key:");
+            if (userKey) {
+                alert("Decryption logic would run here using the key: " + userKey);
+            } else {
+                alert("Decryption cancelled.");
+            }
+        }
+    </script>
+
 </body>
 </html>
