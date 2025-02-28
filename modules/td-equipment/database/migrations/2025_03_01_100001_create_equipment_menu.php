@@ -39,7 +39,7 @@ class CreateEquipmentMenu extends Migration
                 'menu_id' => $menuId,
                 'parent_id' => null, // Ingen overordnet
                 'title' => 'All',
-                'url' => '/admin/equipment',
+                'url' => '/equipment',
                 'icon' => 'bi bi-list',
                 'order' => 0,
                 'created_at' => now(),
@@ -52,7 +52,7 @@ class CreateEquipmentMenu extends Migration
                 'menu_id' => $menuId,
                 'parent_id' => null,
                 'title' => '+ New',
-                'url' => '/admin/equipment/create',
+                'url' => '/equipment/create',
                 'icon' => 'bi bi-plus-lg',
                 'order' => 1,
                 'created_at' => now(),

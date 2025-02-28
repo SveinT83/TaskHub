@@ -6,40 +6,79 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use TronderData\Equipment\Models\Equipment;
 use TronderData\Equipment\Models\EquipmentCategory;
+use TronderData\Equipment\Models\Supplier;
 
 
 class EquipmentController extends Controller
 {
-    /**
-     * 📌 1️⃣ Hovedvisning: Liste over alt utstyr
-     */
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION INDEX
+    // Shows the default page of the equipment module
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function index()
     {
+
+        // -------------------------------------------------
+        // Get all equipment
+        // -------------------------------------------------
         $equipment = Equipment::paginate(10);
+
+        // -------------------------------------------------
+        // return view
+        // -------------------------------------------------
         return view('equipment::index', compact('equipment'));
     }
 
-    /**
-     * 📌 2️⃣ Vis spesifikt utstyr (Profilside)
-     */
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION SHOW
+    // Shows the details of a specific equipment
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function show(Equipment $equipment)
     {
+
+        // -------------------------------------------------
+        // return view
+        // -------------------------------------------------
         return view('equipment.show', compact('equipment'));
     }
 
-    /**
-     * 📌 3️⃣ Registreringsside: Legg til nytt utstyr
-     */
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION CREATE
+    // Creates a new equipment
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function create()
     {
-        return view('equipment.create');
+
+        // -------------------------------------------------
+        // Get all categories
+        // -------------------------------------------------
+        $categories = EquipmentCategory::equipmentCategories()->get();
+
+        // -------------------------------------------------
+        // Get all suppliers
+        // -------------------------------------------------
+        $suppliers = Supplier::getSuppliers();
+
+        // -------------------------------------------------
+        // return view
+        // -------------------------------------------------
+        return view('equipment::create', compact('categories', 'suppliers'));
     }
 
-    /**
-     * 📌 4️⃣ Lagrer nytt utstyr
-     */
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION STORE
+    // Stores a new equipment
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function store(Request $request)
     {
+
+        // -------------------------------------------------
+        // Validate the request
+        // -------------------------------------------------
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:equipment_categories,id',
@@ -49,24 +88,42 @@ class EquipmentController extends Controller
             'description' => 'nullable|string',
         ]);
 
+        // -------------------------------------------------
+        // Store the equipment
+        // -------------------------------------------------
         Equipment::create($validated);
 
+
+        // -------------------------------------------------
+        // return view
+        // -------------------------------------------------
         return redirect()->route('equipment.index')->with('success', 'Utstyr registrert.');
     }
 
-    /**
-     * 📌 5️⃣ Rediger utstyr
-     */
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION EDIT
+    // Edits a specific equipment
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function edit(Equipment $equipment)
     {
-        return view('equipment.edit', compact('equipment'));
+        // -------------------------------------------------
+        // return view
+        // -------------------------------------------------
+        return view('equipment::edit', compact('equipment'));
     }
 
-    /**
-     * 📌 6️⃣ Oppdater utstyr
-     */
+   // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION IUPDATE
+    // Updates a specific equipment
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function update(Request $request, Equipment $equipment)
     {
+
+        // -------------------------------------------------
+        // Validate the request
+        // -------------------------------------------------
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:equipment_categories,id',
@@ -78,15 +135,28 @@ class EquipmentController extends Controller
 
         $equipment->update($validated);
 
-        return redirect()->route('equipment.index')->with('success', 'Utstyr oppdatert.');
+        // -------------------------------------------------
+        // return view
+        // -------------------------------------------------
+        return redirect()->route('equipment::index')->with('success', 'Utstyr oppdatert.');
     }
 
-    /**
-     * 📌 7️⃣ Slett utstyr
-     */
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // FUNCTION DESTROY
+    // DESTROYS a specific equipment
+    //
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function destroy(Equipment $equipment)
     {
+
+        // -------------------------------------------------
+        // Delete the equipment
+        // -------------------------------------------------
         $equipment->delete();
-        return redirect()->route('equipment.index')->with('success', 'Utstyr slettet.');
+
+        // -------------------------------------------------
+        // return view
+        // -------------------------------------------------
+        return redirect()->route('equipment::index')->with('success', 'Utstyr slettet.');
     }
 }

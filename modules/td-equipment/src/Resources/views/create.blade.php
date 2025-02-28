@@ -12,11 +12,24 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Kategori</label>
-            <select name="category_id" class="form-control" required>
-                @foreach ($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            <label class="form-label">Supplier</label>
+            <select name="supplier_id" class="form-control">
+                @foreach ($suppliers as $supplier)
+                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                 @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kategori</label>
+            <select name="category_id" class="form-control">
+                @if ($categories->isEmpty())
+                    <option value="unspecified">Uspesifisert kategori</option>
+                @else
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                @endif
             </select>
         </div>
 

@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class EquipmentCategory extends Model
 {
-    protected $table = 'equipment_categories'; // Tabellnavn
+    protected $table = 'categories'; // Bruker tabellen "categories"
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'module'];
 
     /**
-     * Relasjon: Henter alle utstyr i denne kategorien.
+     * Scope: Hent kun kategorier som er globale (NULL) eller spesifikke for `td-equipment`
      */
-    public function equipment()
+    public function scopeEquipmentCategories($query)
     {
-        return $this->hasMany(Equipment::class, 'category_id');
+        return $query->whereNull('module')->orWhere('module', 'td-equipment');
     }
 }

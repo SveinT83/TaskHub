@@ -3,35 +3,38 @@
 use Illuminate\Support\Facades\Route;
 use TronderData\Equipment\Http\Controllers\EquipmentController;
 
-Route::middleware(['web', 'auth'])->prefix('admin/equipment')->group(function () {
+Route::middleware(['web', 'auth'])->group(function () {
     
-    Route::get('/', [EquipmentController::class, 'index'])
-        ->name('equipment.index')
-        ->middleware('can:equipment.view');
+    //Route::prefix('equipment')->group(function () {
 
-    Route::get('/{equipment}', [EquipmentController::class, 'show'])
-        ->name('equipment.show')
-        ->middleware('can:equipment.view');
+        Route::get('equipment/', [EquipmentController::class, 'index'])
+            ->name('equipment.index')
+            ->middleware('can:equipment.view');
 
-    Route::get('/create', [EquipmentController::class, 'create'])
-        ->name('equipment.create')
-        ->middleware('can:equipment.create');
+        Route::get('/{equipment}', [EquipmentController::class, 'show'])
+            ->name('equipment.show')
+            ->middleware('can:equipment.view');
 
-    Route::post('/store', [EquipmentController::class, 'store'])
-        ->name('equipment.store')
-        ->middleware('can:equipment.create');
+        Route::get('equipment/create', [EquipmentController::class, 'create'])
+            ->name('equipment.create');
 
-    Route::get('/{equipment}/edit', [EquipmentController::class, 'edit'])
-        ->name('equipment.edit')
-        ->middleware('can:equipment.edit');
+        Route::post('/store', [EquipmentController::class, 'store'])
+            ->name('equipment.store')
+            ->middleware('can:equipment.create');
 
-    Route::put('/{equipment}/update', [EquipmentController::class, 'update'])
-        ->name('equipment.update')
-        ->middleware('can:equipment.edit');
+        Route::get('/{equipment}/edit', [EquipmentController::class, 'edit'])
+            ->name('equipment.edit')
+            ->middleware('can:equipment.edit');
 
-    Route::delete('/{equipment}/delete', [EquipmentController::class, 'destroy'])
-        ->name('equipment.destroy')
-        ->middleware('can:equipment.delete');
+        Route::put('/{equipment}/update', [EquipmentController::class, 'update'])
+            ->name('equipment.update')
+            ->middleware('can:equipment.edit');
+
+        Route::delete('/{equipment}/delete', [EquipmentController::class, 'destroy'])
+            ->name('equipment.destroy')
+            ->middleware('can:equipment.delete');
+
+    //});
 });
 
 // 📌 Custom 403-melding hvis bruker ikke har tilgang
