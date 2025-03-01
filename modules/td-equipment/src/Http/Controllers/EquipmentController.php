@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use TronderData\Equipment\Models\Equipment;
 use TronderData\Equipment\Models\EquipmentCategory;
-use TronderData\Equipment\Models\Supplier;
+use TronderData\Equipment\Models\Vendors;
 
 
 class EquipmentController extends Controller
@@ -41,7 +41,7 @@ class EquipmentController extends Controller
         // -------------------------------------------------
         // return view
         // -------------------------------------------------
-        return view('equipment.show', compact('equipment'));
+        return view('equipment::show', compact('equipment'));
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,12 +60,12 @@ class EquipmentController extends Controller
         // -------------------------------------------------
         // Get all suppliers
         // -------------------------------------------------
-        $suppliers = Supplier::getSuppliers();
+        $vendors = Vendors::getvendors();
 
         // -------------------------------------------------
         // return view
         // -------------------------------------------------
-        return view('equipment::create', compact('categories', 'suppliers'));
+        return view('equipment::create', compact('categories', 'vendors'));
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -81,8 +81,9 @@ class EquipmentController extends Controller
         // -------------------------------------------------
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:equipment_categories,id',
-            'serial_number' => 'required|string|unique:equipment,serial_number',
+            'vendor_id' => 'min:1|max:20',
+            'category_id' => 'required|min:1|max:5',
+            'serial_number' => 'string|unique:equipment,serial_number',
             'status' => 'required|in:active,inactive,needs_certification',
             'certification_month' => 'nullable|integer|min:1|max:12',
             'description' => 'nullable|string',
@@ -108,12 +109,28 @@ class EquipmentController extends Controller
     public function edit(Equipment $equipment)
     {
         // -------------------------------------------------
+        // Get all categories (kun de relevante for td-equipment)
+        // -------------------------------------------------
+        $categories = EquipmentCategory::equipmentCategories()->get();
+
+        // -------------------------------------------------
+        // Get all suppliers
+        // -------------------------------------------------
+        $vendors = Vendors::getvendors();
+
+        // -------------------------------------------------
+        // Hent lagret leverandør og kategori (hvis de finnes)
+        // -------------------------------------------------
+        $selectedvendor = $equipment->vendor_id ? Vendors::find($equipment->vendor_id) : null;
+        $selectedCategory = $equipment->category_id ? EquipmentCategory::find($equipment->category_id) : null;
+
+        // -------------------------------------------------
         // return view
         // -------------------------------------------------
-        return view('equipment::edit', compact('equipment'));
+        return view('equipment::edit', compact('equipment', 'categories', 'vendors', 'selectedvendor', 'selectedCategory'));
     }
 
-   // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // FUNCTION IUPDATE
     // Updates a specific equipment
     //
@@ -126,19 +143,23 @@ class EquipmentController extends Controller
         // -------------------------------------------------
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:equipment_categories,id',
-            'serial_number' => "required|string|unique:equipment,serial_number,{$equipment->id}",
+            'vendor_id' => 'min:1|max:20',
+            'category_id' => 'required|min:1|max:20',
+            'serial_number' => 'string',
             'status' => 'required|in:active,inactive,needs_certification',
             'certification_month' => 'nullable|integer|min:1|max:12',
             'description' => 'nullable|string',
         ]);
 
+        // -------------------------------------------------
+        // Update the equipment
+        // -------------------------------------------------
         $equipment->update($validated);
 
         // -------------------------------------------------
         // return view
         // -------------------------------------------------
-        return redirect()->route('equipment::index')->with('success', 'Utstyr oppdatert.');
+        return redirect()->route('equipment.index')->with('success', 'Utstyr oppdatert.');
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------

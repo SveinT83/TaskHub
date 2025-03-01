@@ -4,9 +4,9 @@ namespace TronderData\Equipment\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Supplier extends Model
+class vendors extends Model
 {
-    protected $table = 'suppliers'; // Kobler til riktig tabell
+    protected $table = 'vendors'; // Kobler til riktig tabell
 
     protected $fillable = [
         'id', 'name', 'url', 'email', 'phone',
@@ -16,17 +16,9 @@ class Supplier extends Model
     ];
 
     /**
-     * Relasjon: Henter kategori fra `categories`-tabellen (hvis den finnes)
-     */
-    public function category()
-    {
-        return $this->belongsTo(\TronderData\Equipment\Models\EquipmentCategory::class, 'category_id');
-    }
-
-    /**
      * Scope: Henter alle leverandører, men gir en fallback-melding hvis ingen finnes
      */
-    public static function getSuppliers()
+    public static function getvendors()
     {
         $suppliers = self::all();
 
