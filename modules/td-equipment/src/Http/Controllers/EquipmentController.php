@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use TronderData\Equipment\Models\Equipment;
 use TronderData\Equipment\Models\EquipmentCategory;
+use TronderData\Equipment\Models\ServiceHistory;
 use TronderData\Equipment\Models\Vendors;
 
 
@@ -16,18 +17,17 @@ class EquipmentController extends Controller
     // Shows the default page of the equipment module
     //
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    public function index()
+    public function index(Request $request)
     {
+        // Get sorting parameters
+        $sortField = $request->get('sort_field', 'name');
+        $sortOrder = $request->get('sort_order', 'asc');
 
-        // -------------------------------------------------
-        // Get all equipment
-        // -------------------------------------------------
-        $equipment = Equipment::paginate(10);
+        // Get all equipment with sorting
+        $equipment = Equipment::orderBy($sortField, $sortOrder)->paginate(10);
 
-        // -------------------------------------------------
-        // return view
-        // -------------------------------------------------
-        return view('equipment::index', compact('equipment'));
+        // Return view
+        return view('equipment::index', compact('equipment', 'sortField', 'sortOrder'));
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,11 +37,20 @@ class EquipmentController extends Controller
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     public function show(Equipment $equipment)
     {
+        // -------------------------------------------------
+        // Fetch service history for the equipment
+        // -------------------------------------------------
+        $serviceHistory = ServiceHistory::where('equipment_id', $equipment->id)->get();
 
         // -------------------------------------------------
-        // return view
+        // If no service history exists, set historyCount to 0
         // -------------------------------------------------
-        return view('equipment::show', compact('equipment'));
+        $historyCount = $serviceHistory->count() ? $serviceHistory->count() : 0;
+
+        // -------------------------------------------------
+        // Return view with equipment and service history
+        // -------------------------------------------------
+        return view('equipment::show', compact('equipment', 'serviceHistory', 'historyCount'));
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -178,6 +187,6 @@ class EquipmentController extends Controller
         // -------------------------------------------------
         // return view
         // -------------------------------------------------
-        return redirect()->route('equipment::index')->with('success', 'Utstyr slettet.');
+        return redirect()->route('equipment.index')->with('success', 'Utstyr slettet.');
     }
 }

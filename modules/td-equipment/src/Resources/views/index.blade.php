@@ -12,10 +12,26 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Navn</th>
-                    <th>Kategori</th>
-                    <th>Serienummer</th>
-                    <th>Status</th>
+                    <th>
+                        <a href="{{ route('equipment.index', ['sort_field' => 'name', 'sort_order' => $sortField == 'name' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
+                            Navn
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('equipment.index', ['sort_field' => 'category_id', 'sort_order' => $sortField == 'category_id' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
+                            Kategori
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('equipment.index', ['sort_field' => 'serial_number', 'sort_order' => $sortField == 'serial_number' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
+                            Serienummer
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ route('equipment.index', ['sort_field' => 'status', 'sort_order' => $sortField == 'status' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
+                            Status
+                        </a>
+                    </th>
                     <th>Handlinger</th>
                 </tr>
             </thead>
@@ -32,7 +48,7 @@
             </tbody>
         </table>
 
-        {{ $equipment->links() }}
+        {{ $equipment->appends(['sort_field' => $sortField, 'sort_order' => $sortOrder])->links() }}
     @endif
 </div>
 @endsection
