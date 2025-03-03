@@ -1,14 +1,15 @@
 <?php
-namespace tronderdata\categories\Providers;
+namespace TronderData\Categories\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
-use tronderdata\categories\Http\Livewire\CategoryManager;
+use TronderData\Categories\Http\Livewire\CategoryManager;
 
 class CategoriesServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        
         Livewire::component('categories', CategoryManager::class);
 
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');

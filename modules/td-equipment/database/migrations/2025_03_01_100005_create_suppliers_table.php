@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('suppliers')) {
-            Schema::create('suppliers', function (Blueprint $table) {
+        if (!Schema::hasTable('vendors')) {
+            Schema::create('vendors', function (Blueprint $table) {
                 $table->id();
                 $table->string('name')->unique(); // Navn må være unikt og påbudt
                 $table->string('url')->nullable();
@@ -55,6 +55,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('suppliers');
+        Schema::dropIfExists('vendors');
     }
 };

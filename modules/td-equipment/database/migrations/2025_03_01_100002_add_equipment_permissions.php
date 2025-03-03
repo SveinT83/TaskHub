@@ -28,6 +28,34 @@ class AddEquipmentPermissions extends Migration
                 }
             }
         }
+
+        // Gi superadmin (ID 1) alle rettigheter som standard
+        $superAdminRole = Role::find(1);
+        if ($superAdminRole) {
+            foreach ($permissions as $permission) {
+                if (!$superAdminRole->hasPermissionTo($permission)) {
+                    $superAdminRole->givePermissionTo($permission);
+                }
+            }
+        }
+
+        // Opprett nye roller for equipment-modulen
+        $viewRole = Role::firstOrCreate(['name' => 'equipmentView']);
+        $equipmentUserRole = Role::firstOrCreate(['name' => 'equipmentUser']);
+
+        // Gi view-rollen alle view-rettigheter
+        if ($viewRole && !$viewRole->hasPermissionTo('equipment.view')) {
+            $viewRole->givePermissionTo('equipment.view');
+        }
+
+        // Gi equipmentUser-rollen alle rettigheter
+        if ($equipmentUserRole) {
+            foreach ($permissions as $permission) {
+                if (!$equipmentUserRole->hasPermissionTo($permission)) {
+                    $equipmentUserRole->givePermissionTo($permission);
+                }
+            }
+        }
     }
 
     public function down()
@@ -41,5 +69,9 @@ class AddEquipmentPermissions extends Migration
                 $permissionModel->delete();
             }
         }
+
+        // Fjern de nye rollene
+        Role::where('name', 'equipmentView')->delete();
+        Role::where('name', 'equipmentUser')->delete();
     }
 }

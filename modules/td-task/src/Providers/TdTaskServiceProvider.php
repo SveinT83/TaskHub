@@ -17,7 +17,7 @@ class TdTaskServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'tdtask');
 
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../Database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
          // Superadmin kan lage templates
         Gate::define('superadmin.create', function ($user) {

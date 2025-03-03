@@ -27,7 +27,6 @@ class AddAdminCategoriesMenuItem extends Migration
                 'title' => 'Categories',
                 'url' => '/admin/cat',
                 'icon' => 'bi bi-list', // You can change the icon if needed
-                'permission' => null, // Set permissions if needed
                 'order' => 0, // Position in the menu, adjust if needed
                 'created_at' => now(),
                 'updated_at' => now(),

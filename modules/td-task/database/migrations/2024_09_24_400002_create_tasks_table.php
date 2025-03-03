@@ -37,7 +37,7 @@ class CreateTasksTable extends Migration
                 $table->foreignId('created_by')->constrained('users');
                 $table->foreignId('child_task_id')->nullable()->constrained('tasks')->nullOnDelete();
                 $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete();
-                $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete(); // Legger til category_id
+                $table->char('category_id', 5)->nullable(); // Endret category_id til en vanlig kolonne
                 $table->integer('estimated_time')->nullable();
                 $table->integer('actual_time')->nullable();
                 $table->timestamps();
@@ -45,9 +45,9 @@ class CreateTasksTable extends Migration
         } else {
             // Hvis tasks tabellen finnes, sjekk om kolonnen category_id allerede er satt
             if (!Schema::hasColumn('tasks', 'category_id')) {
-                // Hvis fremmednøkkelen ikke er satt, legg den til
+                // Hvis kolonnen ikke er satt, legg den til
                 Schema::table('tasks', function (Blueprint $table) {
-                    $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete(); // Legger til category_id
+                    $table->char('category_id', 5)->nullable(); // Endret category_id til en vanlig kolonne
                 });
             }
         }
@@ -55,11 +55,10 @@ class CreateTasksTable extends Migration
 
     public function down()
     {
-        // Hvis tasks-tabellen eksisterer, fjern fremmednøklene først
+        // Hvis tasks-tabellen eksisterer, fjern kolonnen category_id først
         if (Schema::hasTable('tasks')) {
             Schema::table('tasks', function (Blueprint $table) {
                 if (Schema::hasColumn('tasks', 'category_id')) {
-                    $table->dropForeign(['category_id']); // Dropper fremmednøkkelen
                     $table->dropColumn('category_id'); // Dropper kolonnen
                 }
 

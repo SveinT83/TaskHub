@@ -4,7 +4,7 @@ namespace TronderData\Equipment\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class vendors extends Model
+class Vendors extends Model
 {
     protected $table = 'vendors'; // Kobler til riktig tabell
 

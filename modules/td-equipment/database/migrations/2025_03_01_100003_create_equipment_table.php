@@ -26,7 +26,7 @@ class CreateEquipmentTable extends Migration
                 $table->timestamps(); // created_at & updated_at
 
                 // Definer utenlandsnøkkel
-                $table->foreign('category_id')->references('id')->on('equipment_categories')->onDelete('cascade');
+                // $table->foreign('category_id')->references('id')->on('equipment_categories')->onDelete('cascade');
             });
 
             // Indekser for raskere søk
