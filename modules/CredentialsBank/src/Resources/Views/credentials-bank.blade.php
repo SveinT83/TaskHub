@@ -99,7 +99,11 @@
                     </td>
                     <td>
                         <button class="btn btn-primary" onclick="openEditModal('{{ $credential->id }}', '{{ $credential->decrypted_username }}', '{{ $credential->decrypted_password }}')">✏️ Edit</button>
-                        <button class="btn btn-danger" onclick="openDeleteModal('{{ $credential->id }}')">🗑️ Delete</button>
+                        <form action="{{ route('credentials-bank.destroy', $credential->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
@@ -144,7 +148,7 @@
 
             if (document.getElementById('use_individual_key').checked) {
                 notice.style.display = 'block';
-                downloadBtn.style.display = 'none';
+                downloadBtn.style.display = 'block';
                 individualKey = btoa(window.crypto.getRandomValues(new Uint8Array(32)).join(''));
             } else {
                 notice.style.display = 'none';
