@@ -231,7 +231,6 @@ class TaskWallController extends Controller
                 'title' => $title, // Bruk navnet på veggen, evt. prefikset tittel for templates
                 'url' => "/walls/{$taskWall->id}", // Lagre relativ URL
                 'icon' => 'bi bi-columns', // Valgfritt ikon for menyen
-                'permission' => $permission, // Sett tillatelser for templates
                 'order' => 0, // Endre rekkefølgen hvis nødvendig
                 'created_at' => now(),
                 'updated_at' => now(),

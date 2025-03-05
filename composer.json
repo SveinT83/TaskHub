@@ -67,7 +67,8 @@
             "Database\\Seeders\\": "database/seeders/",
             "tronderdata\\tdTask\\": "modules/td-task/src/",
             "tronderdata\\kbartickles\\": "modules/kbartickles/src/",
-            "TronderData\\categories\\": "modules/categories/src/",
+            "TronderData\\Categories\\": "modules/categories/src/",
+            "TronderData\\TdClients\\": "modules/td-clients/src/",
             "TronderData\\Equipment\\": "modules/td-equipment/src/"
         }
     },
@@ -96,10 +97,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider",
-                "tronderdata\\tdTask\\Providers\\TdTaskServiceProvider",
-                "tronderdata\\kbartickles\\Providers\\KbarticklesServiceProvider",
-                "TronderData\\categories\\Providers\\CategoriesServiceProvider",
+                "TronderData\\TdClients\\Providers\\TdClientsServiceProvider",
+                "TronderData\\tdTask\\Providers\\TdTaskServiceProvider",
+                "TronderData\\kbartickles\\Providers\\KbarticklesServiceProvider",
+                "TronderData\\Categories\\Providers\\CategoriesServiceProvider",
                 "TronderData\\Equipment\\Providers\\EquipmentServiceProvider"
             ]
         }

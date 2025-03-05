@@ -35,6 +35,13 @@ class AddKbMenuItems extends Migration
         $menuItems = [
             [
                 'menu_id' => $kbMenuId,
+                'title' => 'Artickles',
+                'url' => '/kb',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'menu_id' => $kbMenuId,
                 'title' => 'New Artickle',
                 'url' => '/kb/article-form',
                 'created_at' => now(),

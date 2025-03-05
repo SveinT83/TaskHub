@@ -107,12 +107,12 @@
                                     <!-- ------------------------------------------------- -->
                                     <div class="col-md-3">
                                         <div class="row justify-content-end">
-                                            <i class="bi col-md-5 bi-calendar-check"> {{ $history->service_date }}</i>
+                                            <i class="bi col-md-6 bi-calendar-check"> {{ $history->service_date }}</i>
                                             
                                             @canany(['equipment.edit', 'equipment.admin', 'superadmin.edit'])
-                                            <form action="{{ route('equipment.service.destroy', $history->id) }}" method="POST" class="col-md-4">
+                                            <form action="{{ route('equipment.service.destroy', $history->id) }}" method="POST" class="col-md-5">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm bi bi-x-circle"> Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm bi bi-x-circle"> </button>
                                             </form>
                                             @endcanany
                                         </div>

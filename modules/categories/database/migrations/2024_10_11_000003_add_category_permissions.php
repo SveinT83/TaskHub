@@ -25,6 +25,16 @@ class AddCategoryPermissions  extends Migration
         if ($adminRole && !$adminRole->hasPermissionTo('category.admin')) {
             $adminRole->givePermissionTo('category.admin');
         }
+
+        // Gi superadmin (ID 1) alle rettigheter for category modulen
+        $superAdminRole = Role::find(1);
+        if ($superAdminRole) {
+            foreach ($permissions as $permission) {
+                if (!$superAdminRole->hasPermissionTo($permission)) {
+                    $superAdminRole->givePermissionTo($permission);
+                }
+            }
+        }
     }
 
     public function down()

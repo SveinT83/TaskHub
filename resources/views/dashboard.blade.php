@@ -13,11 +13,10 @@
     <div class="container mt-3">
         <div class="row">
             <div class="col-12">
-                <x-card-primary title="Welcome to the Dashboard">
-                    <p>
-                        This is the dashboard page. You can manage your posts, categories, and tags here.
-                    </p>
-                </x-card-primary>
+                <!-- Viser widgets -->
+                 @foreach($widgets as $widgetPosition)
+                    @include($widgetPosition->widget->view_path, $widgetData[$widgetPosition->widget->id])
+                @endforeach
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use tronderdata\categories\Http\Controllers\CategoriesController;
+use TronderData\Categories\Http\Controllers\CategoriesController;
 
 // Middleware for autentiserte brukere
 Route::middleware(['web', 'auth'])->group(function () {

@@ -30,6 +30,9 @@ class EquipmentServiceProvider extends ServiceProvider
         // Last inn view-filer
         $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'equipment');
 
+        // Last inn view-filer for widgets
+        $this->loadViewsFrom(__DIR__.'/../Resources/views/widgets', 'widgets');
+
         // Publiser migrasjoner og konfigurasjoner
         if ($this->app->runningInConsole()) {
             $this->publishes([

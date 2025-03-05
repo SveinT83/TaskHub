@@ -7,8 +7,8 @@ class CreateCommentsTable extends Migration
 {
     public function up()
     {
-        if (!Schema::hasTable('comments')) {
-            Schema::create('comments', function (Blueprint $table) {
+        if (!Schema::hasTable('task_comments')) {
+            Schema::create('task_comments', function (Blueprint $table) {
                 $table->id();
                 $table->text('comment');
                 $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade'); // Link to task

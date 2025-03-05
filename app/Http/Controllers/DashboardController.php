@@ -9,25 +9,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Widgets\WidgetPosition;
 
 class DashboardController extends Controller
 {
-
-    // --------------------------------------------------------------------------------------------------
-    // FUNCTION - INDEX
-    // --------------------------------------------------------------------------------------------------
-    // This function returns the dashboard view.
-    // --------------------------------------------------------------------------------------------------
     public function index()
     {
-        // -------------------------------------------------
-        // Retrieve the authenticated user.
-        // -------------------------------------------------
-        $user = auth()->user();
+        // Hent widgets for dashboardet
+        $widgets = WidgetPosition::where('route', '/dashboard')
+            ->with('widget')
+            ->get();
 
-        // -------------------------------------------------
-        // Return the view with the user's information.
-        // -------------------------------------------------
-        return view('dashboard');
+        // Debugging: Skriv ut widget data
+        if ($widgets->isEmpty()) {
+            dd('No widgets found for route: /dashboard', $widgets);
+        }
+
+        // Dynamisk kall til kontrolleren og hent data
+        $widgetData = [];
+        foreach ($widgets as $widgetPosition) {
+            $controllerAction = explode('@', $widgetPosition->widget->controller);
+            $controller = app($controllerAction[0]);
+            $action = $controllerAction[1];
+            $widgetData[$widgetPosition->widget->id] = $controller->$action()->getData();
+        }
+
+        // Returner visningen med widgets og data
+        return view('dashboard', ['widgets' => $widgets, 'widgetData' => $widgetData]);
     }
 }

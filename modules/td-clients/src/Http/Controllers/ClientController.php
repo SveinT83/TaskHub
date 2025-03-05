@@ -1,11 +1,11 @@
 <?php
-namespace tronderdata\TdClients\Http\Controllers;
+namespace TronderData\TdClients\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use tronderdata\TdClients\Models\Client;
-use tronderdata\TdClients\Models\ClientSite;
-use tronderdata\TdClients\Models\ClientUser;
+use TronderData\TdClients\Models\Client;
+use TronderData\TdClients\Models\ClientSite;
+use TronderData\TdClients\Models\ClientUser;
 
 class ClientController extends Controller
 {

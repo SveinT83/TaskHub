@@ -5,13 +5,13 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "tronderdata\\TdClients\\": "src/"
+            "TronderData\\TdClients\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "tronderdata\\TdClients\\Providers\\TdClientsServiceProvider"
+                "TronderData\\TdClients\\Providers\\TdClientsServiceProvider"
             ]
         }
     }

@@ -8,24 +8,6 @@ class CreateTasksTable extends Migration
 {
     public function up()
     {
-        // Først, sjekk om task_statuses tabellen finnes
-        if (!Schema::hasTable('task_statuses')) {
-            // Opprett task_statuses tabellen dersom den ikke eksisterer
-            Schema::create('task_statuses', function (Blueprint $table) {
-                $table->id();
-                $table->string('status_name');
-                $table->timestamps();
-            });
-
-            // Legg inn standardrader i task_statuses
-            DB::table('task_statuses')->insert([
-                ['status_name' => 'Not Started', 'created_at' => now(), 'updated_at' => now()],
-                ['status_name' => 'In Progress', 'created_at' => now(), 'updated_at' => now()],
-                ['status_name' => 'Completed', 'created_at' => now(), 'updated_at' => now()],
-                ['status_name' => 'Blocked', 'created_at' => now(), 'updated_at' => now()],
-            ]);
-        }
-
         // Sjekk om tasks tabellen allerede finnes
         if (!Schema::hasTable('tasks')) {
             // Opprett tasks tabellen hvis den ikke finnes
@@ -37,31 +19,43 @@ class CreateTasksTable extends Migration
                 $table->foreignId('created_by')->constrained('users');
                 $table->foreignId('child_task_id')->nullable()->constrained('tasks')->nullOnDelete();
                 $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete();
-                $table->char('category_id', 5)->nullable(); // Endret category_id til en vanlig kolonne
+                $table->unsignedInteger('category_id')->nullable(); // Endret category_id til en INT med 5 tegn
+                $table->foreignId('assigned_to')->nullable(); // Legger til assigned_to kolonne
+                $table->unsignedInteger('wall_id', 5)->nullable(); // Legger til wall_id kolonne
                 $table->integer('estimated_time')->nullable();
                 $table->integer('actual_time')->nullable();
                 $table->timestamps();
             });
         } else {
-            // Hvis tasks tabellen finnes, sjekk om kolonnen category_id allerede er satt
-            if (!Schema::hasColumn('tasks', 'category_id')) {
-                // Hvis kolonnen ikke er satt, legg den til
-                Schema::table('tasks', function (Blueprint $table) {
-                    $table->char('category_id', 5)->nullable(); // Endret category_id til en vanlig kolonne
-                });
-            }
+            // Hvis tasks tabellen finnes, sjekk om kolonnene allerede er satt
+            Schema::table('tasks', function (Blueprint $table) {
+                if (!Schema::hasColumn('tasks', 'category_id')) {
+                    $table->unsignedInteger('category_id')->nullable(); // Endret category_id til en INT med 5 tegn
+                }
+                if (!Schema::hasColumn('tasks', 'assigned_to')) {
+                    $table->foreignId('assigned_to')->nullable(); // Legger til assigned_to kolonne
+                }
+                if (!Schema::hasColumn('tasks', 'wall_id')) {
+                    $table->unsignedInteger('wall_id', 5)->nullable(); // Legger til wall_id kolonne
+                }
+            });
         }
     }
 
     public function down()
     {
-        // Hvis tasks-tabellen eksisterer, fjern kolonnen category_id først
+        // Hvis tasks-tabellen eksisterer, fjern kolonnene først
         if (Schema::hasTable('tasks')) {
             Schema::table('tasks', function (Blueprint $table) {
                 if (Schema::hasColumn('tasks', 'category_id')) {
                     $table->dropColumn('category_id'); // Dropper kolonnen
                 }
-
+                if (Schema::hasColumn('tasks', 'assigned_to')) {
+                    $table->dropColumn('assigned_to'); // Dropper kolonnen
+                }
+                if (Schema::hasColumn('tasks', 'wall_id')) {
+                    $table->dropColumn('wall_id'); // Dropper kolonnen
+                }
                 if (Schema::hasColumn('tasks', 'status_id')) {
                     $table->dropForeign(['status_id']); // Dropper fremmednøkkelen
                     $table->dropColumn('status_id'); // Dropper kolonnen

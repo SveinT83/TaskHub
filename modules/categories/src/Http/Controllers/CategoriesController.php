@@ -3,7 +3,7 @@
 // -------------------------------------------------
 // Namespace
 // -------------------------------------------------
-namespace tronderdata\Categories\Http\Controllers;
+namespace TronderData\Categories\Http\Controllers;
 
 // -------------------------------------------------
 // Dependencies

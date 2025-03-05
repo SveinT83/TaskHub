@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use TronderData\Equipment\Http\Controllers\EquipmentController;
 use TronderData\Equipment\Http\Controllers\ServiceController;
+use TronderData\Equipment\Http\Controllers\WidgetController;
 
 Route::middleware(['web', 'auth'])->group(function () {
 
@@ -53,4 +54,10 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::delete('equipment/service/{serviceHistory}/delete', [ServiceController::class, 'destroy'])
         ->name('equipment.service.destroy')
         ->middleware('can:equipment.edit');
+
+
+    // --------------------------------------------------------------------------------------------------
+    // Widgets routes
+    // --------------------------------------------------------------------------------------------------
+    Route::get('/widgets/equipments-list', [WidgetController::class, 'equipmentsListWidget'])->name('widgets.equipmentsListWidget');
 });
