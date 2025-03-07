@@ -1,0 +1,59 @@
+<?php
+
+namespace Modules\CredentialsBank\Services;
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+class EncryptionService
+{
+    private const AES_METHOD = 'aes-256-cbc';
+
+    public function encryptWithAES($data, $aesKey, $iv)
+    {
+        $encryptedData = openssl_encrypt($data, self::AES_METHOD, $aesKey, 0, $iv);
+        return ['encrypted_data' => base64_encode($encryptedData)];
+    }
+
+    public function decryptWithAES($encryptedData, $aesKey, $iv)
+    {
+        return openssl_decrypt(base64_decode($encryptedData), self::AES_METHOD, $aesKey, 0, base64_decode($iv));
+    }
+
+    public function encryptAESKeyWithRSA($aesKey)
+    {
+        $publicKeyPath = storage_path('app/credentials-bank/public_key.pem');
+        if (!file_exists($publicKeyPath)) {
+            throw new \Exception('Public key not found.');
+        }
+
+        $publicKey = file_get_contents($publicKeyPath);
+        if (!openssl_public_encrypt($aesKey, $encryptedAESKey, $publicKey)) {
+            throw new \Exception('RSA encryption failed. Please check the public key.');
+        }
+
+        return base64_encode($encryptedAESKey);
+    }
+
+    public function decryptAESKeyWithRSA($encryptedAESKey)
+    {
+        $privateKeyPath = storage_path('app/credentials-bank/private_key.pem');
+        if (!file_exists($privateKeyPath)) {
+            throw new \Exception('Private key not found.');
+        }
+
+        $privateKey = file_get_contents($privateKeyPath);
+        if (!openssl_private_decrypt(base64_decode($encryptedAESKey), $aesKey, $privateKey)) {
+            throw new \Exception('RSA decryption failed.');
+        }
+
+        return $aesKey;
+    }
+
+    public function generateIndividualKeyFile($aesKey)
+    {
+        $fileName = 'user_' . auth()->id() . '_' . time() . '.txt';
+        Storage::put("individual_keys/$fileName", base64_encode($aesKey));
+        return route('credentials-bank.download-key', ['file' => $fileName]);
+    }
+}

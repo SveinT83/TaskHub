@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Credentials Bank</title>
     <style>
         body {
@@ -80,7 +81,7 @@
         </thead>
         <tbody id="credentials-table">
             @foreach($credentials as $credential)
-                <tr>
+                <tr data-id="{{ $credential->id }}">
                     <td>
                         @if($credential->uses_individual_key && !$credential->is_decrypted)
                             <span class="masked">*****</span>
@@ -113,78 +114,176 @@
     <h3>Add New Credential</h3>
     <form action="{{ route('credentials-bank.store') }}" method="POST" id="addForm" onsubmit="return handleFormSubmit(event)">
         @csrf
-        <input type="text" name="username" placeholder="Enter Username" required><br><br>
-        <input type="password" name="password" placeholder="Enter Password" required><br><br>
+        <input type="text" name="username" placeholder="Enter Username" required id="usernameField"><br><br>
+        <input type="password" name="password" placeholder="Enter Password" required id="passwordField"><br><br>
         <input type="checkbox" name="use_individual_key" id="use_individual_key" onchange="toggleIndividualKey()">
         <label for="use_individual_key">Use Individual Decryption Key</label><br>
-        <small id="individualKeyNotice">⚠️ This will download a private key, keep it safe!</small><br><br>
+        <small id="individualKeyNotice">⚠️ This will download a private key, keep it safe! If you lose it, we cannot recover the information.</small><br><br>
         <button type="submit" class="btn btn-primary">Save</button>
-        <button type="button" id="downloadKeyButton" class="btn btn-secondary" onclick="downloadIndividualKey()">Download Key Again</button>
+        <button type="button" id="downloadKeyButton" class="btn btn-secondary" onclick="downloadIndividualKey()" style="display: none;">Download Key Again</button>
     </form>
 
     <script>
-        let individualKey = '';
-        let currentCredentialId = '';
+    console.log("🚀 Script Loaded!"); // ✅ Debugging: Check if script runs
 
-        function togglePassword(id) {
-            const input = document.getElementById('pass-' + id);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
+    function handleFormSubmit(event) {
+        event.preventDefault(); // ✅ Prevents default form submission
 
-        function handleFormSubmit(event) {
-            if (document.getElementById('use_individual_key').checked) {
-                event.preventDefault();
-                downloadIndividualKey(() => {
-                    setTimeout(() => {
-                        document.getElementById('addForm').submit();
-                    }, 500);
-                });
-            }
-        }
+        const form = document.getElementById("addForm");
+        const submitButton = form.querySelector("button[type='submit']");
 
-        function toggleIndividualKey() {
-            const notice = document.getElementById('individualKeyNotice');
-            const downloadBtn = document.getElementById('downloadKeyButton');
+        // ✅ Prevent double submissions
+        if (submitButton.disabled) return;
+        submitButton.disabled = true;
 
-            if (document.getElementById('use_individual_key').checked) {
-                notice.style.display = 'block';
-                downloadBtn.style.display = 'block';
-                individualKey = btoa(window.crypto.getRandomValues(new Uint8Array(32)).join(''));
-            } else {
-                notice.style.display = 'none';
-                downloadBtn.style.display = 'none';
-                individualKey = '';
-            }
-        }
+        const formData = new FormData(form);
+        formData.append("use_individual_key", document.getElementById("use_individual_key").checked ? 1 : 0);
 
-        function downloadIndividualKey(callback) {
-            if (!individualKey) {
-                alert("No individual key available to download.");
+        console.log("📡 Submitting Form...");
+
+        fetch(form.action, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                "Accept": "application/json"
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("📨 Server Response:", data);
+
+            if (data.error) {
+                alert(data.error);
+                submitButton.disabled = false; // ✅ Re-enable button on error
                 return;
             }
 
-            const blob = new Blob([individualKey], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'individual_key.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-
-            document.getElementById('downloadKeyButton').style.display = 'block';
-
-            if (callback) callback();
-        }
-
-        function promptForKey(credentialId) {
-            const userKey = prompt("Enter your individual key:");
-            if (userKey) {
-                alert("Decryption logic would run here using the key: " + userKey);
-            } else {
-                alert("Decryption cancelled.");
+            if (!data.credential) {
+                console.error("❌ Credential data is missing from response:", data);
+                alert("Something went wrong. Please try again.");
+                submitButton.disabled = false; // ✅ Re-enable button on error
+                return;
             }
+
+            // ✅ If an individual key was used, trigger download WITHOUT REDIRECT
+            if (data.download_url) {
+            fetch(data.download_url)
+            .then(response => response.blob())
+            .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = "individual_key.txt";
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error("Download error:", error));
+            }
+
+            // ✅ Append new credential row dynamically
+            const tableBody = document.getElementById("credentials-table");
+            const newRow = document.createElement("tr");
+            newRow.setAttribute("data-id", data.credential.id);
+            newRow.innerHTML = `
+                <td>${data.credential.uses_individual_key ? '*****' : data.credential.decrypted_username}</td>
+                <td>
+                    ${data.credential.uses_individual_key ? '*****' : `<input type="password" value="${data.credential.decrypted_password}" readonly>`}
+                    ${data.credential.uses_individual_key ? `<button onclick="promptForKey('${data.credential.id}')">🔑 Decrypt</button>` : ''}
+                </td>
+                <td>
+                    <button class="btn btn-primary" onclick="openEditModal('${data.credential.id}', '${data.credential.decrypted_username}', '${data.credential.decrypted_password}')">✏️ Edit</button>
+                    <form action="/credentials-bank/credentials/${data.credential.id}" method="POST" style="display:inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute("content")}">
+                        <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+                    </form>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+
+            form.reset();
+            submitButton.disabled = false; // ✅ Re-enable button after success
+        })
+        .catch(error => {
+            console.error("❌ Error:", error);
+            alert("Something went wrong. Please try again.");
+            submitButton.disabled = false; // ✅ Re-enable button on failure
+        });
+    }
+
+    document.getElementById("addForm").addEventListener("submit", handleFormSubmit);
+
+    function toggleIndividualKey() {
+        const notice = document.getElementById('individualKeyNotice');
+        const useKeyCheckbox = document.getElementById('use_individual_key');
+
+        if (useKeyCheckbox.checked) {
+            notice.style.display = 'block';
+        } else {
+            notice.style.display = 'none';
         }
-    </script>
+    }
+
+    function togglePassword(id) {
+        const input = document.getElementById('pass-' + id);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function promptForKey(credentialId) {
+        const userKey = prompt("Enter your individual key:");
+        if (!userKey) {
+            alert("Decryption cancelled.");
+            return;
+        }
+
+        fetch(`/credentials-bank/decrypt/${credentialId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+            },
+            body: JSON.stringify({ individual_key: userKey }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // ✅ Update table row with decrypted values
+            const row = document.querySelector(`tr[data-id='${credentialId}']`);
+            row.children[0].innerHTML = data.username;
+            row.children[1].innerHTML = `
+                <input type="password" value="${data.password}" readonly id="pass-${credentialId}">
+                <button onclick="togglePassword(${credentialId})">👁️</button>
+            `;
+        })
+        .catch(error => {
+            console.error("❌ Error:", error);
+            alert("Failed to decrypt credentials.");
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputs = document.querySelectorAll('#usernameField, #passwordField');
+
+        inputs.forEach(input => {
+            input.addEventListener("keydown", function (event) {
+                if (event.key === " ") {
+                    event.preventDefault();
+                }
+            });
+
+            input.addEventListener("input", function () {
+                this.value = this.value.replace(/\s/g, "");
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

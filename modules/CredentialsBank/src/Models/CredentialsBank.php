@@ -12,7 +12,20 @@ class CredentialsBank extends Model
     // Explicitly set the table name to match the migration
     protected $table = 'credentials_bank';
 
-    protected $fillable = ['user_id', 'encrypted_username', 'encrypted_password', 'encrypted_aes_key', 'iv'];
+    protected $fillable = [
+        'user_id',
+        'encrypted_username',
+        'encrypted_password',
+        'encrypted_aes_key',
+        'iv',
+        'uses_individual_key',
+        'is_decrypted',
+    ];
+
+    protected $casts = [
+        'uses_individual_key' => 'boolean',
+        'is_decrypted' => 'boolean',
+    ];
 
     public function user()
     {

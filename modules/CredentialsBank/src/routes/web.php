@@ -23,6 +23,20 @@ Route::middleware(['web', 'auth'])->prefix('credentials-bank')->group(function (
     // 🗝️ Download Public Key
     Route::get('/public-key', [CredentialsBankController::class, 'publicKey'])->name('credentials-bank.public-key');
 
+    // 🔑 Download Individual Key (Ensures Plain Text Format)
+    Route::get('/download-key/{file}', function ($file) {
+        $filePath = storage_path("app/individual_keys/{$file}");
+    
+        if (!Storage::disk('local')->exists("individual_keys/{$file}")) {
+            return response()->json(['error' => 'Key file not found.'], 404);
+        }
+    
+        return response()->file($filePath, [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => 'attachment; filename="' . $file . '"'
+        ]);
+    })->name('credentials-bank.download-key');
+
     // 🔄 Rotate Encryption Keys
     Route::post('/rotate-keys', [CredentialsBankController::class, 'rotateKeys'])->name('credentials-bank.rotate-keys');
 });
