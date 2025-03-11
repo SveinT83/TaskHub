@@ -34,7 +34,6 @@ body {
 .dropdown-menu {
   background-color: black !important;
 }
-
 .nav-item a {
   background-color: black !important;
   color: white !important;
@@ -61,31 +60,35 @@ body {
 # ACCORDION
 -------------------------------------------------------------------------------------------------- */ 
 .accordion {
-  color: white;
-  --bs-accordion-bg: #333 !important;
-  --bs-accordion-active-color: #423548 !important;
-  --bs-accordion-active-bg: #423548 !important;
-  --bs-accordion-border-color: none !important;
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
-  --bs-accordion-border-radius: 0 !important;
+    color:#fff;
+    --bs-accordion-bg: none !important;
+    --bs-accordion-active-color: #423548 !important;
+    --bs-accordion-active-bg: #423548 !important;
+    --bs-accordion-border-color: none !important;
+    border-top-left-radius:0!important;
+    border-top-right-radius:0!important;
+    --bs-accordion-border-radius: 0 !important
 }
 
 /* -------------------------------------------------
 # ACCORDION COLLAPSE
-------------------------------------------------- */ 
+------------------------------------------------- */
+/*
 .accordion-collapse {
   background-color: black !important;
 }
+*/
 
 /* -------------------------------------------------
 # A SINGLE ITEM
 ------------------------------------------------- */ 
+/*
 a.single-item {
   background-color: #333 !important;
   color: white;
   text-decoration: none;
 }
+  */
 
 /* -------------------------------------------------
 # ACCORDION BODY

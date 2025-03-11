@@ -16,7 +16,7 @@
         <div class="accordion-item">
 
             <!-- Accordion Header -->
-            <h2 class="accordion-header">
+            <h2 class="accordion-header" >
                 <button class="accordion-button {{ isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id] ? '' : 'collapsed' }}"
                         type="button"
                         data-bs-toggle="collapse"
@@ -29,11 +29,13 @@
 
             <!-- Accordion Collapse Body -->
             <div id="collapseMenu{{ $menu->id }}" 
-                 class="accordion-collapse collapse {{ isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id] ? 'show' : '' }}" 
-                 data-bs-parent="#accordionSideMenu">
+                 class="accordion-collapse collapse {{ isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id] ? 'show active' : '' }}" 
+                 data-bs-parent="#accordionSideMenu"
+                 
+                 style="background-color: rgba(255, 255, 255, 0.1) !important;">
 
                 <!-- Accordion Body -->
-                <div class="accordion-body" style="padding: 0px;">
+                <div class="accordion-body" style="padding: 5px;">
 
                     <!-- -------------------------------------------------------------------------------------------------- -->
                     <!-- Iterate through all menu items -->

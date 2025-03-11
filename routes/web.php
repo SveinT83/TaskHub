@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     // -------------------------------------------------
     // Dashboard routes
     // -------------------------------------------------
-    Route::prefix('/')->middleware('verified')->group(function () {
+    Route::prefix('dashboard')->middleware('verified')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     });
 

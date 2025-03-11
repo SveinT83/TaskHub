@@ -13,11 +13,6 @@ use App\Http\Controllers\Admin\Integrations\Nextcloud\NextcloudController;
 
 use Illuminate\Support\Facades\Route;
 
-// filepath: /var/Projects/SteinkjerLiftUtleie/routes/web.php
-Route::get('/test', function () {
-    return 'Test route is working';
-});
-
 // Legg til en middleware for å sjekke Nextcloud-innstillinger innenfor rutene
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
