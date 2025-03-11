@@ -48,7 +48,8 @@
             </tbody>
         </table>
 
-        {{ $equipment->appends(['sort_field' => $sortField, 'sort_order' => $sortOrder])->links() }}
+        <!-- Dette virker ikke, 12345... seksjonene havner langt nede på listen samt pilene som tar deg til neste og forigie side er mange pixler store.
+        {{ $equipment->appends(['sort_field' => $sortField, 'sort_order' => $sortOrder])->links('vendor.pagination.default') }}
     @endif
 </div>
 @endsection
