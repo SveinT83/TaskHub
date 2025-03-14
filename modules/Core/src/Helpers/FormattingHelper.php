@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\src\Helpers;
+namespace Modules\Core\Helpers;
 
 class FormattingHelper
 {

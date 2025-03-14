@@ -1,19 +1,16 @@
 {
-    "name": "taskhub/utstyrssystem",
-    "description": "A module to securely store encrypted usernames and passwords linked to TaskHub users.",
+    "name": "modules/invoicing",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Modules\\Utstyrslagring\\": "src/"
+            "Modules\\Projects\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Utstyrslagring\\Providers\\UtstyrslagringServiceProvider"
+                "Modules\\Projects\\src\\Invoicing\\ProjectServiceProvider"
             ]
         }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    }
 }

@@ -1,0 +1,8 @@
+{
+    "name": "Core",
+    "description": "Core utilities and shared functionality for all modules.",
+    "namespace": "Modules\\Core\\",
+    "providers": [
+        "Modules\\Core\\src\\Providers\\CoreServiceProvider"
+    ]
+}

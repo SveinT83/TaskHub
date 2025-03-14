@@ -1,19 +1,16 @@
 {
-    "name": "taskhub/customers",
-    "description": "A module for the OCAB system for TaskHub users.",
+    "name": "modules/customers",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Modules\\Utstyrslagring\\": "src/"
+            "Modules\\Projects\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Customers\\Providers\\UtstyrslagringServiceProvider"
+                "Modules\\Customers\\src\\Providers\\ProjectServiceProvider"
             ]
         }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    }
 }

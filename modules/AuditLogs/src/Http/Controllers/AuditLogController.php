@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\AuditLogs\src\Http\Controllers;
+namespace Modules\AuditLogs\Http\Controllers;
 
 use Modules\AuditLogs\src\Models\AuditLog;
 use Illuminate\Routing\Controller;

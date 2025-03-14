@@ -22,6 +22,21 @@ return Application::configure(basePath: dirname(__DIR__))
     $app = new Illuminate\Foundation\Application(
         $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
     );
+    
+    // Auto-register all module service providers
+    $modulesPath = base_path('Modules');
+    if (is_dir($modulesPath)) {
+        $modules = array_filter(glob($modulesPath . '/*'), 'is_dir');
+    
+        foreach ($modules as $module) {
+            $moduleName = basename($module);
+            $providerClass = "Modules\\{$moduleName}\\src\\Providers\\{$moduleName}ServiceProvider";
+    
+            if (class_exists($providerClass)) {
+                $app->register($providerClass);
+            }
+        }
+    }
 
     // Load environment configurations
     Dotenv\Dotenv::createImmutable($app->environmentPath(), $app->environmentFile())->safeLoad();

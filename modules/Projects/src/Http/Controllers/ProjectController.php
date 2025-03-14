@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Projects\src\Http\Controllers;
+namespace Modules\Projects\Http\Controllers;
 
 use Modules\Projects\src\Models\Project;
 use Modules\Customers\src\Models\Customer;
@@ -11,13 +11,14 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        return view('projects.index', ['projects' => Project::with('customer')->get()]);
+        return view('projects::index', ['projects' => Project::with('customer')->get()]); // ✅ Matches namespace
     }
 
     public function create()
     {
-        return view('projects.create', ['customers' => Customer::all()]);
+        return view('projects::create', ['customers' => Customer::all()]); // ✅ Matches namespace
     }
+
 
     public function store(Request $request)
     {
@@ -26,7 +27,7 @@ class ProjectController extends Controller
         ]);
 
         Project::create([
-            'project_number' => 'P-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
+            'project_number' => 'P-' . now()->format('Ymd') . '-' . strtoupper(\Str::random(4)),
             'customer_id' => $request->customer_id,
             'status' => 'pending',
         ]);

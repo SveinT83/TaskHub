@@ -1,0 +1,8 @@
+{
+    "name": "Customers",
+    "description": "Manages customer data.",
+    "namespace": "Modules\\Customers\\",
+    "providers": [
+        "Modules\\Customers\\src\\Providers\\CustomerServiceProvider"
+    ]
+}

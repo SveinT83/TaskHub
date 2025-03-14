@@ -1,0 +1,8 @@
+{
+    "name": "Projects",
+    "description": "Handles project registrations and tracking.",
+    "namespace": "Modules\\Projects\\",
+    "providers": [
+        "Modules\\Projects\\src\\Providers\\ProjectServiceProvider"
+    ]
+}

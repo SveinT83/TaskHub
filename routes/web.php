@@ -235,3 +235,9 @@ Route::get('facebook/post-form', function () {
 // This is for routing to the CredentialBank Module
 
 require_once base_path('modules/CredentialsBank/src/routes/web.php');
+
+
+// Manually load module routes
+foreach (glob(base_path('Modules/*/src/Routes/web.php')) as $routeFile) {
+    require $routeFile;
+}

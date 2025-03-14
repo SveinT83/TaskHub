@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Invoicing\src\Models;
+namespace Modules\Invoicing\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Projects\src\Models\Project;

@@ -11,7 +11,6 @@ class CredentialsBankServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        // Register any bindings or services if needed.
     }
 
     public function boot()

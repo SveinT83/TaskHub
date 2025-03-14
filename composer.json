@@ -31,21 +31,49 @@
     "repositories": [
         {
             "type": "path",
-            "url": "./modules/FacebookPostingModule"
+            "url": "./Modules/Projects"
         },
         {
             "type": "path",
-            "url": "./modules/CredentialsBank"
+            "url": "./Modules/Customers"
+        },
+        {
+            "type": "path",
+            "url": "./Modules/Inventory"
+        },
+        {
+            "type": "path",
+            "url": "./Modules/AuditLogs"
+        },
+        {
+            "type": "path",
+            "url": "./Modules/Invoicing"
+        },
+        {
+            "type": "path",
+            "url": "./Modules/FacebookPostingModule"
+        },
+        {
+            "type": "path",
+            "url": "./Modules/CredentialsBank"
         }
     ],
+
     "autoload": {
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Modules\\CredentialsBank\\": "modules/CredentialsBank/src/"
+            "Modules\\Projects\\": "Modules/Projects/src/",
+            "Modules\\Customers\\": "Modules/Customers/src/",
+            "Modules\\Inventory\\": "Modules/Inventory/src/",
+            "Modules\\AuditLogs\\": "Modules/AuditLogs/src/",
+            "Modules\\Invoicing\\": "Modules/Invoicing/src/",
+            "Modules\\FacebookPostingModule\\": "Modules/FacebookPostingModule/src/",
+            "Modules\\CredentialsBank\\": "Modules/CredentialsBank/src/"
         }
     },
+
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
@@ -69,12 +97,22 @@
             "@php artisan migrate --graceful --ansi"
         ]
     },
+
     "extra": {
         "laravel": {
             "providers": [
+                "Modules\\Projects\\src\\Providers\\ProjectServiceProvider",
+                "Modules\\Customers\\src\\Providers\\CustomerServiceProvider",
+                "Modules\\Inventory\\src\\Providers\\InventoryServiceProvider",
+                "Modules\\AuditLogs\\src\\Providers\\AuditLogServiceProvider",
+                "Modules\\Invoicing\\src\\Providers\\InvoicingServiceProvider",
+                "Modules\\FacebookPostingModule\\src\\Providers\\FacebookPosterServiceProvider",
+                "Modules\\CredentialsBank\\src\\Providers\\CredentialsBankServiceProvider"
+
             ]
         }
     },
+
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\AuditLogs\src\Models;
+namespace Modules\AuditLogs\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

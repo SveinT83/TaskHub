@@ -1,0 +1,8 @@
+{
+    "name": "Invoicing",
+    "description": "Handles invoicing and Tripletex integration.",
+    "namespace": "Modules\\Invoicing\\",
+    "providers": [
+        "Modules\\Invoicing\\src\\Providers\\InvoicingServiceProvider"
+    ]
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Inventory\src\Http\Controllers;
+namespace Modules\Inventory\Http\Controllers;
 
 use Modules\Inventory\src\Models\Inventory;
 use Illuminate\Http\Request;

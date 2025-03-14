@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Invoicing\src\Console\Commands;
+namespace Modules\Invoicing\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Invoicing\src\Models\Invoice;

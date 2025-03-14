@@ -1,0 +1,8 @@
+{
+    "name": "Inventory",
+    "description": "Handles inventory management and stock tracking.",
+    "namespace": "Modules\\Inventory\\",
+    "providers": [
+        "Modules\\Inventory\\src\\Providers\\InventoryServiceProvider"
+    ]
+}

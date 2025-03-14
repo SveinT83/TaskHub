@@ -1,0 +1,8 @@
+{
+    "name": "AuditLogs",
+    "description": "Tracks and records system actions for auditing.",
+    "namespace": "Modules\\AuditLogs\\",
+    "providers": [
+        "Modules\\AuditLogs\\src\\Providers\\AuditLogServiceProvider"
+    ]
+}
