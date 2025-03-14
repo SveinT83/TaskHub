@@ -1,0 +1,36 @@
+<?php
+
+namespace Modules\Projects\src\Http\Controllers;
+
+use Modules\Projects\src\Models\Project;
+use Modules\Customers\src\Models\Customer;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+
+class ProjectController extends Controller
+{
+    public function index()
+    {
+        return view('projects.index', ['projects' => Project::with('customer')->get()]);
+    }
+
+    public function create()
+    {
+        return view('projects.create', ['customers' => Customer::all()]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+        ]);
+
+        Project::create([
+            'project_number' => 'P-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4)),
+            'customer_id' => $request->customer_id,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('projects.index')->with('success', 'Project created!');
+    }
+}
