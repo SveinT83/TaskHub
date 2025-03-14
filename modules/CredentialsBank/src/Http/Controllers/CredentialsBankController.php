@@ -64,24 +64,35 @@ class CredentialsBankController extends Controller
         $encryptedPasswordData = $this->encryptWithAES($validated['password'], $aesKey, $iv);
 
         $usesIndividualKey = $request->input('use_individual_key', false);
-        $individualKey = null;
         $downloadUrl = null;
 
         if ($usesIndividualKey) {
             $individualKey = base64_encode($aesKey);
             $fileName = 'user_' . Auth::id() . '_' . time() . '.txt';
-            Storage::put("individual_keys/$fileName", $individualKey);
-            Log::info("Individual key saved at: " . storage_path("app/individual_keys/$fileName"));
+            $filePath = storage_path("app/individual_keys/{$fileName}");
+
+            // Ensure the directory exists
+            $directory = dirname($filePath);
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            // Save the file and log the path
+            if (file_put_contents($filePath, $individualKey) === false) {
+                throw new \Exception("Failed to write individual key to file.");
+            }
+            Log::info("Individual key saved at: " . $filePath);
 
             // Ensure download URL is correctly set
             $downloadUrl = route('credentials-bank.download-key', ['file' => $fileName]);
         }
 
-        // ✅ Ensure `$credential` is assigned BEFORE returning it
+        $encryptedAESKey = $this->encryptAESKeyWithRSA($aesKey);
+
         $credential = Auth::user()->credentialsBank()->create([
             'encrypted_username' => $encryptedUsernameData['encrypted_data'],
             'encrypted_password' => $encryptedPasswordData['encrypted_data'],
-            'encrypted_aes_key'  => $this->encryptAESKeyWithRSA($aesKey),
+            'encrypted_aes_key'  => $encryptedAESKey,
             'iv'                 => base64_encode($iv),
             'uses_individual_key' => $usesIndividualKey,
             'is_decrypted'        => false,
@@ -103,35 +114,37 @@ class CredentialsBankController extends Controller
     }
 }
 
-    public function decrypt(Request $request, $id)
-    {
-        $credential = CredentialsBank::findOrFail($id);
-        $userKey = $request->input('individual_key');
+public function decrypt(Request $request, $id)
+{
+    Log::info("Decrypting credential with ID: " . $id);
 
-        try {
-            $aesKey = base64_decode($userKey);
-            $decryptedUsername = openssl_decrypt(base64_decode($credential->encrypted_username), self::AES_METHOD, $aesKey, 0, base64_decode($credential->iv));
-            $decryptedPassword = openssl_decrypt(base64_decode($credential->encrypted_password), self::AES_METHOD, $aesKey, 0, base64_decode($credential->iv));
+    $credential = CredentialsBank::findOrFail($id);
+    $userKey = $request->input('individual_key');
 
-            if ($decryptedUsername === false || $decryptedPassword === false) {
-                Log::warning("Decryption failed for credential ID: {$credential->id} - Invalid Key Entered", [
-                    'user_id' => Auth::id()
-                ]);
+    try {
+        $aesKey = base64_decode($userKey);
+        $decryptedUsername = openssl_decrypt(base64_decode($credential->encrypted_username), self::AES_METHOD, $aesKey, 0, base64_decode($credential->iv));
+        $decryptedPassword = openssl_decrypt(base64_decode($credential->encrypted_password), self::AES_METHOD, $aesKey, 0, base64_decode($credential->iv));
 
-                return response()->json(['error' => 'Invalid decryption key provided.'], 400);
-            }
-
-            $credential->update(['is_decrypted' => true]);
-
-            return response()->json([
-                'username' => $decryptedUsername,
-                'password' => $decryptedPassword,
+        if ($decryptedUsername === false || $decryptedPassword === false) {
+            Log::warning("Decryption failed for credential ID: {$credential->id} - Invalid Key Entered", [
+                'user_id' => Auth::id()
             ]);
-        } catch (\Exception $e) {
-            Log::error("Decryption error for credential ID: {$credential->id}", ['exception' => $e->getMessage()]);
-            return response()->json(['error' => 'Error decrypting credentials.'], 500);
+
+            return response()->json(['error' => 'Invalid decryption key provided.'], 400);
         }
+
+        $credential->update(['is_decrypted' => true]);
+
+        return response()->json([
+            'username' => $decryptedUsername,
+            'password' => $decryptedPassword,
+        ]);
+    } catch (\Exception $e) {
+        Log::error("Decryption error for credential ID: {$credential->id}", ['exception' => $e->getMessage()]);
+        return response()->json(['error' => 'Error decrypting credentials.'], 500);
     }
+}
 
     public function update(Request $request, $id)
     {

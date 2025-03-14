@@ -24,19 +24,31 @@ Route::middleware(['web', 'auth'])->prefix('credentials-bank')->group(function (
     Route::get('/public-key', [CredentialsBankController::class, 'publicKey'])->name('credentials-bank.public-key');
 
     // 🔑 Download Individual Key (Ensures Plain Text Format)
+    
     Route::get('/download-key/{file}', function ($file) {
         $filePath = storage_path("app/individual_keys/{$file}");
+        Log::info("Attempting to download file from: " . $filePath);
     
-        if (!Storage::disk('local')->exists("individual_keys/{$file}")) {
+        if (!file_exists($filePath)) {
+            Log::error("File not found: " . $filePath);
             return response()->json(['error' => 'Key file not found.'], 404);
         }
     
-        return response()->file($filePath, [
-            'Content-Type' => 'text/plain',
-            'Content-Disposition' => 'attachment; filename="' . $file . '"'
-        ]);
+        try {
+            Log::info("Sending file for download: " . $filePath);
+            return response()->download($filePath, $file, [
+                'Content-Type' => 'text/plain',
+                'Content-Disposition' => 'attachment; filename="' . $file . '"'
+            ])->deleteFileAfterSend(true);
+    
+        } catch (\Exception $e) {
+            Log::error("Error serving file for download: " . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error.'], 500);
+        }
     })->name('credentials-bank.download-key');
 
     // 🔄 Rotate Encryption Keys
     Route::post('/rotate-keys', [CredentialsBankController::class, 'rotateKeys'])->name('credentials-bank.rotate-keys');
 });
+
+Route::post('/credentials-bank/decrypt/{id}', [CredentialsBankController::class, 'decrypt'])->name('credentials-bank.decrypt');

@@ -168,9 +168,18 @@
 
             // ✅ If an individual key was used, trigger download WITHOUT REDIRECT
             if (data.download_url) {
-            fetch(data.download_url)
-            .then(response => response.blob())
-            .then(blob => {
+    console.log("⬇️ Downloading Key from:", data.download_url);
+
+    fetch(data.download_url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            console.log("Fetch response OK, creating blob...");
+            return response.blob();
+        })
+        .then(blob => {
+            console.log("Blob created, triggering download...");
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.style.display = "none";
@@ -179,9 +188,12 @@
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
-            })
-            .catch(error => console.error("Download error:", error));
-            }
+            console.log("Download should have started.");
+        })
+        .catch(error => {
+            console.error("Download error:", error);
+        });
+}
 
             // ✅ Append new credential row dynamically
             const tableBody = document.getElementById("credentials-table");
@@ -233,40 +245,45 @@
     }
 
     function promptForKey(credentialId) {
-        const userKey = prompt("Enter your individual key:");
-        if (!userKey) {
-            alert("Decryption cancelled.");
+    const userKey = prompt("Enter your individual key:");
+    if (!userKey) {
+        alert("Decryption cancelled.");
+        return;
+    }
+
+    fetch(`/credentials-bank/decrypt/${credentialId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        },
+        body: JSON.stringify({ individual_key: userKey }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
             return;
         }
 
-        fetch(`/credentials-bank/decrypt/${credentialId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-            },
-            body: JSON.stringify({ individual_key: userKey }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
-            // ✅ Update table row with decrypted values
-            const row = document.querySelector(`tr[data-id='${credentialId}']`);
-            row.children[0].innerHTML = data.username;
-            row.children[1].innerHTML = `
-                <input type="password" value="${data.password}" readonly id="pass-${credentialId}">
-                <button onclick="togglePassword(${credentialId})">👁️</button>
-            `;
-        })
-        .catch(error => {
-            console.error("❌ Error:", error);
-            alert("Failed to decrypt credentials.");
-        });
-    }
+        // Update table row with decrypted values
+        const row = document.querySelector(`tr[data-id='${credentialId}']`);
+        row.children[0].innerHTML = data.username;
+        row.children[1].innerHTML = `
+            <input type="password" value="${data.password}" readonly id="pass-${credentialId}">
+            <button onclick="togglePassword(${credentialId})">👁️</button>
+        `;
+    })
+    .catch(error => {
+        console.error("❌ Error:", error);
+        alert("Failed to decrypt credentials.");
+    });
+}
 
     document.addEventListener("DOMContentLoaded", function () {
         const inputs = document.querySelectorAll('#usernameField, #passwordField');
