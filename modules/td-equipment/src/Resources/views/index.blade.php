@@ -30,6 +30,11 @@
                 <thead>
                     <tr>
                         <th>
+                            <a href="{{ route('equipment.index', ['sort_field' => 'id', 'sort_order' => $sortField == 'id' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
+                                ID
+                            </a>
+                        </th>
+                        <th>
                             <a href="{{ route('equipment.index', ['sort_field' => 'name', 'sort_order' => $sortField == 'name' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
                                 Navn
                             </a>
@@ -55,6 +60,7 @@
                 <tbody>
                     @foreach ($equipment as $item)
                     <tr>
+                        <td>{{ $item->id }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->category->name ?? 'Ingen kategori' }}</td>
                         <td>{{ $item->serial_number }}</td>
@@ -65,7 +71,7 @@
                 </tbody>
             </table>
 
-            {{ $equipment->appends(['sort_field' => $sortField, 'sort_order' => $sortOrder])->links() }}
+            {{ $equipment->appends(['sort_field' => $sortField, 'sort_order' => $sortOrder])->links('pagination::bootstrap-4') }}
         @endif
         <!-- -------------------------------------------------------------------------------------------------- -->
         <!-- End Equipment Card -->

@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
         // Debugging: Skriv ut widget data
         if ($widgets->isEmpty()) {
-            dd('No widgets found for route: /dashboard', $widgets);
+            //dd('No widgets found for route: /dashboard', $widgets);
         }
 
         // Dynamisk kall til kontrolleren og hent data

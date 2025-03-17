@@ -19,7 +19,8 @@
         "tronderdata/td-clients": "dev-Dev",
         "tronderdata/td-task": "dev-Dev",
         "tronderdata/td-tickets": "dev-Dev",
-        "tronderdata/td-equipment": "dev-Dev"
+        "tronderdata/td-equipment": "dev-Dev",
+        "tronderdata/td-ocab": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -30,7 +31,6 @@
         "nunomaduro/collision": "^8.0",
         "phpunit/phpunit": "^11.0.1"
     },
-
     "repositories": [
         {
             "type": "path",
@@ -55,6 +55,10 @@
         {
             "type": "path",
             "url": "./modules/td-equipment"
+        },
+        {
+            "type": "path",
+            "url": "./modules/td-ocab"
         }
     ],
     "autoload": {
@@ -63,8 +67,6 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Modules\\TdClients\\": "app/Modules/TdClients/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
             "tronderdata\\tdTask\\": "modules/td-task/src/",
             "tronderdata\\kbartickles\\": "modules/kbartickles/src/",
             "TronderData\\Categories\\": "modules/categories/src/",
