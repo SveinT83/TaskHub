@@ -3,7 +3,7 @@
 namespace Modules\Invoicing\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Invoicing\src\Models\Invoice;
+use Modules\Invoicing\Models\Invoice;
 use Illuminate\Support\Facades\Http;
 
 class SyncTripletexInvoices extends Command

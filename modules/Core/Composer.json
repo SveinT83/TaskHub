@@ -1,5 +1,5 @@
 {
-    "name": "modules/projects",
+    "name": "modules/core",
     "type": "library",
     "autoload": {
         "psr-4": {
@@ -9,7 +9,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Projects\\src\\Providers\\ProjectServiceProvider"
+                "Modules\\Core\\Providers\\ProjectServiceProvider"
             ]
         }
     }

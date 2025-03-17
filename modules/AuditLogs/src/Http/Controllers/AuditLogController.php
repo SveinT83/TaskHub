@@ -2,7 +2,7 @@
 
 namespace Modules\AuditLogs\Http\Controllers;
 
-use Modules\AuditLogs\src\Models\AuditLog;
+use Modules\AuditLogs\Models\AuditLog;
 use Illuminate\Routing\Controller;
 
 class AuditLogController extends Controller

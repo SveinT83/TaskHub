@@ -3,8 +3,8 @@
 namespace Modules\Invoicing\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\Projects\src\Models\Project;
-use Modules\Customers\src\Models\Customer;
+use Modules\Projects\Models\Project;
+use Modules\Customers\Models\Customer;
 
 class Invoice extends Model
 {

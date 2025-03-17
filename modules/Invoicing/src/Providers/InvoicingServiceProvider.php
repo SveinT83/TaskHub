@@ -3,7 +3,7 @@
 namespace Modules\Invoicing\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Invoicing\src\Console\Commands\SyncTripletexInvoices;
+use Modules\Invoicing\Console\Commands\SyncTripletexInvoices;
 
 class InvoicingServiceProvider extends ServiceProvider
 {

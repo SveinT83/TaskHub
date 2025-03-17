@@ -9,7 +9,7 @@ class ProjectServiceProvider extends ServiceProvider
     public function boot()
     {
         // ✅ Make sure Laravel knows where to find views
-        $this->loadViewsFrom(__DIR__ . '/../Views/projects', 'projects'); // 🔥 Updated Path
+        $this->loadViewsFrom(__DIR__ . '/../Views', 'projects'); // 🔥 Updated Path
         
         // ✅ Ensure routes are also loaded in `boot()`
         $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');

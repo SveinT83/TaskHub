@@ -16,7 +16,12 @@
         "spatie/laravel-permission": "^6.9",
         "facebook/php-business-sdk": "^21.0",
         "taskhub/facebook-posting-module": "dev-Plov94-branch",
-        "taskhub/credentials-bank": "dev-Plov94-branch"
+        "taskhub/credentials-bank": "dev-Plov94-branch",
+        "taskhub/projects": "dev-Plov94-branch",
+        "taskhub/customers": "dev-Plov94-branch",
+        "taskhub/inventory": "dev-Plov94-branch",
+        "taskhub/auditlogs": "dev-Plov94-branch",
+        "taskhub/invoicing": "dev-Plov94-branch"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -101,13 +106,13 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Projects\\src\\Providers\\ProjectServiceProvider",
-                "Modules\\Customers\\src\\Providers\\CustomerServiceProvider",
-                "Modules\\Inventory\\src\\Providers\\InventoryServiceProvider",
-                "Modules\\AuditLogs\\src\\Providers\\AuditLogServiceProvider",
-                "Modules\\Invoicing\\src\\Providers\\InvoicingServiceProvider",
-                "Modules\\FacebookPostingModule\\src\\Providers\\FacebookPosterServiceProvider",
-                "Modules\\CredentialsBank\\src\\Providers\\CredentialsBankServiceProvider"
+                "Modules\\Projects\\Providers\\ProjectServiceProvider",
+                "Modules\\Customers\\Providers\\CustomerServiceProvider",
+                "Modules\\Inventory\\Providers\\InventoryServiceProvider",
+                "Modules\\AuditLogs\\Providers\\AuditLogServiceProvider",
+                "Modules\\Invoicing\\Providers\\InvoicingServiceProvider",
+                "Modules\\FacebookPostingModule\\Providers\\FacebookPosterServiceProvider",
+                "Modules\\CredentialsBank\\Providers\\CredentialsBankServiceProvider"
 
             ]
         }

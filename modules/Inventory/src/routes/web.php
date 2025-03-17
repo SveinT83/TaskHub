@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Inventory\src\Http\Controllers\InventoryController;
+use Modules\Inventory\Http\Controllers\InventoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('inventory')->group(function () {

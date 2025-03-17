@@ -2,8 +2,8 @@
 
 namespace Modules\Projects\Http\Controllers;
 
-use Modules\Projects\src\Models\Project;
-use Modules\Customers\src\Models\Customer;
+use Modules\Projects\Models\Project;
+use Modules\Customers\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 

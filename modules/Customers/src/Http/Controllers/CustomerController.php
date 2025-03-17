@@ -2,7 +2,7 @@
 
 namespace Modules\Customers\Http\Controllers;
 
-use Modules\Customers\src\Models\Customer;
+use Modules\Customers\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 

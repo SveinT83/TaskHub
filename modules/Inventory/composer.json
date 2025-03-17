@@ -9,7 +9,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Inventory\\src\\Providers\\ProjectServiceProvider"
+                "Modules\\Inventory\\Providers\\ProjectServiceProvider"
             ]
         }
     }

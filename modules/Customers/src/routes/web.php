@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Customers\src\Http\Controllers\CustomerController;
+use Modules\Customers\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('customers')->group(function () {

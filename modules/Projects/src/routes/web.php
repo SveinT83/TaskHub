@@ -1,6 +1,6 @@
 <?php
 
-use Modules\Projects\src\Http\Controllers\ProjectController;
+use Modules\Projects\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('projects')->group(function () {
