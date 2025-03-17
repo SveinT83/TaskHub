@@ -8,7 +8,7 @@ class CustomerServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->loadViewsFrom(__DIR__ . '/../Views', 'customers');
+        $this->loadViewsFrom(__DIR__ . '/../Views/customers', 'customers');
         $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
     }
 }

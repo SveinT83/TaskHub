@@ -1,15 +1,15 @@
 {
-    "name": "modules/inventory",
+    "name": "taskhub/inventory",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Modules\\Projects\\": "src/"
+            "Modules\\Inventory\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\Inventory\\Providers\\ProjectServiceProvider"
+                "Modules\\Inventory\\Providers\\InventoryServiceProvider"
             ]
         }
     }

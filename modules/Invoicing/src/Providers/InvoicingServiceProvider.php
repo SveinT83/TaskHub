@@ -9,7 +9,7 @@ class InvoicingServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->loadViewsFrom(__DIR__ . '/../Views', 'invoicing');
+        $this->loadViewsFrom(__DIR__ . '/../Views/Invoices', 'invoices');
         $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
 
         $this->commands([

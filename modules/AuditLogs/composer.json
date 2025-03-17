@@ -1,15 +1,15 @@
 {
-    "name": "modules/auditlogs",
+    "name": "taskhub/auditlogs",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Modules\\Projects\\": "src/"
+            "Modules\\AuditLogs\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\AuditLogs\\Providers\\ProjectServiceProvider"
+                "Modules\\AuditLogs\\Providers\\AuditLogServiceProvider"
             ]
         }
     }

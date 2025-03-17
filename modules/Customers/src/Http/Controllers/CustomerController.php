@@ -5,17 +5,18 @@ namespace Modules\Customers\Http\Controllers;
 use Modules\Customers\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
     public function index()
     {
-        return view('customers.index', ['customers' => Customer::all()]);
+        return view('customers::index', ['customers' => Customer::all()]);
     }
 
     public function create()
     {
-        return view('customers.create');
+        return view('customers::create');
     }
 
     public function store(Request $request)

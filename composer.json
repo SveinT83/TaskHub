@@ -21,7 +21,8 @@
         "taskhub/customers": "dev-Plov94-branch",
         "taskhub/inventory": "dev-Plov94-branch",
         "taskhub/auditlogs": "dev-Plov94-branch",
-        "taskhub/invoicing": "dev-Plov94-branch"
+        "taskhub/invoicing": "dev-Plov94-branch",
+        "taskhub/core": "dev-Plov94-branch"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -56,6 +57,10 @@
         },
         {
             "type": "path",
+            "url": "./Modules/Core"
+        },
+        {
+            "type": "path",
             "url": "./Modules/FacebookPostingModule"
         },
         {
@@ -74,6 +79,7 @@
             "Modules\\Inventory\\": "Modules/Inventory/src/",
             "Modules\\AuditLogs\\": "Modules/AuditLogs/src/",
             "Modules\\Invoicing\\": "Modules/Invoicing/src/",
+            "Modules\\Core\\": "Modules/Core/src/",
             "Modules\\FacebookPostingModule\\": "Modules/FacebookPostingModule/src/",
             "Modules\\CredentialsBank\\": "Modules/CredentialsBank/src/"
         }
@@ -112,7 +118,8 @@
                 "Modules\\AuditLogs\\Providers\\AuditLogServiceProvider",
                 "Modules\\Invoicing\\Providers\\InvoicingServiceProvider",
                 "Modules\\FacebookPostingModule\\Providers\\FacebookPosterServiceProvider",
-                "Modules\\CredentialsBank\\Providers\\CredentialsBankServiceProvider"
+                "Modules\\CredentialsBank\\Providers\\CredentialsBankServiceProvider",
+                "Modules\\Core\\Providers\\CoreServiceProvider"
 
             ]
         }

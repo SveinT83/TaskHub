@@ -8,7 +8,7 @@ class AuditLogServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->loadViewsFrom(__DIR__ . '/../Views', 'auditlogs');
+        $this->loadViewsFrom(__DIR__ . '/../Views/audit_logs', 'auditlogs');
         $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
     }
 }
