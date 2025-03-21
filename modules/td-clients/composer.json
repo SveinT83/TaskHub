@@ -5,13 +5,13 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Taskhub\\TdClients\\": "src/"
+            "Taskhub\\tdclients\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Taskhub\\TdClients\\Providers\\TdClientsServiceProvider"
+                "Taskhub\\tdclients\\Providers\\TdClientsServiceProvider"
             ]
         }
     }

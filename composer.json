@@ -113,8 +113,8 @@
         "laravel": {
             "providers": [
                 "Modules\\Projects\\Providers\\ProjectServiceProvider",
-                "Modules\\Customers\\Providers\\CustomerServiceProvider",
-                "Modules\\Inventory\\Providers\\InventoryServiceProvider",
+                "Modules\\td-clients\\Providers\\TdClientsServiceProvider",
+                "Modules\\td-equipment\\Providers\\EquipmentServiceProvider",
                 "Modules\\AuditLogs\\Providers\\AuditLogServiceProvider",
                 "Modules\\Invoicing\\Providers\\InvoicingServiceProvider",
                 "Modules\\FacebookPostingModule\\Providers\\FacebookPosterServiceProvider",
