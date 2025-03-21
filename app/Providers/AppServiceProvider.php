@@ -30,17 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom([
-            database_path('migrations'),
-            base_path('modules/FacebookPostingModule/database/migrations'),
-            base_path('modules/CredentialsBank/database/migrations'),
-            base_path('Modules/td-clients/database/migrations'),
-            base_path('Modules/Projects/database/migrations'),
-            base_path('Modules/td-equipment/database/migrations'),
-            base_path('Modules/AuditLogs/database/migrations'),
-            base_path('Modules/Invoicing/database/migrations'),
-            base_path('Modules/Core/database/migrations'),
-        ]);
     }
 
 }

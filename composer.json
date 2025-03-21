@@ -75,8 +75,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Modules\\Projects\\": "Modules/Projects/src/",
-            "Modules\\TdClients\\": "Modules/td-clients/src/",
-            "Modules\\TdEquipment\\": "Modules/td-equipment/src/",
+            "Taskhub\\TdClients\\": "Modules/td-clients/src/",
+            "Taskhub\\Equipment\\": "Modules/td-equipment/src/",
             "Modules\\AuditLogs\\": "Modules/AuditLogs/src/",
             "Modules\\Invoicing\\": "Modules/Invoicing/src/",
             "Modules\\Core\\": "Modules/Core/src/",
@@ -113,8 +113,8 @@
         "laravel": {
             "providers": [
                 "Modules\\Projects\\Providers\\ProjectServiceProvider",
-                "Modules\\td-clients\\Providers\\TdClientsServiceProvider",
-                "Modules\\td-equipment\\Providers\\EquipmentServiceProvider",
+                "Taskhub\\TdClients\\Providers\\TdClientsServiceProvider",
+                "Taskhub\\Equipment\\Providers\\EquipmentServiceProvider",
                 "Modules\\AuditLogs\\Providers\\AuditLogServiceProvider",
                 "Modules\\Invoicing\\Providers\\InvoicingServiceProvider",
                 "Modules\\FacebookPostingModule\\Providers\\FacebookPosterServiceProvider",

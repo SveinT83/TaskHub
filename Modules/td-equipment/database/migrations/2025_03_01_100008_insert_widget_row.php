@@ -2,7 +2,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class SeedWidgetsAndPositions extends Migration
+class InsertWidgetRow extends Migration
 {
     /**
      * Run the migrations.

@@ -1,12 +1,12 @@
 <?php
 
-namespace Taskhub\TdEquipment\Http\Controllers;
+namespace Taskhub\Equipment\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Taskhub\TdEquipment\Models\Equipment;
-use Taskhub\TdEquipment\Models\EquipmentCategory;
-use Taskhub\TdEquipment\Models\ServiceHistory;
+use Taskhub\Equipment\Models\Equipment;
+use Taskhub\Equipment\Models\EquipmentCategory;
+use Taskhub\Equipment\Models\ServiceHistory;
 
 class ServiceController extends Controller
 {
