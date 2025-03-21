@@ -4,7 +4,8 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "TronderData\\Equipment\\": "src/"
+            "TronderData\\Equipment\\": "src/",
+            "Modules\\TdEquipment\\Database\\Migrations\\": "database/migrations/"
         }
     },
     "extra": {

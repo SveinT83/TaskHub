@@ -10,9 +10,12 @@
 namespace App\Http\Controllers\Admin\Integrations\Nextcloud;
 
 use App\Http\Controllers\Controller;
+use App\Models\Integration;
+use App\Models\Integrations\IntegrationCredential;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 // --------------------------------------------------------------------------------------------------
 // MODELL - MENU
@@ -38,6 +41,7 @@ class NextcloudController extends Controller
     protected $clientSecret;
     protected $redirectUri;
     protected $baseUrl;
+    protected $integration;
 
 
 
@@ -56,6 +60,7 @@ class NextcloudController extends Controller
         $this->clientSecret = config('services.nextcloud.client_secret');
         $this->redirectUri = config('services.nextcloud.redirect');
         $this->baseUrl = config('services.nextcloud.base_url');
+        $this->integration = Integration::where('name', 'Nextcloud')->first();
 
         // -------------------------------------------------
         // Share menus with all views
@@ -80,19 +85,34 @@ class NextcloudController extends Controller
     public function redirectToNextcloud()
     {
         // -------------------------------------------------
+        // Get the Nextcloud credentials from the database
+        // -------------------------------------------------
+        $credentials = IntegrationCredential::where('integration_id', $this->integration->id)->first();
+
+        // -------------------------------------------------
+        // Decrypt the client secret
+        // -------------------------------------------------
+        $clientSecret = Crypt::decryptString($credentials->clientsecret);
+
+        // -------------------------------------------------
         // Build query parameters for the Nextcloud OAuth2 authorization page.
         // -------------------------------------------------
-        $queryParams = http_build_query([
-            'client_id' => $this->clientId,
-            'redirect_uri' => $this->redirectUri,
+        $queryParams = [
+            'client_id' => $credentials->clientid,
+            'redirect_uri' => urldecode($credentials->redirecturi), // Ensure the redirect URI is not double encoded
             'response_type' => 'code',
-            'scope' => 'read write', // Juster etter behov
-        ]);
+            'scope' => 'read write', // Adjust as needed
+        ];
+
+        // -------------------------------------------------
+        // Manually build the query string to avoid double encoding
+        // -------------------------------------------------
+        $queryString = http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
 
         // -------------------------------------------------
         // Redirect the user to the Nextcloud OAuth2 authorization page.
         // -------------------------------------------------
-        return redirect("{$this->baseUrl}/apps/oauth2/authorize?$queryParams");
+        return redirect("{$credentials->baseurl}/apps/oauth2/authorize?$queryString");
     }
 
 
@@ -235,14 +255,22 @@ class NextcloudController extends Controller
         // -------------------------------------------------
         // Get the Nextcloud integration status
         // -------------------------------------------------
-        $setting = Setting::where('name', 'nextcloud_integration')->first();
-        $isNextcloudActive = $setting ? $setting->value == '1' : false;
+        $credentials = IntegrationCredential::where('integration_id', $this->integration->id)->first();
+        $isNextcloudActive = $this->integration->active;
+
+        // -------------------------------------------------
+        // Decrypt the client secret
+        // -------------------------------------------------
+        if ($credentials && isset($credentials->clientsecret)) {
+            $credentials->clientsecret = Crypt::decryptString($credentials->clientsecret);
+        }
 
         // -------------------------------------------------
         // Return the view with the Nextcloud integration settings
         // -------------------------------------------------
         return view('admin.integrations.nextcloud.show', [
             'isNextcloudActive' => $isNextcloudActive,
+            'credentials' => $credentials,
             'user' => Auth::user(),
         ]);
     }
@@ -259,7 +287,7 @@ class NextcloudController extends Controller
         // Get the Nextcloud integration setting
         // -------------------------------------------------
         $setting = Setting::firstOrCreate(['name' => 'nextcloud_integration'], [
-            'description' => 'Aktiver eller deaktiver Nextcloud-integrasjonen',
+            'description' => 'Activate or deactivate the Nextcloud integration',
             'type' => 'boolean',
             'value' => '0', // Standardverdi
         ]);
@@ -275,5 +303,27 @@ class NextcloudController extends Controller
         // Redirect the user back to the Nextcloud integration settings page with a success message
         // -------------------------------------------------
         return redirect()->back()->with('success', 'Nextcloud-integrasjonen er ' . ($setting->value == '1' ? 'aktivert' : 'deaktivert'));
+    }
+
+    // --------------------------------------------------------------------------------------------------
+    // FUNCTION - UPDATE CREDENTIALS
+    // --------------------------------------------------------------------------------------------------
+    // This function updates or creates new credentials in the integration_credentials table.
+    // --------------------------------------------------------------------------------------------------
+    public function updateCredentials(Request $request)
+    {
+        $credentials = [
+            'baseurl' => $request->input('baseurl'),
+            'clientid' => $request->input('clientid'),
+            'clientsecret' => Crypt::encryptString($request->input('clientsecret')),
+            'redirecturi' => $request->input('redirecturi')
+        ];
+
+        IntegrationCredential::updateOrCreate(
+            ['integration_id' => $this->integration->id],
+            $credentials
+        );
+
+        return redirect()->back()->with('success', 'Credentials updated successfully.');
     }
 }

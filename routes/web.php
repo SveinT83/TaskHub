@@ -174,7 +174,9 @@ Route::middleware('auth')->group(function () {
             // -------------------------------------------------
             // Integrations
             // -------------------------------------------------
-            Route::get('/', [IntegrationsController::class, 'index'])->name('admin.integrations');
+            Route::get('/', [IntegrationsController::class, 'index'])->name('admin.integrations.index');
+            Route::post('/{id}/activate', [IntegrationsController::class, 'activate'])->name('admin.integrations.activate');
+            Route::post('/{id}/deactivate', [IntegrationsController::class, 'deactivate'])->name('admin.integrations.deactivate');
 
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
             // ROUTES NEXTCLOUD INTRGRATIONS
@@ -187,6 +189,7 @@ Route::middleware('auth')->group(function () {
                 // -------------------------------------------------
                 Route::get('/', [NextcloudController::class, 'showSettings'])->name('nextcloud.settings');
                 Route::post('/toggle', [NextcloudController::class, 'toggleNextcloudIntegration'])->name('nextcloud.toggle');
+                Route::post('/update-credentials', [NextcloudController::class, 'updateCredentials'])->name('nextcloud.updateCredentials');
 
             });
         });

@@ -133,21 +133,6 @@ return new class extends Migration {
                 'updated_at' => now(),
             ],
             [
-                // -------------------------------------------------
-                // Nextcloud menu item
-                // -------------------------------------------------
-                'id' => 5,
-                'title' => 'Nextcloud',
-                'url' => '/admin/integration/nextcloud',
-                'menu_id' => 1,
-                'parent_id' => 4, //Child of Integrations
-                'icon' => 'bi bi-cloud',
-                'is_parent' => false,
-                'order' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
 
                 // -------------------------------------------------
                 // Configurations menu item
