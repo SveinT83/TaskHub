@@ -1,0 +1,18 @@
+{
+    "name": "taskhub/td-clients",
+    "description": "A module to manage clients, addresses, and users",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Taskhub\\TdClients\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Taskhub\\TdClients\\Providers\\TdClientsServiceProvider"
+            ]
+        }
+    }
+}

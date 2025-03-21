@@ -9,12 +9,11 @@ return new class extends Migration {
     {
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('entity_type');
-            $table->integer('entity_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('action');
-            $table->json('old_value')->nullable();
-            $table->json('new_value')->nullable();
+            $table->string('model_type')->nullable();
+            $table->bigInteger('model_id')->nullable();
+            $table->json('changes')->nullable();
             $table->timestamps();
         });
     }

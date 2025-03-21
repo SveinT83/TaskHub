@@ -7,7 +7,7 @@ use Modules\Customers\Models\Customer;
 
 class Project extends Model
 {
-    protected $fillable = ['project_number', 'customer_id', 'status'];
+    protected $fillable = ['project_number', 'customer_id', 'status', 'name', 'description'];
 
     public function customer()
     {

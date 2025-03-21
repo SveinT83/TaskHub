@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Core\Http\Controllers\CoreController;
 
-Route::get('/forbidden', function () {
-    return view('core::errors.403');
-})->name('error.403');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [CoreController::class, 'index'])->name('core.dashboard');
+});

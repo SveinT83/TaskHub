@@ -18,8 +18,8 @@
         "taskhub/facebook-posting-module": "dev-Plov94-branch",
         "taskhub/credentials-bank": "dev-Plov94-branch",
         "taskhub/projects": "dev-Plov94-branch",
-        "taskhub/customers": "dev-Plov94-branch",
-        "taskhub/inventory": "dev-Plov94-branch",
+        "taskhub/td-clients": "dev-Plov94-branch",
+        "taskhub/td-equipment": "dev-Plov94-branch",
         "taskhub/auditlogs": "dev-Plov94-branch",
         "taskhub/invoicing": "dev-Plov94-branch",
         "taskhub/core": "dev-Plov94-branch"
@@ -41,11 +41,11 @@
         },
         {
             "type": "path",
-            "url": "./Modules/Customers"
+            "url": "./Modules/td-equipment"
         },
         {
             "type": "path",
-            "url": "./Modules/Inventory"
+            "url": "./Modules/td-client"
         },
         {
             "type": "path",
@@ -75,8 +75,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Modules\\Projects\\": "Modules/Projects/src/",
-            "Modules\\Customers\\": "Modules/Customers/src/",
-            "Modules\\Inventory\\": "Modules/Inventory/src/",
+            "Modules\\Customers\\": "Modules/td-clients/src/",
+            "Modules\\Inventory\\": "Modules/td-equipment/src/",
             "Modules\\AuditLogs\\": "Modules/AuditLogs/src/",
             "Modules\\Invoicing\\": "Modules/Invoicing/src/",
             "Modules\\Core\\": "Modules/Core/src/",

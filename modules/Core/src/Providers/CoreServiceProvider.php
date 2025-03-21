@@ -6,13 +6,18 @@ use Illuminate\Support\ServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
 {
-    public function register()
-    {
-        $this->loadViewsFrom(__DIR__.'/../Views', 'core');
-    }
-
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
+        $this->loadViewsFrom(__DIR__ . '/../Views', 'core');
+        $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
+    
+    
+        // Register Middleware
+        $this->app['router']->aliasMiddleware('role', EnsureUserHasRole::class);
+    }
+
+    public function register()
+    {
+        // Register core services
     }
 }

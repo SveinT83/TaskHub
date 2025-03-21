@@ -9,8 +9,10 @@ return new class extends Migration {
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('project_number')->unique(); // ✅ Ensure column exists
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->string('project_number')->unique();
+            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->text('description')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
         });

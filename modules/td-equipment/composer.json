@@ -1,0 +1,18 @@
+{
+    "name": "taskhub/td-equipment",
+    "description": "A module for managing equipment",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Taskhub\\Equipment\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Taskhub\\Equipment\\Providers\\EquipmentServiceProvider"
+            ]
+        }
+    },
+    "require": {}
+}
