@@ -1,13 +1,13 @@
 <?php
-namespace TronDerdata\TdClients\Http\Controllers;
+namespace Taskhub\TdClients\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role; // Import for roller
 use Illuminate\Support\Facades\Auth; // Import for autentisering (valgfritt)
 
-use TronderData\TdClients\Models\Client;
-use TronderData\TdClients\Models\ClientSite;
-use TronderData\TdClients\Models\ClientUser;
+use Taskhub\TdClients\Models\Client;
+use Taskhub\TdClients\Models\ClientSite;
+use Taskhub\TdClients\Models\ClientUser;
 use Illuminate\Support\Facades\Gate;
 
 class ClientConfigController extends Controller

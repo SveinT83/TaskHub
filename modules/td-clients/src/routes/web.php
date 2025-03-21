@@ -1,12 +1,12 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use tronderdata\TdClients\Http\Controllers\ClientController;
-use tronderdata\TdClients\Http\Controllers\ClientSiteController;
-use tronderdata\TdClients\Http\Controllers\ClientUserController;
-use tronderdata\TdClients\Http\Controllers\ClientConfigController;
-use tronderdata\TdClients\Http\Controllers\Api\ClientApiController;
-use tronderdata\TdClients\Http\Controllers\Api\ClientSiteApiController;
-use tronderdata\TdClients\Http\Controllers\Api\ClientUserApiController;
+use Taskhub\TdClients\Http\Controllers\ClientController;
+use Taskhub\TdClients\Http\Controllers\ClientSiteController;
+use Taskhub\TdClients\Http\Controllers\ClientUserController;
+use Taskhub\TdClients\Http\Controllers\ClientConfigController;
+use Taskhub\TdClients\Http\Controllers\Api\ClientApiController;
+use Taskhub\TdClients\Http\Controllers\Api\ClientSiteApiController;
+use Taskhub\TdClients\Http\Controllers\Api\ClientUserApiController;
 
 // Ruter for klientmodulen
 Route::middleware(['web', 'auth'])->group(function () {

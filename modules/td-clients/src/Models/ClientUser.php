@@ -1,5 +1,5 @@
 <?php
-namespace tronderdata\TdClients\Models;
+namespace Taskhub\TdClients\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

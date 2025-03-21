@@ -1,9 +1,9 @@
 <?php
 
-namespace tronderdata\TdClients\Http\Controllers\Api;
+namespace Taskhub\TdClients\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use tronderdata\TdClients\Models\Client;
+use Taskhub\TdClients\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use TronderData\Equipment\Http\Controllers\EquipmentController;
-use TronderData\Equipment\Http\Controllers\ServiceController;
-use TronderData\Equipment\Http\Controllers\WidgetController;
+use Taskhub\Equipment\Http\Controllers\EquipmentController;
+use Taskhub\Equipment\Http\Controllers\ServiceController;
+use Taskhub\Equipment\Http\Controllers\WidgetController;
 
 Route::middleware(['web', 'auth'])->group(function () {
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace TronderData\Equipment\Http\Controllers;
+namespace Taskhub\Equipment\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use TronderData\Equipment\Models\Equipment;
-use TronderData\Equipment\Models\EquipmentCategory;
-use TronderData\Equipment\Models\ServiceHistory;
-use TronderData\Equipment\Models\Vendors;
+use Taskhub\Equipment\Models\Equipment;
+use Taskhub\Equipment\Models\EquipmentCategory;
+use Taskhub\Equipment\Models\ServiceHistory;
+use Taskhub\Equipment\Models\Vendors;
 
 
 class EquipmentController extends Controller

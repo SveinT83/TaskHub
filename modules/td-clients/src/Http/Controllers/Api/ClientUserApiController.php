@@ -1,10 +1,10 @@
 <?php
-namespace tronderdata\TdClients\Http\Controllers\Api;
+namespace Taskhub\TdClients\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use tronderdata\TdClients\Models\ClientSite;
-use tronderdata\TdClients\Models\ClientUser;
+use Taskhub\TdClients\Models\ClientSite;
+use Taskhub\TdClients\Models\ClientUser;
 use Illuminate\Http\JsonResponse;
 
 class ClientUserApiController extends Controller

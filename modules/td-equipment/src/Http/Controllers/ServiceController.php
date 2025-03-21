@@ -1,12 +1,12 @@
 <?php
 
-namespace TronderData\Equipment\Http\Controllers;
+namespace Taskhub\TdEquipment\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use TronderData\Equipment\Models\Equipment;
-use TronderData\Equipment\Models\EquipmentCategory;
-use TronderData\Equipment\Models\ServiceHistory;
+use Taskhub\TdEquipment\Models\Equipment;
+use Taskhub\TdEquipment\Models\EquipmentCategory;
+use Taskhub\TdEquipment\Models\ServiceHistory;
 
 class ServiceController extends Controller
 {

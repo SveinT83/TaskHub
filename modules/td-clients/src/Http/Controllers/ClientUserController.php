@@ -1,12 +1,12 @@
 <?php
-namespace TronDerdata\TdClients\Http\Controllers;
+namespace Taskhub\TdClients\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use TronderData\TdClients\Models\Client;
-use TronderData\TdClients\Models\ClientSite;
+use Taskhub\TdClients\Models\Client;
+use Taskhub\TdClients\Models\ClientSite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use tronderdata\TdClients\Models\ClientUser;
+use Taskhub\TdClients\Models\ClientUser;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ClientUserController extends Controller

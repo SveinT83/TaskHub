@@ -1,6 +1,6 @@
 <?php
 
-namespace TronderData\Equipment\Providers;
+namespace Taskhub\Equipment\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;

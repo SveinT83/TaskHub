@@ -1,8 +1,8 @@
 <?php
-namespace TronderData\Equipment\Http\Controllers;
+namespace Taskhub\Equipment\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use TronderData\Equipment\Models\Equipment;
+use Taskhub\Equipment\Models\Equipment;
 use Carbon\Carbon;
 
 class WidgetController extends Controller
