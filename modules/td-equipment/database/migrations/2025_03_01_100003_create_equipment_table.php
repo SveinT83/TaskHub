@@ -17,6 +17,7 @@ class CreateEquipmentTable extends Migration
             Schema::create('equipment', function (Blueprint $table) {
                 $table->id(); // Primærnøkkel
                 $table->string('name'); // Navn på utstyret
+                $table->string('internal_number')->nullable(); // Intern nummer på utstyret
                 $table->unsignedBigInteger('vendor_id'); // Supplier (FK til suppliers)
                 $table->unsignedBigInteger('category_id'); // Kategori (FK til categories)
                 $table->string('serial_number')->unique(); // Serienummer

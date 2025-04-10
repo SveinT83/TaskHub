@@ -30,6 +30,9 @@
                 <p><strong>Kategori:</strong> {{ $equipment->category->name ?? 'Ingen kategori' }}</p>
             </div>
             <div class="col">
+                <p><strong>Intern nummer:</strong> {{ $equipment->internal_number }}</p>
+            </div>
+            <div class="col">
                 <p><strong>Serienummer:</strong> {{ $equipment->serial_number }}</p>
             </div>
             <div class="col">

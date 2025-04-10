@@ -89,6 +89,7 @@ class EquipmentController extends Controller
         // -------------------------------------------------
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'internal_number' => 'nullable|string|max:255',
             'vendor_id' => 'min:1|max:20',
             'category_id' => 'required|min:1|max:5',
             'serial_number' => 'string|unique:equipment,serial_number',
@@ -151,6 +152,7 @@ class EquipmentController extends Controller
         // -------------------------------------------------
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'internal_number' => 'nullable|string|max:255',
             'vendor_id' => 'min:1|max:20',
             'category_id' => 'required|min:1|max:20',
             'serial_number' => 'string',

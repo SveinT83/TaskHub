@@ -36,9 +36,15 @@
             <div class="row mt-3">
 
                 <!-- Name -->
-                <div class="col-md-7 md-3">
+                <div class="col-md-5 md-3">
                     <label class="form-label">Navn</label>
                     <input type="text" name="name" class="form-control" required>
+                </div>
+
+                <!-- Intern number -->
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Internnummer</label>
+                    <input type="text" name="internal_number" value="{{ $equipment->internal_number ?? '' }}" class="form-control">
                 </div>
 
                 <!-- SN -->

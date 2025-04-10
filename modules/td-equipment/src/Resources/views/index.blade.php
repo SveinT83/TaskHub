@@ -35,6 +35,11 @@
                             </a>
                         </th>
                         <th>
+                            <a href="{{ route('equipment.index', ['sort_field' => 'internal_number', 'sort_order' => $sortField == 'internal_number' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
+                                Intern nummer
+                            </a>
+                        </th>
+                        <th>
                             <a href="{{ route('equipment.index', ['sort_field' => 'name', 'sort_order' => $sortField == 'name' && $sortOrder == 'asc' ? 'desc' : 'asc']) }}">
                                 Navn
                             </a>
@@ -61,6 +66,7 @@
                     @foreach ($equipment as $item)
                     <tr>
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->internal_number }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->category->name ?? 'Ingen kategori' }}</td>
                         <td>{{ $item->serial_number }}</td>

@@ -38,6 +38,12 @@
                     <input type="text" name="name" value="{{ $equipment->name }}" class="form-control" required>
                 </div>
 
+                <!-- Intern number -->
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Internnummer</label>
+                    <input type="text" name="internal_number" value="{{ $equipment->internal_number ?? '' }}" class="form-control">
+                </div>
+
                 <!-- SN -->
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Serienummer</label>

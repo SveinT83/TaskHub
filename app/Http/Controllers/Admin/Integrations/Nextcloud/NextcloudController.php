@@ -99,7 +99,7 @@ class NextcloudController extends Controller
         // -------------------------------------------------
         $queryParams = [
             'client_id' => $credentials->clientid,
-            'redirect_uri' => urldecode($credentials->redirecturi), // Ensure the redirect URI is not double encoded
+            'redirect_uri' => $credentials->redirecturi, // Ensure the redirect URI is not double encoded
             'response_type' => 'code',
             'scope' => 'read write', // Adjust as needed
         ];
@@ -124,83 +124,60 @@ class NextcloudController extends Controller
     // --------------------------------------------------------------------------------------------------
     public function handleNextcloudCallback(Request $request)
     {
-
-        // -------------------------------------------------
-        // Try to get the access token
-        // -------------------------------------------------
         try {
-            
-            // -------------------------------------------------
-            // Create a new Guzzle HTTP client
-            // -------------------------------------------------
-            $client = new \GuzzleHttp\Client();
+            // Hent Nextcloud credentials fra databasen
+            $credentials = IntegrationCredential::where('integration_id', $this->integration->id)->get()->pluck('value', 'key')->toArray();
 
-            // -------------------------------------------------
-            // Get the access token from Nextcloud
-            // -------------------------------------------------
-            $response = $client->post(config('services.nextcloud.base_url') . '/apps/oauth2/api/v1/token', [
+            // Dekrypter client secret
+            $clientSecret = Crypt::decryptString($credentials['clientsecret']);
+
+            // Opprett en ny Guzzle HTTP-klient
+            $client = new Client();
+
+            // Hent access token fra Nextcloud
+            $response = $client->post("{$credentials['baseurl']}/apps/oauth2/api/v1/token", [
                 'form_params' => [
-                    'client_id' => config('services.nextcloud.client_id'),
-                    'client_secret' => config('services.nextcloud.client_secret'),
+                    'client_id' => $credentials['clientid'],
+                    'client_secret' => $clientSecret,
                     'grant_type' => 'authorization_code',
                     'code' => $request->get('code'),
-                    'redirect_uri' => config('services.nextcloud.redirect'),
+                    'redirect_uri' => $credentials['redirecturi'],
                 ],
             ]);
 
-            // -------------------------------------------------
-            // Decode the response
-            // -------------------------------------------------
+            // Dekod responsen
             $data = json_decode($response->getBody()->getContents(), true);
 
-            // -------------------------------------------------
-            // Check if the access token is returned
-            // -------------------------------------------------
+            // Sjekk om access token er returnert
             if (!isset($data['access_token'])) {
                 throw new \Exception('Ingen tilgangstoken ble returnert fra Nextcloud.');
             }
 
-            // -------------------------------------------------
-            // Get the access token
-            // -------------------------------------------------
+            // Hent access token
             $accessToken = $data['access_token'];
 
-            // -------------------------------------------------
-            // Get user data from Nextcloud
-            // -------------------------------------------------
-            $userResponse = $client->get(config('services.nextcloud.base_url') . '/ocs/v2.php/cloud/user', [
+            // Hent brukerdata fra Nextcloud
+            $userResponse = $client->get("{$credentials['baseurl']}/ocs/v2.php/cloud/user", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $accessToken,
                     'OCS-APIRequest' => 'true',
                 ],
             ]);
 
-            // -------------------------------------------------
-            // Decode the user data
-            // -------------------------------------------------
+            // Dekod brukerdata
             $userData = simplexml_load_string($userResponse->getBody()->getContents(), "SimpleXMLElement", LIBXML_NOCDATA);
             $userData = json_decode(json_encode($userData), true);
 
-            // -------------------------------------------------
-            // Check if the user ID is returned
-            // -------------------------------------------------
+            // Sjekk om bruker-ID er returnert
             if (!isset($userData['data']['id'])) {
                 throw new \Exception('Feil under henting av brukerdata fra Nextcloud.');
             }
 
-            // -------------------------------------------------
-            // Check if the user email is returned
-            // -------------------------------------------------
+            // Sjekk om brukeren allerede eksisterer
             $existingUser = \App\Models\User::where('email', $userData['data']['email'])->first();
 
-            // -------------------------------------------------
-            // Check if the user exists
-            // -------------------------------------------------
+            // Hvis brukeren ikke eksisterer, opprett en ny bruker
             if (!$existingUser) {
-                
-                // -------------------------------------------------
-                // If the user does not exist, create a new user
-                // -------------------------------------------------
                 $existingUser = \App\Models\User::create([
                     'name' => $userData['data']['displayname'],
                     'email' => $userData['data']['email'],
@@ -209,35 +186,18 @@ class NextcloudController extends Controller
                 ]);
             }
 
-            // -------------------------------------------------
-            // Log in the user
-            // -------------------------------------------------
+            // Logg inn brukeren
             Auth::login($existingUser);
 
-            // -------------------------------------------------
-            // Update the user's Nextcloud token
-            // -------------------------------------------------
+            // Oppdater brukerens Nextcloud token
             $existingUser->nextcloud_token = $accessToken;
             $existingUser->save();
 
-            // -------------------------------------------------
-            // Create an API token for sanctum
-            // -------------------------------------------------
+            // Opprett en API token for sanctum
             $apiToken = $existingUser->createToken('API Token')->plainTextToken;
 
-            // -------------------------------------------------
-            // return redirect()->route('dashboard')->with('success', 'Du er logget inn via Nextcloud!');
-            // -------------------------------------------------
             return redirect()->route('dashboard')->with('success', 'Du er logget inn via Nextcloud!');
-
-        // -------------------------------------------------
-        // Catch any exceptions
-        // -------------------------------------------------
         } catch (\Exception $e) {
-
-            // -------------------------------------------------
-            // return redirect()->route('login')->with('error', 'Det oppstod en feil under Nextcloud-innloggingen: ' . $e->getMessage());
-            // -------------------------------------------------
             return redirect()->route('login')->with('error', 'Det oppstod en feil under Nextcloud-innloggingen: ' . $e->getMessage());
         }
     }
