@@ -14,8 +14,8 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "spatie/laravel-permission": "^6.9",
-        "tronderdata/categories": "dev-Dev",
-        "tronderdata/kbartickles": "dev-Dev",
+        "tronderdata/td-categories": "dev-Dev",
+        "tronderdata/td-kbartickles": "dev-Dev",
         "tronderdata/td-clients": "dev-Dev",
         "tronderdata/td-task": "dev-Dev",
         "tronderdata/td-tickets": "dev-Dev",
@@ -46,11 +46,11 @@
         },
         {
             "type": "path",
-            "url": "./modules/kbartickles"
+            "url": "./modules/td-kbartickles"
         },
         {
             "type": "path",
-            "url": "./modules/categories"
+            "url": "./modules/td-categories"
         },
         {
             "type": "path",
@@ -68,8 +68,8 @@
             "Database\\Seeders\\": "database/seeders/",
             "Modules\\TdClients\\": "app/Modules/TdClients/",
             "tronderdata\\tdTask\\": "modules/td-task/src/",
-            "tronderdata\\kbartickles\\": "modules/kbartickles/src/",
-            "TronderData\\Categories\\": "modules/categories/src/",
+            "tronderdata\\kbartickles\\": "modules/td-kbartickles/src/",
+            "TronderData\\Categories\\": "modules/td-categories/src/",
             "TronderData\\TdClients\\": "modules/td-clients/src/",
             "TronderData\\Equipment\\": "modules/td-equipment/src/"
         }
