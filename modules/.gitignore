@@ -1,0 +1,6 @@
+# Ignorer alt som default - moduler har egne git repositories
+*
+
+# Men behold denne instruksjonsfilen
+!modules_README.md
+!.gitignore
