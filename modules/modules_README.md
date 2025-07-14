@@ -1,33 +1,33 @@
-# TaskHub Modules - Setup og Utvikling Guide
+# TaskHub Modules - Setup and Development Guide
 
-Dette er en komplett guide for å jobbe med TaskHub-moduler som separate Git-repositories.
+This is a comprehensive guide for working with TaskHub modules as separate Git repositories.
 
-## 📋 Oversikt
+## 📋 Overview
 
-TaskHub er bygget med en modulær arkitektur der hver funksjonalitet er organisert som separate Composer-pakker med egne Git-repositories. Dette gir fleksibilitet, gjenbruk og uavhengig utvikling.
+TaskHub is built with a modular architecture where each functionality is organized as separate Composer packages with their own Git repositories. This provides flexibility, reusability, and independent development.
 
-## 🏗️ Eksisterende Moduler
+## 🏗️ Existing Modules
 
-TaskHub består for øyeblikket av følgende moduler:
+TaskHub currently consists of the following modules:
 
-| Modul | Beskrivelse | Namespace |
-|-------|-------------|-----------|
-| **td-categories** | Kategori-håndtering | `TronderData\Categories` |
-| **td-clients** | Klient-administrasjon | `TronderData\TdClients` |
-| **td-equipment** | Utstyr og inventar | `TronderData\Equipment` |
-| **td-kbartickles** | Kunnskapsbase artikler | `tronderdata\kbartickles` |
-| **td-ocab** | OCAB integrasjon | `TronderData\TdOcab` |
-| **td-task** | Oppgave-håndtering | `tronderdata\tdTask` |
-| **td-tickets** | Ticket-system | `tronderdata\TdTickets` |
+| Module | Description | Namespace |
+|--------|-------------|-----------|
+| **td-categories** | Category management | `TronderData\Categories` |
+| **td-clients** | Client administration | `TronderData\TdClients` |
+| **td-equipment** | Equipment and inventory | `TronderData\Equipment` |
+| **td-kbartickles** | Knowledge base articles | `tronderdata\kbartickles` |
+| **td-ocab** | OCAB integration | `TronderData\TdOcab` |
+| **td-task** | Task management | `tronderdata\tdTask` |
+| **td-tickets** | Ticket system | `tronderdata\TdTickets` |
 
-## 🚀 Setup for Utvikling
+## 🚀 Development Setup
 
-### 1. Klon alle moduler til denne mappen
+### 1. Clone all modules to this directory
 
 ```bash
 cd /var/Projects/TaskHub/Dev/modules
 
-# Klon hver modul (erstatt med faktiske repository URLs når de er opprettet)
+# Clone each module (replace with actual repository URLs when created)
 git clone git@github.com:TronderData/td-categories.git
 git clone git@github.com:TronderData/td-clients.git
 git clone git@github.com:TronderData/td-equipment.git
@@ -37,7 +37,7 @@ git clone git@github.com:TronderData/td-task.git
 git clone git@github.com:TronderData/td-tickets.git
 ```
 
-### 2. Installer avhengigheter
+### 2. Install dependencies
 
 ```bash
 cd /var/Projects/TaskHub/Dev
@@ -45,21 +45,21 @@ composer install
 php artisan package:discover
 ```
 
-### 3. Kjør database-migrasjoner
+### 3. Run database migrations
 
 ```bash
 php artisan migrate
 ```
 
-## 📁 Modul Struktur
+## 📁 Module Structure
 
-Hver modul skal følge denne standardstrukturen:
+Each module should follow this standard structure:
 
 ```
 td-example/
-├── composer.json              # Pakke-konfigurasjon
-├── README.md                  # Modul-dokumentasjon
-├── src/                       # Kildekode
+├── composer.json              # Package configuration
+├── README.md                  # Module documentation
+├── src/                       # Source code
 │   ├── Providers/            
 │   │   └── ExampleServiceProvider.php
 │   ├── Http/
@@ -79,22 +79,22 @@ td-example/
     └── Unit/
 ```
 
-## 📦 Opprette en Ny Modul
+## 📦 Creating a New Module
 
-### 1. Opprett modul-mappen og struktur
+### 1. Create module directory and structure
 
 ```bash
 cd /var/Projects/TaskHub/Dev/modules
 mkdir td-example
 cd td-example
 
-# Opprett mappestruktur
+# Create directory structure
 mkdir -p src/{Providers,Http/Controllers,Models,resources/views,routes}
 mkdir -p database/migrations
 mkdir -p tests/{Feature,Unit}
 ```
 
-### 2. Opprett composer.json for modulen
+### 2. Create composer.json for the module
 
 ```json
 {
@@ -126,7 +126,7 @@ mkdir -p tests/{Feature,Unit}
 }
 ```
 
-### 3. Opprett ServiceProvider
+### 3. Create ServiceProvider
 
 ```php
 <?php
@@ -139,16 +139,16 @@ class TdExampleServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        // Last ruter
+        // Load routes
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         
-        // Last views
+        // Load views
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'tdexample');
         
-        // Last migrasjoner
+        // Load migrations
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
         
-        // Registrer meny-elementer
+        // Register menu items
         Menu::register(
             menu: 'main',
             title: 'Examples',
@@ -161,12 +161,12 @@ class TdExampleServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        // Registrer tjenester her
+        // Register services here
     }
 }
 ```
 
-### 4. Opprett Controller
+### 4. Create Controller
 
 ```php
 <?php
@@ -189,7 +189,7 @@ class ExampleController extends Controller
 
     public function store(Request $request)
     {
-        // Lagre logikk
+        // Store logic
     }
 
     public function show($id)
@@ -204,17 +204,17 @@ class ExampleController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Oppdater logikk
+        // Update logic
     }
 
     public function destroy($id)
     {
-        // Slett logikk
+        // Delete logic
     }
 }
 ```
 
-### 5. Opprett ruter
+### 5. Create routes
 
 ```php
 <?php
@@ -227,11 +227,11 @@ Route::middleware(['web', 'auth'])->group(function () {
 });
 ```
 
-## 🔧 Registrere Modul i TaskHub
+## 🔧 Register Module in TaskHub
 
-### 1. Legg til i root composer.json
+### 1. Add to root composer.json
 
-Rediger `/var/Projects/TaskHub/Dev/composer.json` og legg til:
+Edit `/var/Projects/TaskHub/Dev/composer.json` and add:
 
 ```json
 {
@@ -259,7 +259,7 @@ Rediger `/var/Projects/TaskHub/Dev/composer.json` og legg til:
 }
 ```
 
-### 2. Oppdater autoloader
+### 2. Update autoloader
 
 ```bash
 cd /var/Projects/TaskHub/Dev
@@ -268,119 +268,119 @@ php artisan package:discover
 php artisan config:clear
 ```
 
-## 🔄 Arbeidsflyt for Utvikling
+## 🔄 Development Workflow
 
-### Daglig utvikling
+### Daily development
 
-1. **Jobb på moduler**:
+1. **Work on modules**:
    ```bash
    cd modules/td-example
-   git checkout -b feature/ny-funksjon
-   # Gjør endringer
+   git checkout -b feature/new-functionality
+   # Make changes
    git add .
-   git commit -m "Legg til ny funksjon"
-   git push origin feature/ny-funksjon
+   git commit -m "Add new functionality"
+   git push origin feature/new-functionality
    ```
 
-2. **Test i TaskHub**:
+2. **Test in TaskHub**:
    ```bash
    cd /var/Projects/TaskHub/Dev
    php artisan serve
    ```
 
-3. **Commit TaskHub endringer**:
+3. **Commit TaskHub changes**:
    ```bash
    cd /var/Projects/TaskHub/Dev
    git add .
-   git commit -m "Oppdater for ny modul-funksjon"
+   git commit -m "Update for new module functionality"
    ```
 
-### Versjonering
+### Versioning
 
-- **Moduler**: Bruk semantisk versjonering (v1.0.0, v1.1.0, etc.)
-- **TaskHub Core**: Oppdater modul-versjoner i composer.json når nødvendig
+- **Modules**: Use semantic versioning (v1.0.0, v1.1.0, etc.)
+- **TaskHub Core**: Update module versions in composer.json when necessary
 
 ## 🧪 Testing
 
-### Test individuelle moduler
+### Test individual modules
 
 ```bash
 cd modules/td-example
 ./vendor/bin/phpunit
 ```
 
-### Test hele TaskHub
+### Test entire TaskHub
 
 ```bash
 cd /var/Projects/TaskHub/Dev
 php artisan test
 ```
 
-## 📋 Namespace Konvensjoner
+## 📋 Namespace Conventions
 
-- **Hovednamespace**: `TronderData\[ModulNavn]`
-- **Eksempel**: `TronderData\TdClients`, `TronderData\Equipment`
-- **Eldre moduler**: Noen bruker `tronderdata\[modulnavn]` (lowercase)
-- **Konsistens**: Nye moduler skal bruke `TronderData\[ModulNavn]`
+- **Main namespace**: `TronderData\[ModuleName]`
+- **Example**: `TronderData\TdClients`, `TronderData\Equipment`
+- **Legacy modules**: Some use `tronderdata\[modulename]` (lowercase)
+- **Consistency**: New modules should use `TronderData\[ModuleName]`
 
 ## 🔍 Debugging
 
-### Vanlige problemer
+### Common issues
 
-1. **"Class not found" feil**:
+1. **"Class not found" errors**:
    ```bash
    composer dump-autoload
    php artisan config:clear
    ```
 
-2. **Ruter ikke funnet**:
+2. **Routes not found**:
    ```bash
    php artisan route:clear
-   php artisan route:list --name=modulnavn
+   php artisan route:list --name=modulename
    ```
 
-3. **Views ikke funnet**:
-   - Sjekk at views er registrert i ServiceProvider
-   - Bruk riktig namespace i blade: `@extends('tdexample::layout')`
+3. **Views not found**:
+   - Check that views are registered in ServiceProvider
+   - Use correct namespace in blade: `@extends('tdexample::layout')`
 
 ## 💡 Best Practices
 
-### Modul Design
+### Module Design
 
-- ✅ Hold moduler små og fokuserte
-- ✅ Bruk konsistente namespace-konvensjoner  
-- ✅ Inkluder comprehensive tests
-- ✅ Dokumenter API og funksjonalitet
-- ✅ Følg Laravel-konvensjoner
+- ✅ Keep modules small and focused
+- ✅ Use consistent namespace conventions  
+- ✅ Include comprehensive tests
+- ✅ Document API and functionality
+- ✅ Follow Laravel conventions
 
 ### Git Workflow
 
-- ✅ En feature per branch
+- ✅ One feature per branch
 - ✅ Meaningful commit messages
-- ✅ Code review før merge
-- ✅ Tag releases med versjonsnummer
+- ✅ Code review before merge
+- ✅ Tag releases with version number
 
 ### Database
 
-- ✅ Bruk beskrivende migration-navn
-- ✅ Inkluder `down()` metoder
-- ✅ Test migrasjoner both up og down
+- ✅ Use descriptive migration names
+- ✅ Include `down()` methods
+- ✅ Test migrations both up and down
 
 ## 📞 Support
 
-- **Dokumentasjon**: Se TaskHub hovedprosjekt README
-- **Issues**: Rapporter bugs i respektive modul-repositories
-- **Diskusjoner**: TaskHub team Slack/Discord
-- **Code Review**: Pull requests requires approval
+- **Documentation**: See TaskHub main project README
+- **Issues**: Report bugs in respective module repositories
+- **Discussions**: TaskHub team Slack/Discord
+- **Code Review**: Pull requests require approval
 
 ---
 
-## 📄 Eksempel Repository URLs
+## 📄 Example Repository URLs
 
-Når modulene er satt opp som separate repositories:
+When modules are set up as separate repositories:
 
 ```bash
-# TrønderData organisasjon på GitHub
+# TrønderData organization on GitHub
 git@github.com:TronderData/td-categories.git
 git@github.com:TronderData/td-clients.git
 git@github.com:TronderData/td-equipment.git
