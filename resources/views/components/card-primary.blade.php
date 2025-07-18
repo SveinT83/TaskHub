@@ -1,4 +1,4 @@
-<div class="card text-bg-primary">
+<div class="card mt-3 text-bg-primary">
     <div class="card-header">
         {{ $title }}
     </div>

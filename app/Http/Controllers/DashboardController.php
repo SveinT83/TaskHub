@@ -9,32 +9,82 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Widgets\WidgetPosition;
+use App\Models\WidgetPosition;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Hent widgets for dashboardet
-        $widgets = WidgetPosition::where('route', '/dashboard')
+        $route = $request->route()->getName() ?? 'dashboard';
+        
+        // Hent aktive widgets for denne ruten, gruppert etter posisjon
+        $widgetPositions = WidgetPosition::where('route', $route)
+            ->where('is_active', true)
             ->with('widget')
-            ->get();
+            ->orderBy('position_key')
+            ->orderBy('sort_order')
+            ->get()
+            ->groupBy('position_key');
 
-        // Debugging: Skriv ut widget data
-        if ($widgets->isEmpty()) {
-            //dd('No widgets found for route: /dashboard', $widgets);
+        // Render widgets med data
+        $renderedWidgets = [];
+        foreach ($widgetPositions as $position => $widgets) {
+            $renderedWidgets[$position] = [];
+            foreach ($widgets as $widgetPosition) {
+                try {
+                    $renderedWidgets[$position][] = [
+                        'html' => $this->renderWidget($widgetPosition),
+                        'size' => $widgetPosition->size,
+                        'widget' => $widgetPosition->widget,
+                        'position' => $widgetPosition
+                    ];
+                } catch (\Exception $e) {
+                    // Log error og fortsett med neste widget
+                    \Log::error("Failed to render widget {$widgetPosition->widget->name}: " . $e->getMessage());
+                }
+            }
         }
 
-        // Dynamisk kall til kontrolleren og hent data
-        $widgetData = [];
-        foreach ($widgets as $widgetPosition) {
-            $controllerAction = explode('@', $widgetPosition->widget->controller);
-            $controller = app($controllerAction[0]);
-            $action = $controllerAction[1];
-            $widgetData[$widgetPosition->widget->id] = $controller->$action()->getData();
-        }
+        return view('dashboard', compact('renderedWidgets', 'widgetPositions'));
+    }
 
-        // Returner visningen med widgets og data
-        return view('dashboard', ['widgets' => $widgets, 'widgetData' => $widgetData]);
+    /**
+     * Render en enkelt widget
+     */
+    private function renderWidget(WidgetPosition $widgetPosition)
+    {
+        $widget = $widgetPosition->widget;
+        
+        // Sjekk tilgang til widget
+        if (!$widget->hasAccess()) {
+            return '<div class="alert alert-warning">Du har ikke tilgang til denne widgeten.</div>';
+        }
+        
+        // Hent widget-data hvis nødvendig
+        $data = $this->getWidgetData($widget, $widgetPosition->widget_settings);
+
+        try {
+            return view($widget->view_path, [
+                'data' => $data,
+                'settings' => $widgetPosition->widget_settings,
+                'size' => $widgetPosition->size,
+                'widget' => $widget
+            ])->render();
+        } catch (\Exception $e) {
+            return view('partials.widget-error', [
+                'widget' => $widget,
+                'error' => $e->getMessage()
+            ])->render();
+        }
+    }
+
+    /**
+     * Hent data for en widget (override i subklasser eller via service)
+     */
+    protected function getWidgetData($widget, $settings = [])
+    {
+        // Denne metoden kan utvides for å hente data basert på widget-type
+        // For nå returnerer vi tomt array
+        return [];
     }
 }

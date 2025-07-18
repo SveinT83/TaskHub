@@ -20,12 +20,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    // Hvis Nextcloud er aktivert, legg til påloggingsruter for Nextcloud
+    // If Nextcloud is enabled, add login routes for Nextcloud
     Route::get('login/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('login.nextcloud');
-    Route::get('login/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
-
-    Route::get('login/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])
-        ->name('nextcloud.callback');
+    Route::get('login/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('login.nextcloud.callback');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');

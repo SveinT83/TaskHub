@@ -1,5 +1,5 @@
 <?php
-namespace tronderdata\TdClients\Providers;
+namespace TronderData\TdClients\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

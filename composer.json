@@ -14,12 +14,12 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "spatie/laravel-permission": "^6.9",
-        "tronderdata/td-categories": "dev-Dev",
-        "tronderdata/td-kbartickles": "dev-Dev",
-        "tronderdata/td-clients": "dev-Dev",
-        "tronderdata/td-task": "dev-Dev",
-        "tronderdata/td-tickets": "dev-Dev",
-        "tronderdata/td-equipment": "dev-Dev",
+        "tronderdata/td-categories": "dev-main",
+        "tronderdata/td-kb-articles": "dev-main",
+        "tronderdata/td-clients": "dev-main",
+        "tronderdata/td-task": "dev-main",
+        "tronderdata/td-tickets": "dev-main",
+        "tronderdata/td-equipment": "dev-main",
         "tronderdata/td-ocab": "dev-main"
     },
     "require-dev": {
@@ -46,7 +46,7 @@
         },
         {
             "type": "path",
-            "url": "./modules/td-kbartickles"
+            "url": "./modules/td-kb-articles"
         },
         {
             "type": "path",
@@ -66,11 +66,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Modules\\TdClients\\": "app/Modules/TdClients/",
-            "tronderdata\\tdTask\\": "modules/td-task/src/",
-            "tronderdata\\kbartickles\\": "modules/td-kbartickles/src/",
+            "TronderData\\Task\\": "modules/td-task/src/",
+            "TronderData\\KbArticles\\": "modules/td-kb-articles/src/",
             "TronderData\\Categories\\": "modules/td-categories/src/",
-            "TronderData\\TdClients\\": "modules/td-clients/src/",
+            "TronderData\\Clients\\": "modules/td-clients/src/",
             "TronderData\\Equipment\\": "modules/td-equipment/src/"
         }
     },
@@ -99,9 +98,9 @@
     "extra": {
         "laravel": {
             "providers": [
-                "TronderData\\TdClients\\Providers\\TdClientsServiceProvider",
-                "TronderData\\tdTask\\Providers\\TdTaskServiceProvider",
-                "TronderData\\kbartickles\\Providers\\KbarticklesServiceProvider",
+                "TronderData\\Clients\\Providers\\ClientsServiceProvider",
+                "TronderData\\Task\\Providers\\TaskServiceProvider",
+                "TronderData\\KbArticles\\Providers\\KbArticlesServiceProvider",
                 "TronderData\\Categories\\Providers\\CategoriesServiceProvider",
                 "TronderData\\Equipment\\Providers\\EquipmentServiceProvider"
             ]

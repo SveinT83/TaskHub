@@ -38,6 +38,37 @@ class IntegrationsController extends Controller {
     public function activate($id)
     {
         $integration = Integration::findOrFail($id);
+        
+        // Check if integration has required credentials
+        $credentials = DB::table('integration_credentials')
+            ->where('integration_id', $id)
+            ->first();
+            
+        if (!$credentials) {
+            return redirect()->route('admin.integrations.index')
+                ->with('error', 'Cannot activate integration: No credentials found. Please configure the integration first.');
+        }
+        
+        // Validate required fields based on integration type
+        $missingFields = [];
+        if ($integration->name === 'nextcloud') {
+            if (empty($credentials->baseurl)) $missingFields[] = 'Base URL';
+            if (empty($credentials->clientid)) $missingFields[] = 'Client ID';
+            if (empty($credentials->clientsecret)) $missingFields[] = 'Client Secret';
+            if (empty($credentials->redirecturi)) $missingFields[] = 'Redirect URI';
+            
+            // Validate that redirect URI matches expected format
+            $expectedRedirectUri = url('/auth/nextcloud/callback');
+            if ($credentials->redirecturi !== $expectedRedirectUri) {
+                $missingFields[] = 'Correct Redirect URI (expected: ' . $expectedRedirectUri . ')';
+            }
+        }
+        
+        if (!empty($missingFields)) {
+            return redirect()->route('admin.integrations.index')
+                ->with('error', 'Cannot activate integration: Missing required fields: ' . implode(', ', $missingFields));
+        }
+        
         $integration->active = 1;
         $integration->save();
 
@@ -47,7 +78,7 @@ class IntegrationsController extends Controller {
             'url' => '/admin/integration/' . strtolower($integration->name),
             'menu_id' => 1,
             'parent_id' => 4,
-            'icon' => $integration->icon,
+            'icon' => $integration->icon ?? 'bi bi-gear',
             'is_parent' => 0,
             'order' => DB::table('menu_items')->max('order') + 1,
             'created_at' => now(),

@@ -19,6 +19,14 @@ class CreateWidgetsTable extends Migration
             $table->text('description')->nullable();
             $table->string('view_path', 255);
             $table->string('module');
+            $table->string('category', 100)->default('general');
+            $table->boolean('is_configurable')->default(false);
+            $table->json('default_settings')->nullable();
+            $table->string('icon', 100)->nullable();
+            $table->text('preview_image')->nullable();
+            $table->boolean('requires_auth')->default(false);
+            $table->json('permissions')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

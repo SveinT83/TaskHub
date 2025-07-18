@@ -11,11 +11,38 @@ use App\Http\Controllers\Admin\Configurations\EmailAccountController;
 use App\Http\Controllers\Admin\Integrations\IntegrationsController;
 use App\Http\Controllers\Admin\Integrations\Nextcloud\NextcloudController;
 use App\Http\Controllers\Admin\Appearance\AppearanceController;
+use App\Http\Controllers\Admin\Configurations\WidgetController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Debug route for testing auth state
+Route::get('/debug-auth', function () {
+    $authCheck = Auth::check();
+    $userId = Auth::id();
+    $user = Auth::user();
+    
+    return response()->json([
+        'auth_check' => $authCheck,
+        'user_id' => $userId,
+        'user' => $user ? $user->toArray() : null,
+        'session_id' => session()->getId(),
+        'session_data' => session()->all(),
+    ]);
+});
+
+Route::get('/debug-translation', function() {
+    dd([
+        'locale' => App::getLocale(),
+        'config_locale' => config('app.locale'), 
+        'translation_test' => __('core.ui.edit'),
+        'translation_exists' => Lang::has('core.ui.edit'),
+        'file_exists' => file_exists(resource_path('lang/en/core.php'))
+    ]);
 });
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,6 +178,36 @@ Route::middleware('auth')->group(function () {
                 Route::resource('/email_accounts', EmailAccountController::class);
             });
 
+            // --------------------------------------------------------------------------------------------------
+            // PREFIX WIDGETS
+            // All routes for widget CMS
+            // --------------------------------------------------------------------------------------------------
+            Route::prefix('widgets')->middleware('verified')->group(function () {
+
+                // -------------------------------------------------
+                // Widget CMS
+                // -------------------------------------------------
+                Route::get('/', [WidgetController::class, 'index'])->name('admin.configurations.widgets.index');
+                Route::get('/configure', [WidgetController::class, 'configure'])->name('admin.configurations.widgets.configure');
+                Route::post('/add', [WidgetController::class, 'addWidget'])->name('admin.configurations.widgets.add');
+                Route::post('/position/add', [WidgetController::class, 'addToPosition'])->name('admin.configurations.widgets.position.add');
+                Route::delete('/position/{id}', [WidgetController::class, 'removeFromPosition'])->name('admin.configurations.widgets.position.remove');
+                Route::put('/position/{id}/settings', [WidgetController::class, 'updateSettings'])->name('admin.configurations.widgets.position.settings');
+                Route::post('/position/{id}/toggle', [WidgetController::class, 'togglePosition'])->name('admin.configurations.widgets.position.toggle');
+                Route::post('/reorder', [WidgetController::class, 'reorderWidgets'])->name('admin.configurations.widgets.reorder');
+                Route::get('/preview/{widget}', [WidgetController::class, 'preview'])->name('admin.configurations.widgets.preview');
+                Route::get('/refresh/{widgetPosition}', [WidgetController::class, 'refreshWidget'])->name('admin.configurations.widgets.refresh');
+            });
+
+            // --------------------------------------------------------------------------------------------------
+            // LANGUE MANAGEMENT
+            // Routes for langue and translation management
+            // --------------------------------------------------------------------------------------------------
+            Route::prefix('langue')->middleware('verified')->group(function () {
+                Route::get('/', [App\Http\Controllers\Admin\Configurations\Langue\TranslationController::class, 'index'])->name('admin.translations.index');
+                Route::get('/stats', [App\Http\Controllers\Admin\Configurations\Langue\TranslationController::class, 'stats'])->name('admin.translations.stats');
+            });
+
         });
 
         // --------------------------------------------------------------------------------------------------
@@ -187,13 +244,40 @@ Route::middleware('auth')->group(function () {
                 // -------------------------------------------------
                 // Next Cloud Intregration settings
                 // -------------------------------------------------
-                Route::get('/', [NextcloudController::class, 'showSettings'])->name('nextcloud.settings');
+                Route::get('/', [NextcloudController::class, 'showSettings'])->name('admin.integration.nextcloud');
                 Route::post('/toggle', [NextcloudController::class, 'toggleNextcloudIntegration'])->name('nextcloud.toggle');
                 Route::post('/update-credentials', [NextcloudController::class, 'updateCredentials'])->name('nextcloud.updateCredentials');
 
             });
+
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------
+            // ROUTES TRIPLETEX INTRGRATIONS  
+            // Routes for Tripletex integrations (placeholder)
+            // ---------------------------------------------------------------------------------------------------------------------------------------------------
+            Route::prefix('tripletex')->group(function () {
+                Route::get('/', function() { 
+                    return view('admin.integrations.tripletex.show'); 
+                })->name('admin.integration.tripletex');
+            });
         });
 
+        // --------------------------------------------------------------------------------------------------
+        // LEGACY WIDGET ROUTES
+        // Redirect old widget routes to new ones
+        // --------------------------------------------------------------------------------------------------
+        Route::prefix('widgets')->middleware('verified')->group(function () {
+            Route::get('/', function() {
+                return redirect()->route('admin.configurations.widgets.index');
+            })->name('admin.widgets.index');
+            
+            Route::get('/configure', function(Illuminate\Http\Request $request) {
+                return redirect()->route('admin.configurations.widgets.configure', $request->query());
+            })->name('admin.widgets.configure');
+            
+            Route::post('/add', function(Illuminate\Http\Request $request) {
+                return redirect()->route('admin.configurations.widgets.add', $request->all());
+            })->name('admin.widgets.add');
+        });
     });
 });
 
@@ -205,18 +289,12 @@ Route::middleware('auth')->group(function () {
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------
-// NextCloud Connect and callback routes
+// NextCloud Connect and callback routes (for admin integration)
 // -------------------------------------------------
-Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('nextcloud.connect'); // Not sure if this is nessesary route?
+Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('nextcloud.connect');
 Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
 
 // -------------------------------------------------
-// NextCloud login routes
-// -------------------------------------------------
-Route::get('auth/nextcloud', [NextcloudController::class, 'redirectToNextcloud'])->name('login.nextcloud');
-Route::get('auth/nextcloud/callback', [NextcloudController::class, 'handleNextcloudCallback'])->name('nextcloud.callback');
-
-// -------------------------------------------------
-// Require the auth routes
+// Require the auth routes (these handle login-specific routes)
 // -------------------------------------------------
 require __DIR__.'/auth.php';

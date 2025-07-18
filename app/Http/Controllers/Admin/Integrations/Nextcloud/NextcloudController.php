@@ -16,6 +16,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 // --------------------------------------------------------------------------------------------------
 // MODELL - MENU
@@ -125,16 +126,19 @@ class NextcloudController extends Controller
     public function handleNextcloudCallback(Request $request)
     {
         try {
-            // Hent Nextcloud credentials fra databasen
+            \Log::info('Nextcloud callback started', ['request_data' => $request->all()]);
+            
+            // Get Nextcloud credentials from database
             $credentials = IntegrationCredential::where('integration_id', $this->integration->id)->get()->pluck('value', 'key')->toArray();
+            \Log::info('Credentials loaded', ['has_credentials' => !empty($credentials)]);
 
-            // Dekrypter client secret
+            // Decrypt client secret
             $clientSecret = Crypt::decryptString($credentials['clientsecret']);
 
-            // Opprett en ny Guzzle HTTP-klient
+            // Create a new Guzzle HTTP client
             $client = new Client();
 
-            // Hent access token fra Nextcloud
+            // Get access token from Nextcloud
             $response = $client->post("{$credentials['baseurl']}/apps/oauth2/api/v1/token", [
                 'form_params' => [
                     'client_id' => $credentials['clientid'],
@@ -145,18 +149,19 @@ class NextcloudController extends Controller
                 ],
             ]);
 
-            // Dekod responsen
+            // Decode the response
             $data = json_decode($response->getBody()->getContents(), true);
+            \Log::info('Token response', ['has_access_token' => isset($data['access_token'])]);
 
-            // Sjekk om access token er returnert
+            // Check if access token is returned
             if (!isset($data['access_token'])) {
-                throw new \Exception('Ingen tilgangstoken ble returnert fra Nextcloud.');
+                throw new \Exception('No access token was returned from Nextcloud.');
             }
 
-            // Hent access token
+            // Get access token
             $accessToken = $data['access_token'];
 
-            // Hent brukerdata fra Nextcloud
+            // Get user data from Nextcloud
             $userResponse = $client->get("{$credentials['baseurl']}/ocs/v2.php/cloud/user", [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $accessToken,
@@ -164,41 +169,55 @@ class NextcloudController extends Controller
                 ],
             ]);
 
-            // Dekod brukerdata
+            // Decode user data
             $userData = simplexml_load_string($userResponse->getBody()->getContents(), "SimpleXMLElement", LIBXML_NOCDATA);
             $userData = json_decode(json_encode($userData), true);
+            \Log::info('User data retrieved', ['user_email' => $userData['data']['email'] ?? 'not found']);
 
-            // Sjekk om bruker-ID er returnert
+            // Check if user ID is returned
             if (!isset($userData['data']['id'])) {
-                throw new \Exception('Feil under henting av brukerdata fra Nextcloud.');
+                throw new \Exception('Error retrieving user data from Nextcloud.');
             }
 
-            // Sjekk om brukeren allerede eksisterer
+            // Check if user already exists
             $existingUser = \App\Models\User::where('email', $userData['data']['email'])->first();
+            \Log::info('User lookup', ['user_exists' => !is_null($existingUser), 'email' => $userData['data']['email']]);
 
-            // Hvis brukeren ikke eksisterer, opprett en ny bruker
+            // If user doesn't exist, create a new user
             if (!$existingUser) {
                 $existingUser = \App\Models\User::create([
                     'name' => $userData['data']['displayname'],
                     'email' => $userData['data']['email'],
-                    'password' => \Illuminate\Support\Facades\Hash::make(uniqid()), // Midlertidig passord
+                    'password' => \Illuminate\Support\Facades\Hash::make(uniqid()), // Temporary password
                     'nextcloud_token' => $accessToken,
+                    'email_verified_at' => now(), // Mark email as verified for Nextcloud users
                 ]);
+                \Log::info('New user created', ['user_id' => $existingUser->id]);
+            } else {
+                // If user exists but email is not verified, verify it
+                if (!$existingUser->email_verified_at) {
+                    $existingUser->email_verified_at = now();
+                }
+                \Log::info('Existing user found', ['user_id' => $existingUser->id, 'email_verified' => !is_null($existingUser->email_verified_at)]);
             }
 
-            // Logg inn brukeren
+            // Log in the user
             Auth::login($existingUser);
+            \Log::info('User logged in', ['auth_check' => Auth::check(), 'auth_user_id' => Auth::id()]);
 
-            // Oppdater brukerens Nextcloud token
+            // Update user's Nextcloud token
             $existingUser->nextcloud_token = $accessToken;
             $existingUser->save();
 
-            // Opprett en API token for sanctum
+            // Create an API token for sanctum
             $apiToken = $existingUser->createToken('API Token')->plainTextToken;
 
-            return redirect()->route('dashboard')->with('success', 'Du er logget inn via Nextcloud!');
+            \Log::info('Redirecting to dashboard');
+            // Temporary: redirect to a simple page to test auth state
+            return redirect('/debug-auth')->with('success', 'You are logged in via Nextcloud!');
         } catch (\Exception $e) {
-            return redirect()->route('login')->with('error', 'Det oppstod en feil under Nextcloud-innloggingen: ' . $e->getMessage());
+            \Log::error('Nextcloud login error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return redirect()->route('login')->with('error', 'An error occurred during Nextcloud login: ' . $e->getMessage());
         }
     }
 
@@ -219,6 +238,11 @@ class NextcloudController extends Controller
         $isNextcloudActive = $this->integration->active;
 
         // -------------------------------------------------
+        // Generate default redirect URI based on current installation
+        // -------------------------------------------------
+        $defaultRedirectUri = url('/auth/nextcloud/callback');
+
+        // -------------------------------------------------
         // Decrypt the client secret
         // -------------------------------------------------
         if ($credentials && isset($credentials->clientsecret)) {
@@ -232,6 +256,7 @@ class NextcloudController extends Controller
             'isNextcloudActive' => $isNextcloudActive,
             'credentials' => $credentials,
             'user' => Auth::user(),
+            'defaultRedirectUri' => $defaultRedirectUri,
         ]);
     }
 
@@ -244,25 +269,45 @@ class NextcloudController extends Controller
     public function toggleNextcloudIntegration()
     {
         // -------------------------------------------------
-        // Get the Nextcloud integration setting
+        // Toggle the Nextcloud integration active status
         // -------------------------------------------------
-        $setting = Setting::firstOrCreate(['name' => 'nextcloud_integration'], [
-            'description' => 'Activate or deactivate the Nextcloud integration',
-            'type' => 'boolean',
-            'value' => '0', // Standardverdi
-        ]);
+        $this->integration->active = !$this->integration->active;
+        $this->integration->save();
 
         // -------------------------------------------------
-        // Toggle the Nextcloud integration status
+        // Update menu items based on status
         // -------------------------------------------------
-        $setting->value = $setting->value == '1' ? '0' : '1';
-        $setting->updated_by = Auth::id();
-        $setting->save();
+        if ($this->integration->active) {
+            // Add menu item if not exists
+            $menuExists = DB::table('menu_items')
+                ->where('url', '/admin/integration/' . strtolower($this->integration->name))
+                ->exists();
+                
+            if (!$menuExists) {
+                DB::table('menu_items')->insert([
+                    'title' => ucfirst($this->integration->name),
+                    'url' => '/admin/integration/' . strtolower($this->integration->name),
+                    'menu_id' => 1,
+                    'parent_id' => 4,
+                    'icon' => $this->integration->icon ?? 'bi bi-cloud',
+                    'is_parent' => 0,
+                    'order' => DB::table('menu_items')->max('order') + 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        } else {
+            // Remove menu item
+            DB::table('menu_items')
+                ->where('url', '/admin/integration/' . strtolower($this->integration->name))
+                ->delete();
+        }
 
         // -------------------------------------------------
         // Redirect the user back to the Nextcloud integration settings page with a success message
         // -------------------------------------------------
-        return redirect()->back()->with('success', 'Nextcloud-integrasjonen er ' . ($setting->value == '1' ? 'aktivert' : 'deaktivert'));
+        $status = $this->integration->active ? 'activated' : 'deactivated';
+        return redirect()->back()->with('success', 'Nextcloud integration has been ' . $status . '.');
     }
 
     // --------------------------------------------------------------------------------------------------
@@ -272,18 +317,39 @@ class NextcloudController extends Controller
     // --------------------------------------------------------------------------------------------------
     public function updateCredentials(Request $request)
     {
+        $request->validate([
+            'baseurl' => 'required|url',
+            'clientid' => 'required|string',
+            'clientsecret' => 'nullable|string'
+        ]);
+
+        // Get existing credentials
+        $existingCredentials = IntegrationCredential::where('integration_id', $this->integration->id)->first();
+        
+        // Generate redirect URI automatically
+        $redirectUri = url('/auth/nextcloud/callback');
+        
         $credentials = [
             'baseurl' => $request->input('baseurl'),
             'clientid' => $request->input('clientid'),
-            'clientsecret' => Crypt::encryptString($request->input('clientsecret')),
-            'redirecturi' => $request->input('redirecturi')
+            'redirecturi' => $redirectUri, // Always use the generated URI
+            'updated_at' => now()
         ];
+
+        // Only update client secret if a new one is provided (not the masked version)
+        $clientSecret = $request->input('clientsecret');
+        if ($clientSecret && $clientSecret !== '••••••••••••') {
+            $credentials['clientsecret'] = Crypt::encryptString($clientSecret);
+        } elseif (!$existingCredentials) {
+            // If no existing credentials and no secret provided, require it
+            return redirect()->back()->withErrors(['clientsecret' => 'Client Secret is required.']);
+        }
 
         IntegrationCredential::updateOrCreate(
             ['integration_id' => $this->integration->id],
             $credentials
         );
 
-        return redirect()->back()->with('success', 'Credentials updated successfully.');
+        return redirect()->back()->with('success', 'Credentials updated successfully. Redirect URI has been automatically set to: ' . $redirectUri);
     }
 }

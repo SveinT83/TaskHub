@@ -1,66 +1,298 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+TaskHub – Core (Hub) Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Version: Dev branch as of 14 July 2025Stack: Laravel 11, PHP 8.2+, MySQL/MariaDB, Livewire 3, Vite + Bootstrap 5, Sanctum, Socialite, Spatie Permission
 
-## About Laravel
+1 📚 What is TaskHub?
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+TaskHub is a monolithic Laravel application that acts as a central hub for multiple domain modules. The core provides shared infrastructure such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Authentication (email/password, OIDC/OAuth via Socialite) and API tokens (Sanctum)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+RBAC roles and permissions (Spatie Permission)
 
-## Learning Laravel
+CMS functionality: menu management, widgets, media library
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Shared Livewire components, Blade layouts, message/notification bus
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+A REST API exposing user, menu and widget data
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+A plug‑in framework that allows external modules to register routes, menu items, migrations, policies, etc.
 
-## Laravel Sponsors
+The hub therefore isolates domain logic into module packages while handling cross‑cutting concerns like security, layout and configuration itself.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2 🔧 Technology Overview
 
-### Premium Partners
+Layer
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Tool
 
-## Contributing
+Purpose
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Back‑end
 
-## Code of Conduct
+Laravel 11 (minimal bootstrap)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+HTTP engine, IoC, migrations
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+PHP ≥ 8.2
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Language requirement
+
+
+
+Spatie Permission v6
+
+Roles/permissions
+
+
+
+Sanctum v4
+
+SPA & API tokens
+
+Front‑end
+
+Livewire 3
+
+Reactive UI
+
+
+
+Bootstrap 5 + Vite
+
+Styling / bundling
+
+Dev‑ops
+
+Laravel Sail (Docker)
+
+Local runtime
+
+
+
+Pint / Pest / PHPUnit 11
+
+Quality tools
+
+3 🏗️ Architecture
+
+3.1 Directory Structure
+
+.
+├─ app/               # Core only (User model, Policies, Providers)
+├─ modules/           # Path packages for each domain module (not covered here)
+├─ taskhub/           # Core library (menu, widget, helpers)
+├─ routes/            # Empty – modules register their own routes
+└─ database/          # Hub migrations (users, menus, widgets …)
+
+Note: Laravel 11 runs in the modern single‑file bootstrap; route files are added via bootstrap/app.php.
+
+3.2 Hub ⇄ Module Contract
+
+Composer path repository: Every module is placed under modules/<slug> and listed in the root repositories section.
+
+ServiceProvider convention: The module’s provider must:
+
+register routes via $this->loadRoutesFrom()
+
+publish migrations & views via $this->publishes()
+
+call Menu::register() and/or Widget::register() (see § 5 and § 6)
+
+PSR‑4: The module’s src/ is mapped to its own namespace in the hub composer.json.
+
+4 🗄️ Core Database
+
+Table
+
+Key columns
+
+Description
+
+users
+
+id, name, email, password
+
+Standard Laravel
+
+roles / permissions / model_has_roles
+
+–
+
+Spatie RBAC
+
+menus
+
+id, name, slug
+
+Defines top‑level menus
+
+menu_items
+
+id, menu_id, parent_id, title, route, order
+
+N‑level tree structure
+
+widgets
+
+id, key, component, config (JSON)
+
+Registered Livewire widgets
+
+Migrations live under database/migrations or are published by modules.
+
+5 📂 Menu System
+
+5.1 Structure
+
+Menu – a top‑level grouping (“Main”, “Admin”, …)
+
+MenuItem – individual link or dropdown item
+
+parent_id enables unlimited nesting.
+
+5.2 API
+
+use TaskHub\\Facades\\Menu;
+
+Menu::register(
+    menu:  'admin',                    // slug matches a row in `menus`
+    title: 'Equipment',                // Displayed in UI
+    route: 'equipment.index',          // Laravel route name
+    icon:  'lucide-tool',              // (optional) icon key
+    order: 30,                         // Sort order
+    permissions: ['equipment.view']    // Spatie permission gate
+);
+
+Call this in the module’s ServiceProvider → boot().
+
+6 📦 Widget Framework
+
+A Widget is a reusable Livewire component that can be shown on dashboards, sidebars, etc.
+
+Widget::register(
+    key:       'tickets.open',            // Unique identifier
+    component: \\Modules\\TdTickets\\Livewire\\Widgets\\OpenTickets::class,
+    title:     'Open Tickets',
+    placement: ['dashboard'],             // Where it can be placed
+    permissions: ['tickets.view'],
+);
+
+The configuration is stored in the widgets table as JSON so admin users can enable/disable & reorder widgets from the UI.
+
+7 🔑 Authentication & Authorization
+
+Login: POST /login (email + password) – returns a Sanctum token.
+
+OAuth: GET /auth/{provider}/redirect → Socialite flow.
+
+Token refresh: POST /token/refresh (planned)
+
+RBAC: Checks via middleware permission:<slug> or Livewire directive @can.
+
+8 🌐 REST API (Highlights)
+
+Method
+
+Endpoint
+
+Description
+
+GET
+
+/api/user
+
+Authenticated user data
+
+GET
+
+/api/menus
+
+Full menu tree including children
+
+GET
+
+/api/widgets
+
+Available widgets with config
+
+POST
+
+/api/widgets/{key}/configure
+
+Update a widget instance
+
+Run php artisan route:list --path=api for the full reference.
+
+All endpoints require Accept: application/json and a Sanctum token in Authorization: Bearer <token>.
+
+9 🛠️ Creating a New Module (Quick Version)
+
+Create folder modules/td-<slug>
+
+Run composer init and set:
+
+name: "tronderdata/td-<slug>"
+
+autoload.psr-4: { "TronderData\\\\<StudlySlug>\\\\": "src/" }
+
+Create src/Providers/<StudlySlug>ServiceProvider.php and register:
+
+class TdFooServiceProvider extends ServiceProvider {
+    public function boot(): void {
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        Menu::register(...);
+        Widget::register(...);
+    }
+}
+
+Update the root composer.json with the path repo (usually already handled by a wildcard) and run composer update tronderdata/td-foo.
+
+Add Livewire components, policies, tests.
+
+A detailed module guide will be provided in a separate document.
+
+10 ⚙️ Installation & Local Run
+
+# 1. Clone the repo
+$ git clone git@github.com:SveinT83/TaskHub.git && cd TaskHub
+
+# 2. Install dependencies
+$ composer install
+$ npm install && npm run dev     # hot reload
+
+# 3. Copy env file & generate key
+$ cp .env.example .env
+$ php artisan key:generate
+
+# 4. Start Docker containers (Sail)
+$ ./vendor/bin/sail up -d
+
+# 5. Run migrations & seed
+$ ./vendor/bin/sail artisan migrate --seed
+
+Tip: Using GitHub Codespaces or Laravel Herd can eliminate the Docker setup.
+
+11 ✅ Testing & QA
+
+Unit tests – PHPUnit 11, located in /tests/
+
+Pest – optional BDD layer
+
+Code style – run ./vendor/bin/pint
+
+Run all tests:
+
+$ ./vendor/bin/sail artisan test
+
+12 ➡️ Roadmap
+
+
+
+Contributions are welcome – feel free to open a Pull Request or Issue!
+
+© 2025 TrønderData AS  |  License: MIT
+

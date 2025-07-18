@@ -23,7 +23,8 @@
                         data-bs-target="#collapseMenu{{ $menu->id }}"
                         aria-expanded="{{ isset($expandedMenus[$menu->id]) && $expandedMenus[$menu->id] ? 'true' : 'false' }}"
                         aria-controls="collapseMenu{{ $menu->id }}">
-                    {{ $menu->name }}
+                    
+                    {{ __('core.menu.' . $menu->slug) }}
                 </button>
             </h2>
 
@@ -46,7 +47,7 @@
                         @if (!$item->is_parent && is_null($item->parent_id))
                             <a href="{{ $item->url }}" 
                                class="d-block px-3 py-2 single-item {{ request()->is(trim($item->url, '/')) ? 'fw-bold' : '' }}">
-                                <i class="{{ $item->icon }}"> </i> {{ $item->title }}
+                                <i class="{{ $item->icon }}"> </i> {{ __('core.menu.' . $item->title) }}
                             </a>
                         @endif
 
@@ -65,7 +66,7 @@
                                                 data-bs-target="#collapseChild{{ $item->id }}"
                                                 aria-expanded="{{ isset($expandedMenus[$item->id]) && $expandedMenus[$item->id] ? 'true' : 'false' }}"
                                                 aria-controls="collapseChild{{ $item->id }}">
-                                            <i class="{{ $item->icon }}"> </i> {{ $item->title }}
+                                            <i class="{{ $item->icon }}"> </i> {{ __('core.menu.' . $item->title) }}
                                         </button>
                                     </h3>
 
@@ -75,13 +76,13 @@
                                             <!-- Parent menu item -->
                                             <a href="{{ $item->url }}" 
                                                 class="d-block px-3 py-2 {{ request()->is(trim($item->url, '/')) ? 'fw-bold' : '' }}">
-                                                 <i class="{{ $item->icon }}"> </i> {{ $item->title }}
+                                                 <i class="{{ $item->icon }}"> </i> {{ __('core.menu.' . $item->title) }}
                                              </a>
                                             <!-- Iterate through all children of the parent menu item -->
                                             @foreach ($item->children as $child)
                                                 <a href="{{ $child->url }}" 
                                                    class="d-block px-3 py-2 {{ request()->is(trim($child->url, '/')) ? 'fw-bold' : '' }}">
-                                                    <i class="{{ $child->icon }}"> </i> {{ $child->title }}
+                                                    <i class="{{ $child->icon }}"> </i> {{ __('core.menu.' . $child->title) }}
                                                 </a>
                                             @endforeach
                                         </div>

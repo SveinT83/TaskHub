@@ -15,7 +15,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <!-- Dashboard link -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                    <a class="nav-link" href="/dashboard">{{ __('core.pages.dashboard') }}</a>
                 </li>
 
                 <!-- Dynamic Dropdown Menu (Admin Menu Dropdown) -->
@@ -23,17 +23,17 @@
                     @if($menu->items->isNotEmpty())
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ $menu->name }}
+                                {{ __('core.menu.' . $menu->name) }}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @foreach($menu->items as $item)
-                                    <li><a class="dropdown-item" href="{{ $item->url }}">{{ $item->title }}</a></li>
+                                    <li><a class="dropdown-item" href="{{ $item->url }}">{{ __('core.menu.' . $item->title) }}</a></li>
                                 @endforeach
                             </ul>
                         </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ $menu->url }}">{{ $menu->name }}</a>
+                            <a class="nav-link" href="{{ $menu->url }}">{{ __('core.menu.' . $menu->name) }}</a>
                         </li>
                     @endif
                 @endforeach

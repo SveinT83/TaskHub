@@ -92,7 +92,7 @@ return new class extends Migration {
                 // Users menu item
                 // -------------------------------------------------
                 'id' => 2,
-                'title' => 'Users',
+                'title' => 'users',
                 'url' => '/admin/users/users',
                 'menu_id' => 1,
                 'parent_id' => null,
@@ -107,7 +107,7 @@ return new class extends Migration {
                 // Roles menu item
                 // -------------------------------------------------
                 'id' => 3,
-                'title' => 'Roles',
+                'title' => 'roles',
                 'url' => '/admin/roles/roles',
                 'menu_id' => 1,
                 'parent_id' => 2, //Child of Users
@@ -122,7 +122,7 @@ return new class extends Migration {
                 // Integrations menu item
                 // -------------------------------------------------
                 'id' => 4,
-                'title' => 'Integrations',
+                'title' => 'integrations',
                 'url' => '/admin/integration',
                 'menu_id' => 1,
                 'parent_id' => null,
@@ -138,7 +138,7 @@ return new class extends Migration {
                 // Configurations menu item
                 // -------------------------------------------------
                 'id' => 6,
-                'title' => 'Configurations',
+                'title' => 'configurations',
                 'url' => '/admin/configurations',
                 'menu_id' => 1,
                 'parent_id' => null,
@@ -153,7 +153,7 @@ return new class extends Migration {
                 // Email Accounts menu item
                 // -------------------------------------------------
                 'id' => 7,
-                'title' => 'Email Accounts',
+                'title' => 'email_accounts',
                 'url' => '/admin/configurations/email/email_accounts',
                 'menu_id' => 1,
                 'parent_id' => 6, //Child of Configurations
@@ -168,10 +168,10 @@ return new class extends Migration {
                 // Menu menu item
                 // -------------------------------------------------
                 'id' => 8,
-                'title' => 'Menu',
+                'title' => 'menu',
                 'url' => '/admin/configurations/menu',
                 'menu_id' => 1,
-                'parent_id' => 6, //Child of Configurations
+                'parent_id' => 9, //Child of Configurations
                 'icon' => 'bi bi-list',
                 'is_parent' => false,
                 'order' => 1,
@@ -183,13 +183,43 @@ return new class extends Migration {
                 // Appearance menu item
                 // -------------------------------------------------
                 'id' => 9,
-                'title' => 'Appearance',
+                'title' => 'appearance',
                 'url' => '/admin/appearance',
                 'menu_id' => 1,
                 'parent_id' => null,
                 'icon' => 'bi bi-brush',
                 'is_parent' => false,
                 'order' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                // -------------------------------------------------
+                // Widget CMS menu item
+                // -------------------------------------------------
+                'id' => 10,
+                'title' => 'widget',
+                'url' => '/admin/configurations/widgets',
+                'menu_id' => 1,
+                'parent_id' => null,
+                'icon' => 'bi bi-grid-3x3-gap',
+                'is_parent' => false,
+                'order' => 5,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                // -------------------------------------------------
+                // Widget CMS menu item
+                // -------------------------------------------------
+                'id' => 11,
+                'title' => 'langue',
+                'url' => '/admin/configurations/langue',
+                'menu_id' => 1,
+                'parent_id' => 6,
+                'icon' => 'bi bi-translate',
+                'is_parent' => false,
+                'order' => 5,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

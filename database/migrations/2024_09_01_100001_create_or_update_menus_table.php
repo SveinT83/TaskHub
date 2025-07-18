@@ -48,7 +48,7 @@ class CreateOrUpdateMenusTable extends Migration
         $existingMenu = DB::table('menus')->where('slug', 'adminsettings')->exists();
         if (!$existingMenu) {
             DB::table('menus')->insert([
-                'name' => 'Admin settings',
+                'name' => 'admin_settings',
                 'slug' => 'adminsettings',
                 'url' => null, // Sett til null eller en passende verdi
                 'description' => 'Settings for admin users', // Valgfri beskrivelse
