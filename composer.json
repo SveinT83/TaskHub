@@ -1,5 +1,5 @@
 {
-    "name": "TronderData/TaskHub",
+    "name": "tronder-data/task-hub",
     "type": "project",
     "description": "TaskHub – Laravel project template",
     "keywords": ["laravel", "framework"],
