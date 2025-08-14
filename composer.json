@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "TronderData/TaskHub",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "TaskHub – Laravel project template",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
