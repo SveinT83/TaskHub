@@ -85,35 +85,52 @@ class NextcloudController extends Controller
     // --------------------------------------------------------------------------------------------------
     public function redirectToNextcloud()
     {
-        // -------------------------------------------------
-        // Get the Nextcloud credentials from the database
-        // -------------------------------------------------
-        $credentials = IntegrationCredential::where('integration_id', $this->integration->id)->first();
+        try {
+            // Check if Nextcloud integration is active
+            if (!$this->integration || !$this->integration->active) {
+                return redirect()->route('login')
+                    ->with('error', 'Nextcloud integration is not enabled.');
+            }
 
-        // -------------------------------------------------
-        // Decrypt the client secret
-        // -------------------------------------------------
-        $clientSecret = Crypt::decryptString($credentials->clientsecret);
+            // Get the Nextcloud credentials from the database using the relationship
+            $credentials = $this->integration->credentials->pluck('value', 'key')->toArray();
+            
+            // Validate required credentials
+            if (empty($credentials) || !isset($credentials['clientid'], $credentials['baseurl'], $credentials['redirecturi'])) {
+                \Log::error('Nextcloud credentials missing', ['available_keys' => array_keys($credentials)]);
+                return redirect()->route('login')
+                    ->with('error', 'Nextcloud integration is not properly configured.');
+            }
 
-        // -------------------------------------------------
-        // Build query parameters for the Nextcloud OAuth2 authorization page.
-        // -------------------------------------------------
-        $queryParams = [
-            'client_id' => $credentials->clientid,
-            'redirect_uri' => $credentials->redirecturi, // Ensure the redirect URI is not double encoded
-            'response_type' => 'code',
-            'scope' => 'read write', // Adjust as needed
-        ];
+            // Build query parameters for the Nextcloud OAuth2 authorization page
+            $queryParams = [
+                'client_id' => $credentials['clientid'],
+                'redirect_uri' => $credentials['redirecturi'],
+                'response_type' => 'code',
+                'scope' => 'read write',
+                'state' => \Illuminate\Support\Str::random(40), // Add state for security
+            ];
 
-        // -------------------------------------------------
-        // Manually build the query string to avoid double encoding
-        // -------------------------------------------------
-        $queryString = http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
+            // Store state in session for validation in callback
+            session(['nextcloud_oauth_state' => $queryParams['state']]);
 
-        // -------------------------------------------------
-        // Redirect the user to the Nextcloud OAuth2 authorization page.
-        // -------------------------------------------------
-        return redirect("{$credentials->baseurl}/apps/oauth2/authorize?$queryString");
+            // Manually build the query string to avoid double encoding
+            $queryString = http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
+
+            \Log::info('Redirecting to Nextcloud OAuth', [
+                'base_url' => $credentials['baseurl'],
+                'client_id' => $credentials['clientid'],
+                'redirect_uri' => $credentials['redirecturi']
+            ]);
+
+            // Redirect the user to the Nextcloud OAuth2 authorization page
+            return redirect("{$credentials['baseurl']}/apps/oauth2/authorize?$queryString");
+            
+        } catch (\Exception $e) {
+            \Log::error('Nextcloud redirect error', ['message' => $e->getMessage()]);
+            return redirect()->route('login')
+                ->with('error', 'Failed to connect to Nextcloud. Please try again.');
+        }
     }
 
 
@@ -128,9 +145,52 @@ class NextcloudController extends Controller
         try {
             \Log::info('Nextcloud callback started', ['request_data' => $request->all()]);
             
-            // Get Nextcloud credentials from database
-            $credentials = IntegrationCredential::where('integration_id', $this->integration->id)->get()->pluck('value', 'key')->toArray();
+            // Validate state parameter for security
+            $expectedState = session('nextcloud_oauth_state');
+            $receivedState = $request->get('state');
+            
+            if (!$expectedState || $expectedState !== $receivedState) {
+                \Log::warning('Nextcloud OAuth state mismatch', [
+                    'expected' => $expectedState,
+                    'received' => $receivedState
+                ]);
+                return redirect()->route('login')
+                    ->with('error', 'Invalid OAuth state. Please try again.');
+            }
+            
+            // Clear the state from session
+            session()->forget('nextcloud_oauth_state');
+            
+            // Check for authorization errors
+            if ($request->has('error')) {
+                \Log::warning('Nextcloud OAuth error', ['error' => $request->get('error')]);
+                return redirect()->route('login')
+                    ->with('error', 'Nextcloud authorization was denied: ' . $request->get('error'));
+            }
+            
+            // Check if authorization code is present
+            if (!$request->has('code')) {
+                \Log::error('Nextcloud callback missing authorization code');
+                return redirect()->route('login')
+                    ->with('error', 'Authorization code not received from Nextcloud.');
+            }
+            
+            // Check if Nextcloud integration is still active
+            if (!$this->integration || !$this->integration->active) {
+                return redirect()->route('login')
+                    ->with('error', 'Nextcloud integration is not enabled.');
+            }
+            
+            // Get Nextcloud credentials from database using the relationship
+            $credentials = $this->integration->credentials->pluck('value', 'key')->toArray();
             \Log::info('Credentials loaded', ['has_credentials' => !empty($credentials)]);
+            
+            // Validate required credentials
+            if (empty($credentials) || !isset($credentials['clientid'], $credentials['clientsecret'], $credentials['baseurl'], $credentials['redirecturi'])) {
+                \Log::error('Nextcloud credentials incomplete', ['available_keys' => array_keys($credentials)]);
+                return redirect()->route('login')
+                    ->with('error', 'Nextcloud integration is not properly configured.');
+            }
 
             // Decrypt client secret
             $clientSecret = Crypt::decryptString($credentials['clientsecret']);
@@ -174,8 +234,8 @@ class NextcloudController extends Controller
             $userData = json_decode(json_encode($userData), true);
             \Log::info('User data retrieved', ['user_email' => $userData['data']['email'] ?? 'not found']);
 
-            // Check if user ID is returned
-            if (!isset($userData['data']['id'])) {
+            // Check if user data is valid
+            if (!isset($userData['data']['id']) || !isset($userData['data']['email'])) {
                 throw new \Exception('Error retrieving user data from Nextcloud.');
             }
 
@@ -186,35 +246,44 @@ class NextcloudController extends Controller
             // If user doesn't exist, create a new user
             if (!$existingUser) {
                 $existingUser = \App\Models\User::create([
-                    'name' => $userData['data']['displayname'],
+                    'name' => $userData['data']['displayname'] ?? $userData['data']['id'],
                     'email' => $userData['data']['email'],
-                    'password' => \Illuminate\Support\Facades\Hash::make(uniqid()), // Temporary password
+                    'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32)), // Random password
                     'nextcloud_token' => $accessToken,
                     'email_verified_at' => now(), // Mark email as verified for Nextcloud users
                 ]);
                 \Log::info('New user created', ['user_id' => $existingUser->id]);
             } else {
+                // Update existing user's token
+                $existingUser->nextcloud_token = $accessToken;
+                
                 // If user exists but email is not verified, verify it
                 if (!$existingUser->email_verified_at) {
                     $existingUser->email_verified_at = now();
                 }
-                \Log::info('Existing user found', ['user_id' => $existingUser->id, 'email_verified' => !is_null($existingUser->email_verified_at)]);
+                
+                $existingUser->save();
+                \Log::info('Existing user updated', ['user_id' => $existingUser->id, 'email_verified' => !is_null($existingUser->email_verified_at)]);
             }
 
+            // Regenerate session to prevent session fixation attacks
+            $request->session()->regenerate();
+            
             // Log in the user
-            Auth::login($existingUser);
+            Auth::login($existingUser, true); // Remember the user
             \Log::info('User logged in', ['auth_check' => Auth::check(), 'auth_user_id' => Auth::id()]);
 
-            // Update user's Nextcloud token
-            $existingUser->nextcloud_token = $accessToken;
-            $existingUser->save();
+            // Verify authentication worked
+            if (!Auth::check()) {
+                throw new \Exception('Failed to authenticate user after login.');
+            }
 
-            // Create an API token for sanctum
-            $apiToken = $existingUser->createToken('API Token')->plainTextToken;
-
-            \Log::info('Redirecting to dashboard');
-            // Temporary: redirect to a simple page to test auth state
-            return redirect('/debug-auth')->with('success', 'You are logged in via Nextcloud!');
+            \Log::info('Redirecting to dashboard', ['auth_check' => Auth::check()]);
+            
+            // Redirect to intended page or dashboard
+            $intendedUrl = session()->pull('url.intended', route('dashboard'));
+            return redirect($intendedUrl)->with('success', 'Successfully logged in with Nextcloud!');
+            
         } catch (\Exception $e) {
             \Log::error('Nextcloud login error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return redirect()->route('login')->with('error', 'An error occurred during Nextcloud login: ' . $e->getMessage());
@@ -239,8 +308,9 @@ class NextcloudController extends Controller
 
         // -------------------------------------------------
         // Generate default redirect URI based on current installation
+        // For user login, we use the login callback route
         // -------------------------------------------------
-        $defaultRedirectUri = url('/auth/nextcloud/callback');
+        $defaultRedirectUri = url('/login/nextcloud/callback');
 
         // -------------------------------------------------
         // Decrypt the client secret

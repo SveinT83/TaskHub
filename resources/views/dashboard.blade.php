@@ -53,10 +53,6 @@
 
             <!-- Main Content Area -->
             <div class="{{ isset($renderedWidgets['sidebar-left']) || isset($renderedWidgets['sidebar-right']) ? 'col-lg-6' : 'col-12' }}">
-                
-                Debug: {{ __('core::ui.edit') }}<br>
-                Debug: {{ __('core::ui.actions') }}<br>
-                Debug: {{ __('core::ui.settings') }}<br>
 
                 <!-- Main Top Widgets -->
                 @if(isset($renderedWidgets['main-top']) && count($renderedWidgets['main-top']) > 0)

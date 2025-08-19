@@ -19,8 +19,9 @@
         "tronderdata/td-clients": "dev-main",
         "tronderdata/td-task": "dev-main",
         "tronderdata/td-tickets": "dev-main",
-        "tronderdata/td-equipment": "dev-main",
-        "tronderdata/td-ocab": "dev-main"
+    "tronderdata/td-equipment": "dev-main",
+    "tronderdata/td-ocab": "dev-main",
+    "tronderdata/td-cost-calcultaror": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -58,6 +59,10 @@
         },
         {
             "type": "path",
+            "url": "./modules/td-cost-calcultaror"
+        },
+        {
+            "type": "path",
             "url": "./modules/td-ocab"
         }
     ],
@@ -70,8 +75,12 @@
             "TronderData\\KbArticles\\": "modules/td-kb-articles/src/",
             "TronderData\\Categories\\": "modules/td-categories/src/",
             "TronderData\\Clients\\": "modules/td-clients/src/",
-            "TronderData\\Equipment\\": "modules/td-equipment/src/"
-        }
+            "TronderData\\Equipment\\": "modules/td-equipment/src/",
+            "TronderData\\TdCostCalcultaror\\": "modules/td-cost-calcultaror/src/"
+        },
+        "files": [
+            "app/Helpers/SettingHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -99,10 +108,11 @@
         "laravel": {
             "providers": [
                 "TronderData\\Clients\\Providers\\ClientsServiceProvider",
-                "TronderData\\Task\\Providers\\TaskServiceProvider",
+                "TronderData\\Task\\Providers\\TdTaskServiceProvider",
                 "TronderData\\KbArticles\\Providers\\KbArticlesServiceProvider",
                 "TronderData\\Categories\\Providers\\CategoriesServiceProvider",
-                "TronderData\\Equipment\\Providers\\EquipmentServiceProvider"
+                "TronderData\\Equipment\\Providers\\EquipmentServiceProvider",
+                "TronderData\\TdCostCalcultaror\\Providers\\TdCostCalcultarorServiceProvider"
             ]
         }
     },

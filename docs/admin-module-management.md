@@ -22,15 +22,12 @@ All major screens are powered by **Livewire** for instant feedback without full 
 ## 2  Directory Layout
 
 ```
-app/
-└─ Http/
-   └─ Controllers/
-      └─ Admin/
-         ├─ ModuleController.php      # Overview, details, enable/disable
-         ├─ StoreController.php       # Store search & metadata lookup
-         └─ InstallController.php     # Composer/Git queue + live log
+app/Http/Controllers/Admin/Modules
+    ├─ ModuleController.php      # Overview, details, enable/disable
+    ├─ StoreController.php       # Store search & metadata lookup
+    └─ InstallController.php     # Composer/Git queue + live log
 
-app/Livewire/Admin/Modules/
+app/Livevire/Admin/Modules/
    ├─ Index.php           # modules.index
    ├─ Show.php            # modules.show (accordion body)
    ├─ Store.php           # modules.store search UI
@@ -56,22 +53,76 @@ Route::middleware(['auth:admin'])
 
     Route::prefix('modules')->name('modules.')->group(function () {
 
-        // Overview & details
-        Route::get('/',         ModuleController::class)->name('index');
-        Route::get('/{slug}', [ModuleController::class, 'show'])->name('show');
-
         // Store
-        Route::get('/store',    StoreController::class)->name('store');
-        Route::post('/lookup',  [StoreController::class, 'lookup'])->name('lookup');  // AJAX
+        Route::get('/store', [StoreController::class, 'store'])->name('store');
+        Route::post('/lookup', [StoreController::class, 'lookup'])->name('lookup');  // AJAX
 
         // Installation queue
-        Route::post('/install',       [InstallController::class, 'queue'])->name('install');
+        Route::post('/install', [InstallController::class, 'queue'])->name('install');
         Route::get('/install/{uuid}',[InstallController::class, 'log'])->name('install.log');
+
+        // Overview & details
+        Route::get('/', [ModuleController::class,'index'])->name('index');
+        Route::get('/{slug}', [ModuleController::class, 'show'])->name('show');
     });
 });
 ```
 
 > **Tip:** `ModuleController` can be a **single‑action controller** (`__invoke`) delegating heavy lifting to Livewire components.
+
+---
+
+## 3.1  Module Discovery & Caching (Hybrid Approach)
+
+TaskHub uses a **hybrid approach** for module management:
+
+- **Filesystem scan**: On every "Rescan" action, or when a module is installed/removed, TaskHub scans the `modules/` directory (and optionally `vendor/`) for available modules. Each module must have a `module.json` or `composer.json` with metadata.
+- **Database cache**: The result of the scan is cached in a `modules` database table. This table stores metadata (slug, name, version, status, enabled/disabled, etc.) for fast lookups, filtering, and status tracking.
+- **GUI/menus**: The admin GUI and menus always use the database cache for performance. Any action (enable, disable, delete, rescan) updates both the filesystem and the database.
+
+**Typical workflow:**
+1. User clicks "Rescan" or performs an action (enable/disable/delete) in the module admin.
+2. TaskHub scans the filesystem for modules, parses their metadata, and updates the `modules` table.
+3. The GUI reloads from the database cache for instant feedback.
+
+**Why this approach?**
+- Always up-to-date after a rescan or install/uninstall
+- Fast filtering, searching, and status display in the admin
+- No risk of stale data after module changes
+
+**Example migration for `modules` table:**
+```php
+Schema::create('modules', function (Blueprint $table) {
+    $table->id();
+    $table->string('slug')->unique();
+    $table->string('name');
+    $table->string('version')->nullable();
+    $table->string('status')->default('enabled'); // enabled, disabled, error
+    $table->string('path');
+    $table->json('meta')->nullable(); // All other metadata from module.json
+    $table->timestamps();
+});
+```
+
+**Sync logic (pseudo):**
+```php
+// On rescan or install/uninstall:
+$modules = [];
+foreach (glob(base_path('modules/*/module.json')) as $jsonFile) {
+    $meta = json_decode(file_get_contents($jsonFile), true);
+    $modules[] = [
+        'slug' => basename(dirname($jsonFile)),
+        'name' => $meta['name'] ?? basename(dirname($jsonFile)),
+        'version' => $meta['version'] ?? 'n/a',
+        'status' => 'enabled',
+        'path' => dirname($jsonFile),
+        'meta' => $meta,
+    ];
+}
+// Upsert into modules table
+```
+
+**Admin GUI always uses the `modules` table for listing, filtering, and actions.**
 
 ---
 

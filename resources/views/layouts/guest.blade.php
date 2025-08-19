@@ -20,6 +20,8 @@
     </head>
     <body>
         <div class="container">
+
+            @yield('pageHeader')
             @yield('content')
         </div>
     </body>

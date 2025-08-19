@@ -1,237 +1,95 @@
 <?php
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
-// MIGRATION - MENU_ITEMS
+// MIGRATION - CREATE MENU_ITEMS TABLE
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
-// This migration creates the menu_items table in the database. It also inserts some initial menu items into the table.
+// This migration creates the menu_items table in the database structure.
+// It only handles the table creation - no data insertion.
+// Data insertion is handled by a separate migration file (2024_09_01_100003_insert_menu_items.php).
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
-return new class extends Migration {
+return new class extends Migration 
+{
     /**
      * Run the migrations.
+     * 
+     * This method creates the menu_items table if it doesn't already exist.
+     * The table will store individual menu items that belong to menus.
+     * 
+     * @return void
      */
     public function up(): void
     {
-
-        // --------------------------------------------------------------------------------------------------
-        // Create the menu_items table if it doesn't already exist.
-        // --------------------------------------------------------------------------------------------------
+        // Check if the menu_items table already exists before attempting to create it
+        // This prevents errors when running migrations multiple times
         if (!Schema::hasTable('menu_items')) {
+            
+            // Create the menu_items table with all required columns
             Schema::create('menu_items', function (Blueprint $table) {
+                
+                // Primary key - auto-incrementing ID
+                $table->id();
 
-                // -------------------------------------------------
-                // ID = Primary key
-                // -------------------------------------------------
-                $table->id();  // Primærnøkkel
+                // Title of the menu item - this will be displayed in the UI
+                // Should be a translation key for multi-language support
+                $table->string('title');
 
-                // -------------------------------------------------
-                // title = Name of the menu item
-                // -------------------------------------------------
-                $table->string('title');  // Navn på menyelementet
+                // URL that this menu item points to
+                // For admin items, should start with /admin/[module]/[page]
+                $table->string('url');
 
-                // -------------------------------------------------
-                // url = URL of the menu item
-                // if it is an admin menu item, then the url should start whit /admin /module name/side name
-                // -------------------------------------------------
-                $table->string('url');  // URL til menyelementet
+                // Foreign key to the menus table
+                // Defines which top-level menu this item belongs to
+                // Admin menu should always have menu_id = 1
+                $table->unsignedBigInteger('menu_id')->nullable();
 
-                // -------------------------------------------------
-                // menu_id = Parent menu
-                // The id of the meny this item is part of. The Admin menu should always have the id 1
-                // -------------------------------------------------
-                $table->unsignedBigInteger('menu_id')->nullable();  // Overordnet meny
+                // Self-referencing foreign key for hierarchical menu structure
+                // If this item is a child of another menu item, this contains the parent's ID
+                // NULL for top-level menu items within a menu
+                $table->unsignedBigInteger('parent_id')->nullable();
 
-                // -------------------------------------------------
-                // parent_id = Parent menu item
-                // If this is a child menu item, this should be the id of the parent menu item
-                // -------------------------------------------------
-                $table->unsignedBigInteger('parent_id')->nullable();  // Overordnet menyelement
+                // CSS class for the menu item icon
+                // Default: Bootstrap Icons (e.g., "bi bi-home")
+                // Can be adapted for other icon libraries
+                $table->string('icon')->nullable();
 
-                // -------------------------------------------------
-                // icon = Icon class, e.g. "bi bi-home"
-                // By default we use the bootstrap icons, but you can use any icon library you want
-                // -------------------------------------------------
-                $table->string('icon')->nullable();  // Icon-klassen, f.eks. "bi bi-home"
+                // Boolean flag indicating if this item can have children
+                // TRUE: This item can contain sub-menu items
+                // FALSE: This is a leaf node in the menu tree
+                $table->boolean('is_parent')->default(false);
 
-                // -------------------------------------------------
-                // is_parent = Is this a parent menu?
-                // If this is a parent menu item, then this should be true
-                // -------------------------------------------------
-                $table->boolean('is_parent')->default(false);  // Om dette er en overordnet meny
+                // Sort order within the same menu level
+                // Lower numbers appear first in the menu
+                // Allows for custom ordering of menu items
+                $table->integer('order')->default(0);
 
-                // -------------------------------------------------
-                // order = Sort order
-                // If yoy want to change the order of the menu items, you can do that by changing this value
-                // -------------------------------------------------
-                $table->integer('order')->default(0);  // Sorteringsrekkefølge
+                // Module ownership tracking
+                // NULL: Core system menu items
+                // String: Module slug that created this menu item
+                // Used for cleanup when modules are disabled/uninstalled
+                $table->string('module')->nullable()->index();
 
-                // -------------------------------------------------
-                // timestamps = Time stamps
-                // Automatically created timestamps
-                // -------------------------------------------------
-                $table->timestamps();  // Tidsstempler
+                // Laravel timestamps - created_at and updated_at
+                $table->timestamps();
             });
-        }        
-
-        // -------------------------------------------------
-        // Remove the existing menu item with ID 1
-        // -------------------------------------------------
-        DB::table('menu_items')->where('id', 1)->delete();
-
-        // --------------------------------------------------------------------------------------------------
-        // Insert the initial menu items into the menu_items table
-        // --------------------------------------------------------------------------------------------------
-        DB::table('menu_items')->insert([
-            [
-                // -------------------------------------------------
-                // Users menu item
-                // -------------------------------------------------
-                'id' => 2,
-                'title' => 'users',
-                'url' => '/admin/users/users',
-                'menu_id' => 1,
-                'parent_id' => null,
-                'icon' => 'bi bi-people',
-                'is_parent' => true, //Parent of Roles and Users
-                'order' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                // -------------------------------------------------
-                // Roles menu item
-                // -------------------------------------------------
-                'id' => 3,
-                'title' => 'roles',
-                'url' => '/admin/roles/roles',
-                'menu_id' => 1,
-                'parent_id' => 2, //Child of Users
-                'icon' => 'bi bi-ui-checks',
-                'is_parent' => false,
-                'order' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                // -------------------------------------------------
-                // Integrations menu item
-                // -------------------------------------------------
-                'id' => 4,
-                'title' => 'integrations',
-                'url' => '/admin/integration',
-                'menu_id' => 1,
-                'parent_id' => null,
-                'icon' => 'bi bi-arrow-down-up',
-                'is_parent' => true, //Parent of Nextcloud
-                'order' => 3,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-
-                // -------------------------------------------------
-                // Configurations menu item
-                // -------------------------------------------------
-                'id' => 6,
-                'title' => 'configurations',
-                'url' => '/admin/configurations',
-                'menu_id' => 1,
-                'parent_id' => null,
-                'icon' => 'bi bi-gear',
-                'is_parent' => true, //Parent of Email Accounts and Menu
-                'order' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                // -------------------------------------------------
-                // Email Accounts menu item
-                // -------------------------------------------------
-                'id' => 7,
-                'title' => 'email_accounts',
-                'url' => '/admin/configurations/email/email_accounts',
-                'menu_id' => 1,
-                'parent_id' => 6, //Child of Configurations
-                'icon' => 'bi bi-envelope-check',
-                'is_parent' => false,
-                'order' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                // -------------------------------------------------
-                // Menu menu item
-                // -------------------------------------------------
-                'id' => 8,
-                'title' => 'menu',
-                'url' => '/admin/configurations/menu',
-                'menu_id' => 1,
-                'parent_id' => 9, //Child of Configurations
-                'icon' => 'bi bi-list',
-                'is_parent' => false,
-                'order' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                // -------------------------------------------------
-                // Appearance menu item
-                // -------------------------------------------------
-                'id' => 9,
-                'title' => 'appearance',
-                'url' => '/admin/appearance',
-                'menu_id' => 1,
-                'parent_id' => null,
-                'icon' => 'bi bi-brush',
-                'is_parent' => false,
-                'order' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                // -------------------------------------------------
-                // Widget CMS menu item
-                // -------------------------------------------------
-                'id' => 10,
-                'title' => 'widget',
-                'url' => '/admin/configurations/widgets',
-                'menu_id' => 1,
-                'parent_id' => null,
-                'icon' => 'bi bi-grid-3x3-gap',
-                'is_parent' => false,
-                'order' => 5,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                // -------------------------------------------------
-                // Widget CMS menu item
-                // -------------------------------------------------
-                'id' => 11,
-                'title' => 'langue',
-                'url' => '/admin/configurations/langue',
-                'menu_id' => 1,
-                'parent_id' => 6,
-                'icon' => 'bi bi-translate',
-                'is_parent' => false,
-                'order' => 5,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
+        }
     }
 
     /**
      * Reverse the migrations.
+     * 
+     * This method drops the menu_items table if it exists.
+     * Warning: This will delete all menu item data permanently.
+     * 
+     * @return void
      */
     public function down(): void
     {
-        // Fjern de aktuelle radene vi satt inn med ID-er 2, 3, 4, og 5
-        DB::table('menu_items')->whereIn('id', [2, 3, 4, 5, 6, 7, 8, 9])->delete();
+        // Drop the menu_items table and all its data
+        Schema::dropIfExists('menu_items');
     }
 };

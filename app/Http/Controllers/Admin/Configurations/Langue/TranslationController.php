@@ -10,7 +10,7 @@ class TranslationController extends Controller
 {
     public function index()
     {
-        return view('admin.translations.index');
+        return view('admin.configurations.translations.index');
     }
 
     public function stats()
@@ -25,6 +25,6 @@ class TranslationController extends Controller
             ];
         }
 
-        return view('admin.translations.stats', compact('stats'));
+        return view('admin.configurations.translations.stats', compact('stats'));
     }
 }

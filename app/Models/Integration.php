@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Integrations\IntegrationCredential;
 
 class Integration extends Model
 {
@@ -18,4 +19,12 @@ class Integration extends Model
         'created_at',
         'updated_at',
     ];
+
+    /**
+     * Get credentials for this integration
+     */
+    public function credentials()
+    {
+        return $this->hasMany(IntegrationCredential::class);
+    }
 }

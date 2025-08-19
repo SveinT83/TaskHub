@@ -8,10 +8,14 @@ use App\Http\Controllers\Admin\UserAndRoles\RoleController;
 use App\Http\Controllers\Admin\Configurations\ConfigurationsController;
 use App\Http\Controllers\Admin\Configurations\MenuConfigurationController;
 use App\Http\Controllers\Admin\Configurations\EmailAccountController;
+use App\Http\Controllers\Admin\Configurations\CurrencyController;
 use App\Http\Controllers\Admin\Integrations\IntegrationsController;
 use App\Http\Controllers\Admin\Integrations\Nextcloud\NextcloudController;
 use App\Http\Controllers\Admin\Appearance\AppearanceController;
 use App\Http\Controllers\Admin\Configurations\WidgetController;
+use App\Http\Controllers\Admin\Modules\ModuleController;
+use App\Http\Controllers\Admin\Modules\StoreController;
+use App\Http\Controllers\Admin\Modules\InstallController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
@@ -77,6 +81,7 @@ Route::middleware('auth')->group(function () {
         // Admin
         // -------------------------------------------------
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+        
 
         // --------------------------------------------------------------------------------------------------
         // PREFIX ROLES
@@ -200,12 +205,45 @@ Route::middleware('auth')->group(function () {
             });
 
             // --------------------------------------------------------------------------------------------------
+            // PREFIX CURRENCY
+            // All routes for currency management
+            // --------------------------------------------------------------------------------------------------
+            Route::prefix('currency')->middleware('verified')->group(function () {
+
+                // -------------------------------------------------
+                // Currency Management
+                // -------------------------------------------------
+                Route::get('/', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'index'])->name('currency.index');
+                Route::get('/create', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'create'])->name('currency.create');
+                Route::post('/', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'store'])->name('currency.store');
+                Route::get('/{currency}/edit', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'edit'])->name('currency.edit');
+                Route::put('/{currency}', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'update'])->name('currency.update');
+                Route::delete('/{currency}', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'destroy'])->name('currency.destroy');
+                
+                Route::post('/{currency}/set-default', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'setDefault'])->name('admin.configurations.currency.set-default');
+                Route::post('/update-rates', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'updateRates'])->name('admin.configurations.currency.update-rates');
+                Route::get('/settings', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'settings'])->name('admin.configurations.currency.settings');
+                Route::post('/settings', [App\Http\Controllers\Admin\Configurations\CurrencyController::class, 'updateSettings'])->name('admin.configurations.currency.settings.update');
+            });
+
+            // --------------------------------------------------------------------------------------------------
             // LANGUE MANAGEMENT
             // Routes for langue and translation management
             // --------------------------------------------------------------------------------------------------
             Route::prefix('langue')->middleware('verified')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\Configurations\Langue\TranslationController::class, 'index'])->name('admin.translations.index');
                 Route::get('/stats', [App\Http\Controllers\Admin\Configurations\Langue\TranslationController::class, 'stats'])->name('admin.translations.stats');
+            });
+
+            // -------------------------------------------------
+            // Meta Data Management
+            // -------------------------------------------------
+            Route::prefix('meta')->middleware('verified')->group(function () {
+                // Fields route - vanlig controller for å unngå Livewire-problemer
+                Route::get('/fields', function() {
+                    return view('admin.configurations.meta.fields');
+                })->name('admin.configurations.meta.fields');
+                Route::get('/{model}/{id}', \App\Livewire\Admin\Configurations\Meta\Index::class)->name('admin.configurations.meta.index');
             });
 
         });
@@ -277,6 +315,31 @@ Route::middleware('auth')->group(function () {
             Route::post('/add', function(Illuminate\Http\Request $request) {
                 return redirect()->route('admin.configurations.widgets.add', $request->all());
             })->name('admin.widgets.add');
+        });
+
+        // --------------------------------------------------------------------------------------------------
+        // MODULES AND STORE ROUTES
+        // All routes for modules and store
+        // --------------------------------------------------------------------------------------------------
+        Route::prefix('modules')->name('modules.')->group(function () {
+
+            // Store
+            Route::get('/store', [StoreController::class, 'store'])->name('store');
+            Route::post('/lookup', [StoreController::class, 'lookup'])->name('lookup');  // AJAX
+
+            // Installation queue
+            Route::post('/install', [InstallController::class, 'queue'])->name('install');
+            Route::get('/install/{uuid}',[InstallController::class, 'log'])->name('install.log');
+
+            // Module management actions
+            Route::post('/rescan', [ModuleController::class, 'rescan'])->name('rescan');
+            Route::post('/{slug}/enable', [ModuleController::class, 'enable'])->name('enable');
+            Route::post('/{slug}/disable', [ModuleController::class, 'disable'])->name('disable');
+            Route::delete('/{slug}', [ModuleController::class, 'destroy'])->name('destroy');
+
+            // Overview & details
+            Route::get('/', [ModuleController::class,'index'])->name('index');
+            Route::get('/{slug}', [ModuleController::class, 'show'])->name('show');
         });
     });
 });

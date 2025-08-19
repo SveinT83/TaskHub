@@ -1,18 +1,18 @@
-<div class="translation-editor bg-white shadow-lg rounded-lg">
+<div class="card shadow">
     <!-- Header -->
-    <div class="border-b px-6 py-4">
-        <h2 class="text-xl font-semibold text-gray-800">{{ __('core.ui.settings') }} - {{ __('Translation Editor') }}</h2>
+    <div class="card-header border-bottom">
+        <h5 class="card-title mb-0 font-weight-bold text-dark">{{ __('core.ui.settings') }} - {{ __('Translation Editor') }}</h5>
     </div>
 
     <!-- Controls -->
-    <div class="p-6 border-b bg-gray-50">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="card-body bg-light border-bottom">
+        <div class="row">
             <!-- Locale Selector -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+            <div class="col-md-3">
+                <label class="form-label small font-weight-bold text-dark">
                     {{ __('Language') }}
                 </label>
-                <select wire:model.live="currentLocale" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select wire:model.live="currentLocale" class="form-control">
                     @foreach($availableLocales as $code => $name)
                         <option value="{{ $code }}">{{ $name }}</option>
                     @endforeach
@@ -20,11 +20,11 @@
             </div>
 
             <!-- Namespace Selector -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+            <div class="col-md-3">
+                <label class="form-label small font-weight-bold text-dark">
                     {{ __('Module') }}
                 </label>
-                <select wire:model.live="selectedNamespace" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select wire:model.live="selectedNamespace" class="form-control">
                     @foreach($availableNamespaces as $namespace)
                         <option value="{{ $namespace }}">{{ ucfirst($namespace) }}</option>
                     @endforeach
@@ -32,11 +32,11 @@
             </div>
 
             <!-- File Selector -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+            <div class="col-md-3">
+                <label class="form-label small font-weight-bold text-dark">
                     {{ __('File') }}
                 </label>
-                <select wire:model.live="selectedFile" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select wire:model.live="selectedFile" class="form-control">
                     @foreach($availableFiles as $file)
                         <option value="{{ $file }}">{{ $file }}.php</option>
                     @endforeach
@@ -44,102 +44,110 @@
             </div>
 
             <!-- Search -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+            <div class="col-md-3">
+                <label class="form-label small font-weight-bold text-dark">
                     {{ __('core.ui.search') }}
                 </label>
-                <input 
-                    type="text" 
-                    wire:model.live.debounce.300ms="searchTerm" 
-                    placeholder="{{ __('Search translations...') }}"
-                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        wire:model.live.debounce.300ms="searchTerm" 
+                        placeholder="{{ __('Search translations...') }}"
+                        class="form-control"
+                    >
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Flash Message -->
     @if (session()->has('message'))
-        <div class="mx-6 mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+        <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
             {{ session('message') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     @endif
 
     <!-- Translations Table -->
-    <div class="p-6">
+    <div class="card-body">
         @if(empty($this->filteredTranslations))
-            <div class="text-center py-8 text-gray-500">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('core::tables.no_data') }}</h3>
-                <p class="mt-1 text-sm text-gray-500">{{ __('No translations found for the selected criteria.') }}</p>
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                <h5 class="font-weight-bold text-dark">{{ __('core::tables.no_data') }}</h5>
+                <p class="text-muted">{{ __('No translations found for the selected criteria.') }}</p>
             </div>
         @else
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="font-weight-bold text-uppercase small">
                                 {{ __('Key') }}
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="font-weight-bold text-uppercase small">
                                 {{ __('Translation') }}
                             </th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="text-right font-weight-bold text-uppercase small">
                                 {{ __('core.ui.actions') }}
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody>
                         @foreach($this->filteredTranslations as $key => $value)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    <code class="bg-gray-100 px-2 py-1 rounded text-xs">{{ $key }}</code>
+                            <tr>
+                                <td class="align-middle">
+                                    <code class="bg-light px-2 py-1 rounded small">{{ $key }}</code>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">
+                                <td class="align-middle">
                                     @if($editingKey === $key)
-                                        <div class="space-y-2">
+                                        <div>
                                             <textarea 
                                                 wire:model="editingValue"
                                                 rows="3"
-                                                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('editingValue') border-red-500 @enderror"
+                                                class="form-control @error('editingValue') is-invalid @enderror"
                                             ></textarea>
                                             @error('editingValue')
-                                                <p class="text-red-500 text-xs">{{ $message }}</p>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <div class="flex gap-2">
+                                            <div class="mt-2">
                                                 <button 
                                                     wire:click="saveTranslation"
-                                                    class="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                                    class="btn btn-success btn-sm mr-2"
                                                 >
-                                                    {{ __('core.ui.save') }}
+                                                    <i class="fas fa-save"></i> {{ __('core.ui.save') }}
                                                 </button>
                                                 <button 
                                                     wire:click="cancelEdit"
-                                                    class="px-3 py-1 bg-gray-400 text-white text-xs rounded hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                                    class="btn btn-secondary btn-sm"
                                                 >
-                                                    {{ __('core.ui.cancel') }}
+                                                    <i class="fas fa-times"></i> {{ __('core.ui.cancel') }}
                                                 </button>
                                             </div>
                                         </div>
                                     @else
-                                        <div class="max-w-md">
+                                        <div style="max-width: 400px;">
                                             @if(empty($value))
-                                                <span class="text-red-500 italic">{{ __('Empty translation') }}</span>
+                                                <span class="text-danger font-italic">{{ __('Empty translation') }}</span>
                                             @else
                                                 {{ $value }}
                                             @endif
                                         </div>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td class="text-right align-middle">
                                     @if($editingKey !== $key)
                                         <button 
                                             wire:click="editTranslation('{{ $key }}')"
-                                            class="text-blue-600 hover:text-blue-900 focus:outline-none"
+                                            class="btn btn-outline-primary btn-sm"
                                         >
-                                            {{ __('core.ui.edit') }}
+                                            <i class="fas fa-edit"></i> {{ __('core.ui.edit') }}
                                         </button>
                                     @endif
                                 </td>
@@ -152,8 +160,8 @@
     </div>
 
     <!-- Footer -->
-    <div class="border-t px-6 py-4 bg-gray-50 text-sm text-gray-600">
-        <div class="flex justify-between items-center">
+    <div class="card-footer bg-light text-muted small">
+        <div class="d-flex justify-content-between align-items-center">
             <span>
                 {{ __('core.tables.showing', [
                     'from' => 1,

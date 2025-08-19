@@ -4,7 +4,7 @@
 
 
 @section('pageHeader')
-    <h1>Dashboard</h1>
+    <h1>{{ __('core.page.login') }}</h1>
 @endsection
 
 @section('content')

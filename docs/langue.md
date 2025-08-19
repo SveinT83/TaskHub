@@ -1,7 +1,14 @@
 # langue.md
 
 ## 1. Introduction & Audience
-This specification describes how **TaskHub handles language (internationalisation, i18n)** for both *core* and *module* code.
+This specification describes how **TaskHub handles language (internati## 7. Best Practices
+
+* **Use correct keys without namespace prefix**: Use `__('core.ui.save')` NOT `__('core::ui.save')`. The double-colon syntax is incorrect in TaskHub Core.
+* **Module keys**: For modules, use the module's key directly, e.g., `__('blog.posts.title')` NOT `__('blog::posts.title')`.  
+* **Pluralisation**: leverage Laravel's `|` syntax: "apple" => "apple|apples".  
+* **Variables**: always pass named replacements, e.g. `__('core.mail.greeting', ['name' => $user->name])`.  
+* **Dates & numbers**: format in controllers using `Carbon::locale()` or the new `Illuminate\Support\Locale` helpers, not hard‑coded strings.  
+* **Tone**: TaskHub uses a friendly but professional "you" voice. Avoid slang.tion, i18n)** for both *core* and *module* code.
 
 **Audience**  
 * Laravel / TaskHub backend developers.  

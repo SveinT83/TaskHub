@@ -21,7 +21,7 @@ class CreateTasksTable extends Migration
                 $table->foreignId('status_id')->nullable()->constrained('task_statuses')->nullOnDelete();
                 $table->unsignedInteger('category_id')->nullable(); // Endret category_id til en INT med 5 tegn
                 $table->foreignId('assigned_to')->nullable(); // Legger til assigned_to kolonne
-                $table->unsignedInteger('wall_id')->nullable(); // Legger til wall_id kolonne
+                $table->unsignedInteger('wall_id', 5)->nullable(); // Legger til wall_id kolonne
                 $table->integer('estimated_time')->nullable();
                 $table->integer('actual_time')->nullable();
                 $table->timestamps();
@@ -36,7 +36,7 @@ class CreateTasksTable extends Migration
                     $table->foreignId('assigned_to')->nullable(); // Legger til assigned_to kolonne
                 }
                 if (!Schema::hasColumn('tasks', 'wall_id')) {
-                    $table->unsignedInteger('wall_id')->nullable(); // Legger til wall_id kolonne
+                    $table->unsignedInteger('wall_id', 5)->nullable(); // Legger til wall_id kolonne
                 }
             });
         }

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique(); // Unik nøkkel for hver innstilling
+            $table->string('group')->nullable()->index(); // Gruppe for å organisere innstillinger (f.eks. 'financial', 'system')
             $table->text('description')->nullable(); // Valgfri beskrivelse av innstillingen
             $table->string('value')->nullable(); // Verdi for innstillingen (f.eks. 1 eller 0)
             $table->string('type')->default('string'); // Type (f.eks. boolean, string, etc.)

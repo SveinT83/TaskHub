@@ -7,10 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
+use App\Traits\HasMetaData;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles; // Legg til HasRoles her
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasMetaData; // HasMetaData added for metadata support
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,8 @@ class User extends Authenticatable
         'email',
         'password',
         'locale',
+        'nextcloud_token',
+        'email_verified_at',
     ];
 
     /**
@@ -32,6 +35,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'nextcloud_token',
     ];
 
     /**

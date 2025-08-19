@@ -71,6 +71,7 @@ Defines individual menu links and dropdown items.
 | url | string | URL or route name |
 | icon | string | Icon identifier |
 | order | int | Display order |
+| module | string (nullable) | Module slug that owns this menu item. NULL for core items. Used for cleanup when modules are disabled/uninstalled |
 | created_at | timestamp | Creation timestamp |
 | updated_at | timestamp | Update timestamp |
 

@@ -4,7 +4,33 @@ Version: Dev branch as of 14 July 2025Stack: Laravel 11, PHP 8.2+, MySQL/MariaDB
 
 1 📚 What is TaskHub?
 
-TaskHub is a monolithic Laravel application that acts as a central hub for multiple domain modules. The core provides shared infrastructure such as:
+TaskHub is a monolithic Laravel application that acts as a central hub for mul12 📋 Changelog
+
+Date        | Change
+------------|------------------------------------------------------------------
+2025-08-19  | Currency management system added with exchange rate support
+2025-07-18  | Meta data system implemented
+2025-03-03  | Widget system and positioning enhanced
+2024-10-11  | Categories system introduced
+2024-09-02  | Client management module added
+
+13 ➡️ Roadmap
+
+The following features are planned for future releases:
+
+- **App store** for module discovery and installation
+- **Database repair tools** in settings area
+- **Enhanced permissions system** with standardized approach
+- **Global API settings page** for managing APIs across core and modules
+- **Additional integrations**:
+  - Advanced NextCloud integration
+  - n8n workflow automation integration
+  - N-able RMM integration
+- **Custom integration framework** allowing modules to connect with external systems
+
+Contributions are welcome – feel free to open a Pull Request or Issue!
+
+© 2025 TrønderData AS  |  License: MITmain modules. The core provides shared infrastructure such as:
 
 Authentication (email/password, OIDC/OAuth via Socialite) and API tokens (Sanctum)
 

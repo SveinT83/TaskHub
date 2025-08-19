@@ -2,7 +2,106 @@
 
 > **Version:** 1.0  |  **Last updated:** 2025‑07‑17
 
-This guide covers everything a developer needs to know to create, ship, and maintain TaskHub modules.
+This guide covers everything a developer needs to know to create, s---
+
+## 9  Routing & Controllers
+
+Use a unique prefix to avoid global conflicts:
+
+```php
+Rout---
+
+## 11  Data---
+
+## 12  Configuration
+
+Default values live in `Config/<slug>.php`; admins can override via GUI.
+
+---
+
+## 13  Testing & CI
+
+- Place unit tests in `tests/` and run with `php artisan test`.
+- Include `lang:lint` and `phpstan analyse` in CI.
+
+---
+
+## 14  Git Workflow
+- Always guard against existing tables with `if (!Schema::hasTable('…'))`.
+- Prefer reusing TaskHub shared tables (`meta_data`, `comments`, etc.) when possible.
+
+---
+
+## 12  Configurationare(['web', 'auth'])
+     ->prefix('td-<slug>')
+     ->name('td-<slug>.')
+     ->group(function () {
+         Route::get('/', [HomeController::class, 'index'])
+              ->middleware('can:td-<slug>.view')
+              ->name('index');
+     });
+```
+
+---
+
+## 10  Menu Integration
+
+### 10.1  Registering Menu Items
+
+Modules must register menu items with the `module` field to enable proper cleanup:
+
+```php
+use App\Models\MenuItem;
+
+// In your ServiceProvider boot() method or seeder
+MenuItem::create([
+    'title' => 'My Module',
+    'url' => '/admin/td-<slug>',
+    'menu_id' => 1,  // 1 = Admin menu
+    'parent_id' => null,  // Top-level item
+    'icon' => 'bi bi-puzzle',
+    'order' => 100,
+    'module' => 'td-<slug>',  // CRITICAL: Must match your module slug
+]);
+
+// For sub-menu items
+MenuItem::create([
+    'title' => 'Settings',
+    'url' => '/admin/td-<slug>/settings',
+    'menu_id' => 1,
+    'parent_id' => $parentMenuItem->id,
+    'icon' => 'bi bi-gear',
+    'order' => 1,
+    'module' => 'td-<slug>',  // Same module slug
+]);
+```
+
+### 10.2  Menu Cleanup Rules
+
+- **Module disabled:** Menu items are hidden (`is_active = false`)
+- **Module uninstalled:** Menu items are permanently deleted
+- **Core items:** Never set `module` field (leave NULL)
+
+### 10.3  Migration Example
+
+```php
+// In your module's migration or seeder
+DB::table('menu_items')->insert([
+    'title' => 'Task Management',
+    'url' => '/admin/td-tasks',
+    'menu_id' => 1,
+    'parent_id' => null,
+    'icon' => 'bi bi-check2-square',
+    'order' => 50,
+    'module' => 'td-tasks',  // Required for proper cleanup
+    'created_at' => now(),
+    'updated_at' => now(),
+]);
+```
+
+---
+
+## 11  Database MigrationsskHub modules.
 
 ---
 

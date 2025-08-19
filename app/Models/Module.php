@@ -9,5 +9,16 @@ class Module extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'description', 'is_active'];
+    protected $fillable = [
+        'slug',
+        'name',
+        'version',
+        'description',
+        'path',
+        'enabled',
+    ];
+
+    protected $casts = [
+        'enabled' => 'boolean',
+    ];
 }
