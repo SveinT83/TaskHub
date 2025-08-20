@@ -20,7 +20,6 @@
         "tronderdata/td-task": "dev-main",
         "tronderdata/td-tickets": "dev-main",
     "tronderdata/td-equipment": "dev-main",
-    "tronderdata/td-ocab": "dev-main",
     "tronderdata/td-cost-calcultaror": "*"
     },
     "require-dev": {
@@ -63,7 +62,7 @@
         },
         {
             "type": "path",
-            "url": "./modules/td-ocab"
+            "url": "./modules/td-sla"
         }
     ],
     "autoload": {
@@ -76,7 +75,8 @@
             "TronderData\\Categories\\": "modules/td-categories/src/",
             "TronderData\\Clients\\": "modules/td-clients/src/",
             "TronderData\\Equipment\\": "modules/td-equipment/src/",
-            "TronderData\\TdCostCalcultaror\\": "modules/td-cost-calcultaror/src/"
+            "TronderData\\TdCostCalcultaror\\": "modules/td-cost-calcultaror/src/",
+            "TronderData\\Sla\\": "modules/td-sla/src/"
         },
         "files": [
             "app/Helpers/SettingHelper.php"
@@ -112,7 +112,8 @@
                 "TronderData\\KbArticles\\Providers\\KbArticlesServiceProvider",
                 "TronderData\\Categories\\Providers\\CategoriesServiceProvider",
                 "TronderData\\Equipment\\Providers\\EquipmentServiceProvider",
-                "TronderData\\TdCostCalcultaror\\Providers\\TdCostCalcultarorServiceProvider"
+                "TronderData\\TdCostCalcultaror\\Providers\\TdCostCalcultarorServiceProvider",
+                "TronderData\\Sla\\Providers\\SlaServiceProvider"
             ]
         }
     },
